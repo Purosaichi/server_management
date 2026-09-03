@@ -23,7 +23,7 @@
         
         {{-- Background Peta --}}
         <div class="absolute inset-0 opacity-10">
-            <img src="{{ asset('public/images/map indo.png') }}" alt="Peta Indonesia" class="w-full h-full object-cover">
+            <img src="{{ asset('images/map indo.png') }}" alt="Peta Indonesia" class="w-full h-full object-cover">
         </div>
 
         {{-- Card Login --}}
@@ -31,7 +31,7 @@
             
             {{-- Logo --}}
             <div class="flex justify-center mb-4">
-                <img src="{{ asset('public/images/logo kemendik.png') }}" alt="Logo Kemendikdasmen" class="h-16 w-auto">
+                <img src="{{ asset('images/logo kemendik.png') }}" alt="Logo Kemendikdasmen" class="h-16 w-auto">
             </div>
 
             <h2 class="text-2xl font-bold text-center text-gray-800">Monitoring Sistem</h2>
