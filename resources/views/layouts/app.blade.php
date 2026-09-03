@@ -30,7 +30,20 @@
                 <div class="pt-2">
                     <p class="px-4 text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">Monitoring</p>
 
-                    <a href=""
+                    <a href="/server" class="flex items-center px-4 py-2 rounded-lg sidebar-link text-sm font-medium text-gray-500 transition-all duration-200 hover:bg-gray-100">
+                        <i class="fas fa-server w-5 text-base text-gray-400"></i> Server
+                    </a>
+                    
+                    <a href="/application" class="flex items-center px-4 py-2 rounded-lg sidebar-link text-sm font-medium text-gray-500 transition-all duration-200 hover:bg-gray-100">
+                        <i class="fas fa-cubes w-5 text-base text-gray-400"></i> Application
+                    </a>
+
+                    <a href="/domain" class="flex items-center px-4 py-2 rounded-lg sidebar-link text-sm font-medium text-gray-500 transition-all duration-200 hover:bg-gray-100">
+                        <i class="fas fa-globe w-5 text-base text-gray-400"></i> Domain
+                    </a>    
+                    
+                  
+
 
 
 

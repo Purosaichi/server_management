@@ -17,6 +17,6 @@ Route::get('/dashboard', function () {
 })->name('dashboard');
 
 // Route default (arahin ke login)
-Route::get('/dashboard', function () {
-    return redirect('pages.dashboard');
-})->name('dashboard');
+Route::get('/', function () {
+    return view('pages.login');
+})->name('home');
