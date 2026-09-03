@@ -60,8 +60,7 @@
                             id="email"
                             class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
                             placeholder="admin@kemendik.go.id"
-                            required
-                        >
+                            required>
                     </div>
 
                     <div class="mb-6">
@@ -72,8 +71,7 @@
                             id="password"
                             class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
                             placeholder="••••••••"
-                            required
-                        >
+                            required>
                     </div>
 
                     <button 
