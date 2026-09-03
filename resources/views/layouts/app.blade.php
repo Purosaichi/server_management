@@ -15,33 +15,55 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
     <style>
-        * { font-family: 'Inter', sans-serif;}
+       * { font-family: 'Inter', sans-serif;}
 
-         <!-- Navigation -->
-         <nav class="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
+        <!-- Navigation -->
+        <nav class="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
          
-         <!-- Menu Beranda -->
-         <a href="/dashboard" class="flex items-center px-4 py-2.5 rounded-lg sidebar-active text-sm font-medium transition-all duration-200 group">
-                    <i class="fas fa-home w-5 text-base"></i> 
-                    <span class="ml-1">Beranda</span>
-                </a>
+          <!-- Menu Beranda -->
+          <a href="/dashboard" class="flex items-center px-4 py-2.5 rounded-lg sidebar-active text-sm font-medium transition-all duration-200 group">
+                     <i class="fas fa-home w-5 text-base"></i> 
+                     <span class="ml-1">Beranda</span>
+          </a>
 
-                <!-- Group: MONITORING (Server, Application, Domain) -->
-                <div class="pt-2">
-                    <p class="px-4 text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">Monitoring</p>
+          <!-- Group: MONITORING (Server, Application, Domain) -->
+           <div class="pt-2">
+              <p class="px-4 text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">Monitoring</p>
 
-                    <a href="/server" class="flex items-center px-4 py-2 rounded-lg sidebar-link text-sm font-medium text-gray-500 transition-all duration-200 hover:bg-gray-100">
-                        <i class="fas fa-server w-5 text-base text-gray-400"></i> Server
-                    </a>
+              <a href="/server" class="flex items-center px-4 py-2 rounded-lg sidebar-link text-sm font-medium text-gray-500 transition-all duration-200 hover:bg-gray-100">
+                    <i class="fas fa-server w-5 text-base text-gray-400"></i> Server
+              </a>
                     
-                    <a href="/application" class="flex items-center px-4 py-2 rounded-lg sidebar-link text-sm font-medium text-gray-500 transition-all duration-200 hover:bg-gray-100">
-                        <i class="fas fa-cubes w-5 text-base text-gray-400"></i> Application
-                    </a>
+              <a href="/application" class="flex items-center px-4 py-2 rounded-lg sidebar-link text-sm font-medium text-gray-500 transition-all duration-200 hover:bg-gray-100">
+                    <i class="fas fa-cubes w-5 text-base text-gray-400"></i> Application
+              </a>
 
-                    <a href="/domain" class="flex items-center px-4 py-2 rounded-lg sidebar-link text-sm font-medium text-gray-500 transition-all duration-200 hover:bg-gray-100">
-                        <i class="fas fa-globe w-5 text-base text-gray-400"></i> Domain
-                    </a>    
+              <a href="/domain" class="flex items-center px-4 py-2 rounded-lg sidebar-link text-sm font-medium text-gray-500 transition-all duration-200 hover:bg-gray-100">
+                    <i class="fas fa-globe w-5 text-base text-gray-400"></i> Domain
+              </a>    
+           </div>
+                
+         <!-- Group: MONITORING (Licenses, Maintenance, Alerts) -->
+          <div class="pt-2">
+              <p class"px-4 text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">Monitoring</p>
+
+              <a href="/licenses" class="flex items-center px-4 py-2 rounded-lg sidebar-link text-sm font-medium text-gray-500 transition-all duration-200 hover:bg-gray-100">
+                    <i class"fas fa-key w-5 text-base text-gray-400"></i> Licenses
+              </a>
+
+              <a href="/maintenance" class="flex items-center px-4 py-2 rounded-lg sidebar-link text-sm font-medium text-gray-500 transition-all duration-200 hover:bg-gray-100">
+                    <i class="fas fa-tools w-5 text-base text-gray-400"></i> Maintenance
+              </a>
                     
+              <a href="/maintenance" class="flex items-center px-4 py-2 rounded-lg sidebar-link text-sm font-medium text-gray-500 transition-all duration-200 hover:bg-gray-100">
+                    <i class="fas fa-tools w-5 text-base text-gray-400"></i> Maintenance
+              </a>
+                    
+              <a href="/alerts" class="flex items-center px-4 py-2 rounded-lg sidebar-link text-sm font-medium text-gray-500 transition-all duration-200 hover:bg-gray-100">
+                    <i class="fas fa-bell w-5 text-base text-gray-400"></i> Alerts
+              </a>
+          </div>
+     </nav>
                   
 
 
