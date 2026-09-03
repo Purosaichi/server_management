@@ -28,7 +28,43 @@
          <!-- card login -->
         <div class="relative z-10 w-full max-w-md bg-white rounded-xl shadow-lg p-8 mx-4"></div>
 
-        {{-- Logo --}}
+        <!-- Logo -->
             <div class="flex justify-center mb-4">
                 <img src="{{ asset('public/image/logo kemendik.png') }}" alt="Logo Kemendikdasmen" class="h-16 w-auto">
             </div>
+
+              <!-- Title -->
+            <h2 class="text-2xl font-bold text-center text-gray-800">Monitoring Sistem</h2>
+            <p class="text-center text-gray-500 text-sm mb-6">Direktorat Jenderal Guru dan Tenaga Kependidikan</p>
+
+            <!-- Form Login -->
+            <form action="{{ route('login.post') }}" method="POST">
+                @csrf
+                
+                <!-- Email -->
+                <div class="mb-4">
+                    <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                    <input 
+                        type="email" 
+                        name="email" 
+                        id="email"
+                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
+                        placeholder="admin@kemendik.go.id"
+                        required>
+                </div>
+
+                 <!-- Password -->
+                <div class="mb-6">
+                    <label for="password" class="block text-sm font-medium text-gray-700 mb-1">Password</label>
+                    <input 
+                        type="password" 
+                        name="password" 
+                        id="password"
+                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
+                        placeholder="••••••••"
+                        required>
+                </div>
+
+
+
+
