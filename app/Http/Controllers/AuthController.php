@@ -11,7 +11,7 @@ class AuthController extends Controller
     public function showLogin()
     {
         if (session()->has('user_id')) {
-            return redirect()->route('dashboard');
+            return redirect()->route('server.index');
         }
 
         return view('pages.login');
@@ -49,9 +49,10 @@ class AuthController extends Controller
         $request->session()->regenerate();
         $request->session()->put('user_id', $user->id_pengguna);
         $request->session()->put('user_name', $user->nama_pengguna);
-        $request->session()->put('email', $user->email);
+        $request->session()->put('user_login', $user->nama_login);
+        $request->session()->put('email', $user->nama_login);
 
-        return redirect()->route('dashboard');
+        return redirect()->route('server.index');
     }
 
     public function logout(Request $request)

@@ -34,8 +34,25 @@ class LoginTest extends TestCase
                 'email' => 'admin@kemendik.go.id',
                 'password' => 'password',
             ])
-            ->assertRedirect(route('dashboard'))
+            ->assertRedirect(route('server.index'))
             ->assertSessionHas('user_login', 'admin@kemendik.go.id');
+    }
+
+    public function test_logout_accepts_post_method(): void
+    {
+        $this->createPengguna();
+
+        $this->withSession(['user_id' => 1, 'user_name' => 'Administrator'])
+            ->post('/logout')
+            ->assertRedirect('/login');
+    }
+
+    public function test_server_page_renders_with_dashboard_data(): void
+    {
+        $this->withSession(['user_id' => 1, 'user_name' => 'Administrator'])
+            ->get('/server')
+            ->assertOk()
+            ->assertSee('Total Server');
     }
 
     public function test_login_rejects_wrong_password(): void

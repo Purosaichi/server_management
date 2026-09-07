@@ -42,9 +42,8 @@
             </div>
         </aside>
         <main class="flex-1 p-6">
-            <div class="mb-6">
-                <h1 class="text-xl font-semibold text-gray-800">@yield('page-title', 'Dashboard')</h1>
-                <p class="text-sm text-gray-500">@yield('page-subtitle')</p>
+            <div class="mb-6 flex justify-center items-center border-b border-gray-200 pb-4 position-sticky">
+                <img src="{{ asset('images/logo kemendik2.png') }}" alt="Logo Kemendik" class="h-16 w-auto object-contain">
             </div>
             @yield('content')
         </main>
