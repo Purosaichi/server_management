@@ -1,28 +1,21 @@
 <?php
 
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ServerController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return view('pages.login');
+    return redirect()->route('login');
 });
 
-Route::get('/login', function () {
-    return view('pages.login');
-})->name('login');
+Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
+Route::post('/login', [AuthController::class, 'login'])->name('login.post');
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+Route::get('/logout', [AuthController::class, 'logout']);
 
-Route::post('/login', function () {
-    return redirect('/dashboard');
-})->name('login.post');
-
-Route::get('/dashboard', function () {
-    return view('pages.dashboard');
-})->name('dashboard');
-
-// ===== ROUTE SERVER =====
-Route::get('/server', function () {
-    return view('pages.server.index');
-})->name('server.index');
-
-Route::get('/server/{id}', function ($id) {
-    return view('pages.server.detail', ['id' => $id]);
-})->name('server.detail');
+Route::middleware(['auth.session'])->group(function () {
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/server', [ServerController::class, 'index'])->name('server.index');
+    Route::get('/server/{id}', [ServerController::class, 'show'])->name('server.detail');
+});

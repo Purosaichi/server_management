@@ -25,7 +25,8 @@ body {
     z-index: 10;
     width: 100%;
     max-width: 800px;
-    height: 450px;
+    min-height: 450px;
+    height: auto;
     background: white;
     border-radius: 1rem;
     box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
@@ -116,6 +117,18 @@ form {
     font-size: 0.875rem;
     margin-bottom: 1.5rem;
     text-align: center;
+}
+
+.alert-error {
+    width: 100%;
+    max-width: 26rem;
+    margin: 0 auto 1rem;
+    padding: 0.75rem 1rem;
+    border-radius: 0.5rem;
+    background: #fef2f2;
+    color: #b91c1c;
+    font-size: 0.875rem;
+    border: 1px solid #fecaca;
 }
 
 .form-label {

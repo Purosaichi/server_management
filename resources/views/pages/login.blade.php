@@ -38,6 +38,16 @@
                 
                 <h2 class="form-title">Login</h2>
                 <p class="form-subtitle">Masuk ke dashboard monitoring</p>
+
+                @if (session('error'))
+                    <div class="alert-error">{{ session('error') }}</div>
+                @endif
+
+                @if ($errors->any())
+                    <div class="alert-error">
+                        {{ $errors->first() }}
+                    </div>
+                @endif
                 
                 <form action="{{ route('login.post') }}" method="POST">
                     @csrf
@@ -50,6 +60,7 @@
                             id="email"
                             class="form-input"
                             placeholder="admin@kemendik.go.id"
+                            value="{{ old('email') }}"
                             required>
                     </div>
 
