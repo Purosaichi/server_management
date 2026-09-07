@@ -5,31 +5,31 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Login - sim SPBE</title>
         
-        [-- tail wind --]
+        <!-- tail wind -->
         <script src="https://cdn.tailwindcss.com"></script>
 
-        [-- font --]
+        <!-- font -->
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
         <link rel="stylesheet" href="{{ asset('css/login.css') }}">
     </head>
     <body>
         <div class="main screen">
-            [-- map --]
+            <!-- map -->
             <div class="map background">
                 <img src="{{ asset('images/public/images/map indo.png') }}" alt="map" class="map-image">
             </div>
 
-            [-- card login --]
+            <!-- card login -->
             <div class="card login">
 
-            [-- kolom kiri --]
+            <!-- kolom kiri -->
             <div class="logo kemendik">
                 <img src="{{ asset('images/public/images/logo kemendik.png') }}" alt="logo kemendik" class="logo-image">
                     <p class="title">DITJEN GTK</p>
             </div>
 
-            [-- login form --]
+            <!-- login form -->
             <div class="form login">
 
             <h2 class="title">LOGIN</h2>
@@ -38,7 +38,7 @@
                     @csrf
                     
                     <div class="form-group">
-                        <label for="email" class="form-label">Email</label>
+                        <label for="email" class="form-label">Username</label>
                         <input 
                             type="email" 
                             name="email" 
