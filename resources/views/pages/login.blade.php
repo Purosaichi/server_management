@@ -13,4 +13,22 @@
 
         <link rel="stylesheet" href="{{ asset('css/login.css') }}">
     </head>
+    <body>
+        <div class="main screen">
+            [-- map --]
+            <div class="map background">
+                <img src="{{ asset('images/public/images/map indo.png') }}" alt="map" class="map-image">
+            </div>
+
+            [-- card login --]
+            <div class="card login">
+
+            [-- kolom kiri --]
+            <div class="logo kemendik">
+                <img src="{{ asset('images/public/images/logo kemendik.png') }}" alt="logo kemendik" class="logo-image">
+                    <p class="title">DITJEN GTK</p>
+            </div>
+            
+        </div>
+    </body>
 </html>
