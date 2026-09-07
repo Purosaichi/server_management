@@ -1,0 +1,174 @@
+/* ===== public/css/login.css ===== */
+
+/* Font & Body */
+body {
+    font-family: 'Inter', sans-serif;
+}
+
+/* Background Map */
+.map-background {
+    position: absolute;
+    inset: 0;
+    opacity: 0.25;
+    z-index: 0;
+}
+
+.map-background img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Card Login */
+.login-card {
+    position: relative;
+    z-index: 10;
+    width: 100%;
+    max-width: 800px;
+    height: 450px;
+    background: white;
+    border-radius: 1rem;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+@media (min-width: 768px) {
+    .login-card {
+        flex-direction: row;
+    }
+}
+
+/* Kolom Kiri (Branding) */
+.logo-kemendik {
+    width: 100%;
+    padding: 1.25rem 1rem 0.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    background: white;
+}
+
+@media (min-width: 768px) {
+    .logo-kemendik {
+        width: 50%;
+        padding: 1.5rem 1rem 1rem;
+    }
+}
+
+.branding-logo {
+    height: 10.5rem;
+    width: auto;
+    filter: drop-shadow(0 10px 8px rgba(0, 0, 0, 0.04));
+    margin-bottom: 0.75rem;
+}
+
+.branding-title {
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: #111827;
+    letter-spacing: 0.025em;
+}
+
+@media (min-width: 768px) {
+    .branding-title {
+        font-size: 1.125rem;
+    }
+}
+
+/* Kolom Kanan (Form Login) */
+.form-login {
+    width: 100%;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background: white;
+}
+
+@media (min-width: 768px) {
+    .form-login {
+        width: 50%;
+        padding: 3rem;
+    }
+}
+
+form {
+    width: 100%;
+    max-width: 26rem;
+    margin: 0 auto;
+}
+
+.form-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #1f2937;
+    margin-bottom: 0.5rem;
+    margin-top: 1.5rem;
+    text-align  : center;
+}
+
+.form-subtitle {
+    color: #6b7280;
+    font-size: 0.875rem;
+    margin-bottom: 1.5rem;
+    text-align: center;
+}
+
+.form-label {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #374151;
+    margin-bottom: 0.25rem;
+}
+
+.form-input {
+    width: 100%;
+    padding: 0.625rem 1rem;
+    border: 1px solid #d1d5db;
+    border-radius: 0.5rem;
+    outline: none;
+    transition: all 0.2s;
+    box-sizing: border-box;
+}
+
+.form-input:focus {
+    border-color: transparent;
+    box-shadow: 0 0 0 2px #3b82f6;
+}
+
+.form-group {
+    width: 100%;
+    margin-bottom: 1rem;
+}
+
+.form-group:last-of-type {
+    margin-bottom: 1.5rem;
+}
+
+.btn-login {
+    width: 100%;
+    background-color: #2563eb;
+    color: white;
+    padding: 0.625rem 0;
+    border-radius: 0.5rem;
+    font-weight: 500;
+    transition: background-color 0.2s;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-login:hover {
+    background-color: #1d4ed8;
+}
+
+.form-footer {
+    text-align: center;
+    font-size: 0.75rem;
+    color: #9ca3af;
+    margin-top: 1.5rem;
+}
