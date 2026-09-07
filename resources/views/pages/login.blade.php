@@ -28,7 +28,46 @@
                 <img src="{{ asset('images/public/images/logo kemendik.png') }}" alt="logo kemendik" class="logo-image">
                     <p class="title">DITJEN GTK</p>
             </div>
-            
+
+            [-- login form --]
+            <div class="form login">
+
+            <h2 class="title">LOGIN</h2>
+            <p class="subtitle">Masuk ke dashboard monitoring</p>
+            <form action="{{ route('login.post') }}" method="POST">
+                    @csrf
+                    
+                    <div class="form-group">
+                        <label for="email" class="form-label">Email</label>
+                        <input 
+                            type="email" 
+                            name="email" 
+                            id="email"
+                            class="form-input"
+                            placeholder="admin@kemendik.go.id"
+                            required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password" class="form-label">Password</label>
+                        <input 
+                            type="password" 
+                            name="password" 
+                            id="password"
+                            class="form-input"
+                            placeholder="••••••••"
+                            required>
+                    </div>
+
+                    <button type="submit" class="btn-login">
+                        Masuk
+                    </button>
+                </form>
+
+                <p class="form-footer">
+                    © 2026 Direktorat Jenderal Guru, Tenaga Kependidikan dan Pendidikan Guru - Kemendikdasmen
+                </p>
+            </div>
         </div>
     </body>
 </html>
