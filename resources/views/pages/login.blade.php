@@ -36,7 +36,7 @@
             <!-- Kolom Kanan: Form Login -->
             <div class="form-login">
                 
-                <h2 class="form-title">Login</h2>
+                <h2 class="form-title">LOGIN</h2>
                 <p class="form-subtitle">Masuk ke dashboard monitoring</p>
 
                 @if (session('error'))
