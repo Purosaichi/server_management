@@ -10,11 +10,14 @@ class DashboardController extends Controller
     {
         //statistik
         $stats = [
-            'total_server' => 24,
+             'total_server' => 24,
+            'server_online' => 22,
+            'server_offline' => 2,
             'total_aplikasi' => 20,
-            'monitoring' => 24,
-            'maintenance' => 3,
-            'alerts' => 5,
+            'app_aktif' => 18,
+            'app_down' => 2,
+            'jadwal_maintenance' => 5,
+            'akan_expired' => 2,
         ];
 
         //data server
