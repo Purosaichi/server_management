@@ -6,9 +6,8 @@
 {{-- CSS Terpisah --}}
 <link rel="stylesheet" href="{{ asset('css/alerts.css') }}">
 
-<div class="alerts-header">
-    <h1 class="alerts-title">Alerts</h1>
-    <p class="alerts-subtitle">Peringatan kondisi server dan aplikasi.</p>
+<div class="header">
+    <h2 class="title-header">Alerts</h2>
 </div>
 
 <div class="alerts-empty-card">

@@ -10,6 +10,7 @@
     color: #ffffff;
     text-align: center;
     justify-content: space-between;
+    border-radius: 0.5rem;
 }
 
 .title-header {
@@ -18,19 +19,21 @@
     color: #ffffff;
 }
 
+
+/*statistik*/
 .stat-card {
     background: white;
     border-radius: 0.75rem;
-    padding: 1.5rem;
+    padding: 1.25rem 1.5rem;
     border: 1px solid #f3f4f6;
     box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-    margin-top: 1rem;
 }
 
 .stat-card .stat-label {
     font-size: 0.875rem;
     font-weight: 500;
     color: #6b7280;
+    margin-bottom: 0.25rem;
 }
 
 .stat-card .stat-value {
@@ -39,16 +42,46 @@
     color: #1f2937;
 }
 
-.stat-card .stat-value.blue {
-    color: #2563eb;
+.stat-card .stat-detail {
+    font-size: 0.75rem;
+    color: #6b7280;
+    margin-top: 0.25rem;
 }
 
-.stat-card .stat-value.yellow {
+.stat-card .stat-detail .green {
+    color: #16a34a;
+}
+
+.stat-card .stat-detail .red {
+    color: #dc2626;
+}
+
+.stat-card .stat-detail .yellow {
     color: #d97706;
 }
 
-.stat-card .stat-value.red {
-    color: #dc2626;
+.stat-card .stat-detail .blue {
+    color: #2563eb;
+}
+
+/* ===== Grid 4 Kolom ===== */
+.grid-stats-4 {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+@media (min-width: 640px) {
+    .grid-stats-4 {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (min-width: 1024px) {
+    .grid-stats-4 {
+        grid-template-columns: repeat(4, 1fr);
+    }
 }
 
 /*table*/

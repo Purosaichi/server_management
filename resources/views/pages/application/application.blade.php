@@ -9,6 +9,10 @@
 {{-- CSS Terpisah --}}
 <link rel="stylesheet" href="{{ asset('css/application.css') }}">
 
+<div class="header">
+    <h2 class="title-header">Application</h2>
+</div>
+
 <div class="app-table-container">
     <div class="app-table-header">
         <h3 class="app-table-title">Daftar Aplikasi</h3>

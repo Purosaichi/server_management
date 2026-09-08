@@ -1,19 +1,15 @@
-/* ===== public/css/domain.css ===== */
-
-/* ===== Header ===== */
-.domain-header {
-    margin-bottom: 1.5rem;
-}
-
-.domain-header h1 {
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: #1f2937;
-}
-
-.domain-header p {
-    font-size: 0.875rem;
-    color: #6b7280;
+.header {
+    background: linear-gradient(to right, #0a4bff, #7398ff, #0a4bff);
+    padding: 1rem 1.5rem;
+    height: 4rem;
+    display: flex;
+    border-bottom: 1px solid #e5e7eb;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #ffffff;
+    text-align: center;
+    justify-content: space-between;
+    border-radius: 0.5rem;
 }
 
 /* ===== Card Kosong ===== */
@@ -23,6 +19,7 @@
     border: 1px solid #f3f4f6;
     padding: 1.5rem;
     color: #6b7280;
+    margin-top: 1.5rem;
 }
 
 .footer {

@@ -1,12 +1,24 @@
-/* ===== public/css/application.css ===== */
+.header {
+    background: linear-gradient(to right, #0a4bff, #7398ff, #0a4bff);
+    padding: 1rem 1.5rem;
+    height: 4rem;
+    display: flex;
+    border-bottom: 1px solid #e5e7eb;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #ffffff;
+    text-align: center;
+    justify-content: space-between;
+    border-radius: 0.5rem;
+}
 
-/* ===== Container Tabel ===== */
 .app-table-container {
     background: white;
     border-radius: 0.75rem;
     border: 1px solid #f3f4f6;
     box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
     overflow: hidden;
+    margin-top: 1.5rem;
 }
 
 .app-table-header {

@@ -11,34 +11,43 @@
 </div>
 
 <!--statistik-->
-<div class="grid-stats">
+<div class="grid-stats-4">
+    <!--Total Server-->
     <div class="stat-card">
         <p class="stat-label">Total Server</p>
         <p class="stat-value">{{ $stats['total_server'] }}</p>
+        <p class="stat-detail">
+            <span class="green">{{ $stats['server_online'] }} Online</span> · 
+            <span class="red">{{ $stats['server_offline'] }} Offline</span>
+        </p>
     </div>
-    
+
+    <!--Total Aplikasi-->
     <div class="stat-card">
         <p class="stat-label">Total Aplikasi</p>
         <p class="stat-value">{{ $stats['total_aplikasi'] }}</p>
+        <p class="stat-detail">
+            <span class="green">{{ $stats['app_aktif'] }} Aktif</span> · 
+            <span class="red">{{ $stats['app_down'] }} Down</span>
+        </p>
     </div>
-    
+
+    <!--Jadwal Maintenance-->
     <div class="stat-card">
-        <p class="stat-label">Monitoring</p>
-        <p class="stat-value blue">{{ $stats['monitoring'] }}</p>
+        <p class="stat-label">Jadwal Maintenance</p>
+        <p class="stat-value">{{ $stats['jadwal_maintenance'] }}</p>
+        <p class="stat-detail">Dalam 5 hari ke depan</p>
     </div>
-    
+
+    <!--Akan Expired-->
     <div class="stat-card">
-        <p class="stat-label">Maintenance</p>
-        <p class="stat-value yellow">{{ $stats['maintenance'] }}</p>
-    </div>
-    
-    <div class="stat-card">
-        <p class="stat-label">Alerts</p>
-        <p class="stat-value red">{{ $stats['alerts'] }}</p>
+        <p class="stat-label">Akan Expired</p>
+        <p class="stat-value">{{ $stats['akan_expired'] }}</p>
+        <p class="stat-detail">Domain & license</p>
     </div>
 </div>
 
-<!-- Tabel Server -->
+<!--table server-->
 <div class="table-container mb-8">
     <div class="table-header">
         <h3 class="table-title">Server</h3>
@@ -81,7 +90,7 @@
     </div>
 </div>
 
-<!-- Tabel Aplikasi --> 
+<!--table aplikasi-->
 <div class="table-container">
     <div class="table-header">
         <h3 class="table-title">Application</h3>

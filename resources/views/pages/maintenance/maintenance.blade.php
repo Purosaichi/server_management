@@ -8,6 +8,10 @@
 {{-- CSS Terpisah --}}
 <link rel="stylesheet" href="{{ asset('css/maintenance.css') }}">
 
+<div class="header">
+    <h2 class="title-header">Maintenance</h2>
+</div>
+
 {{-- Kartu Statistik --}}
 <div class="mt-stats-grid">
     <div class="mt-stat-card">

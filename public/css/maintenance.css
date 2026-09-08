@@ -1,11 +1,23 @@
-/* ===== public/css/maintenance.css ===== */
+.header {
+    background: linear-gradient(to right, #0a4bff, #7398ff, #0a4bff);
+    padding: 1rem 1.5rem;
+    height: 4rem;
+    display: flex;
+    border-bottom: 1px solid #e5e7eb;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #ffffff;
+    text-align: center;
+    justify-content: space-between;
+    border-radius: 0.5rem;
+}
 
-/* ===== Kartu Statistik ===== */
 .mt-stats-grid {
     display: grid;
     grid-template-columns: repeat(1, 1fr);
     gap: 1rem;
     margin-bottom: 1.5rem;
+    margin-top: 1.5rem;
 }
 
 @media (min-width: 768px) {

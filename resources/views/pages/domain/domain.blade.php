@@ -6,9 +6,8 @@
 {{-- CSS Terpisah --}}
 <link rel="stylesheet" href="{{ asset('css/domain.css') }}">
 
-<div class="domain-header">
-    <h1>Domain</h1>
-    <p>Daftar domain yang terhubung ke sistem.</p>
+<div class="header">
+    <h2 class="title-header">Domain</h2>
 </div>
 
 <div class="domain-empty-card">

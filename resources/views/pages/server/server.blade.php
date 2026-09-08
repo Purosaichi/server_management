@@ -6,8 +6,11 @@
 @section('page-subtitle', 'Daftar semua server yang dimonitoring')
 
 @section('content')
-{{-- CSS Terpisah --}}
 <link rel="stylesheet" href="{{ asset('css/server.css') }}">
+
+<div class="header">
+    <h2 class="title-header">Server</h2>
+</div>
 
 <div class="srv-table-container">
     <div class="srv-table-header">
