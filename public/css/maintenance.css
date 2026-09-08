@@ -1,0 +1,213 @@
+/* ===== public/css/maintenance.css ===== */
+
+/* ===== Kartu Statistik ===== */
+.mt-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+@media (min-width: 768px) {
+    .mt-stats-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+.mt-stat-card {
+    background: white;
+    border-radius: 0.75rem;
+    border: 1px solid #f3f4f6;
+    padding: 1rem;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+}
+
+.mt-stat-card .mt-stat-label {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #9ca3af;
+}
+
+.mt-stat-card .mt-stat-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-top: 0.25rem;
+}
+
+.mt-stat-card .mt-stat-value.green {
+    color: #16a34a;
+}
+
+.mt-stat-card .mt-stat-value.blue {
+    color: #2563eb;
+}
+
+.mt-stat-card .mt-stat-value.yellow {
+    color: #d97706;
+}
+
+.mt-stat-card .mt-stat-sub {
+    font-size: 0.75rem;
+    color: #9ca3af;
+}
+
+/* ===== Tabel ===== */
+.mt-table-container {
+    background: white;
+    border-radius: 0.75rem;
+    border: 1px solid #f3f4f6;
+    overflow: hidden;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+}
+
+.mt-table-header {
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid #f3f4f6;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.mt-table-header .mt-table-title {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: #1f2937;
+}
+
+.mt-table-header .mt-filter-group {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.mt-table-header .mt-filter-btn {
+    padding: 0.375rem 0.75rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+    border-radius: 0.5rem;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.15s;
+}
+
+.mt-table-header .mt-filter-btn.active {
+    background-color: #dbeafe;
+    color: #1d4ed8;
+}
+
+.mt-table-header .mt-filter-btn.inactive {
+    background-color: #f9fafb;
+    color: #4b5563;
+}
+
+.mt-table-header .mt-filter-btn.inactive:hover {
+    background-color: #f3f4f6;
+}
+
+.mt-table-wrapper {
+    overflow-x: auto;
+}
+
+.mt-table-wrapper table {
+    width: 100%;
+    font-size: 0.875rem;
+}
+
+.mt-table-wrapper thead {
+    background-color: #f9fafb;
+}
+
+.mt-table-wrapper thead th {
+    padding: 0.75rem 1.5rem;
+    text-align: left;
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: #6b7280;
+    text-transform: uppercase;
+    letter-spacing: 0.025em;
+}
+
+.mt-table-wrapper tbody tr {
+    transition: background-color 0.15s;
+    border-bottom: 1px solid #f3f4f6;
+}
+
+.mt-table-wrapper tbody tr:hover {
+    background-color: #f9fafb;
+}
+
+.mt-table-wrapper tbody td {
+    padding: 1rem 1.5rem;
+    color: #4b5563;
+}
+
+.mt-table-wrapper tbody td .mt-id {
+    font-weight: 500;
+    color: #111827;
+}
+
+.mt-table-wrapper tbody td .mt-time {
+    font-size: 0.75rem;
+    color: #9ca3af;
+}
+
+/* ===== Badge Kategori ===== */
+.mt-badge {
+    padding: 0.25rem 0.625rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+    border-radius: 9999px;
+}
+
+.mt-badge-purple {
+    background-color: #f3e8ff;
+    color: #6b21a8;
+}
+
+.mt-badge-blue {
+    background-color: #dbeafe;
+    color: #1d4ed8;
+}
+
+.mt-badge-green {
+    background-color: #d1fae5;
+    color: #065f46;
+}
+
+.mt-badge-orange {
+    background-color: #ffedd5;
+    color: #9a3412;
+}
+
+/* ===== Badge Status ===== */
+.mt-status {
+    padding: 0.25rem 0.625rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+    border-radius: 9999px;
+}
+
+.mt-status-progress {
+    background-color: #dbeafe;
+    color: #1d4ed8;
+}
+
+.mt-status-completed {
+    background-color: #d1fae5;
+    color: #065f46;
+}
+
+.mt-status-scheduled {
+    background-color: #fef3c7;
+    color: #92400e;
+}
+
+/* ===== Footer ===== */
+.mt-table-footer {
+    padding: 0.75rem 1.5rem;
+    border-top: 1px solid #f3f4f6;
+    font-size: 0.875rem;
+    color: #6b7280;
+}

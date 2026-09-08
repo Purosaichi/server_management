@@ -5,6 +5,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ServerController;
 use App\Http\Controllers\ApplicationController;
+use App\Http\Controllers\MaintenanceController;
 
 // Halaman Login (rute default)
 Route::redirect('/', '/login');
@@ -39,10 +40,8 @@ Route::middleware(['auth.session'])->group(function () {
         return view('pages.licenses.licenses');
     })->name('licenses.licenses');
 
-    // Maintenance (masih hardcode view nanti)
-    Route::get('/maintenance', function () {
-        return view('pages.maintenance.maintenance');
-    })->name('maintenance.maintenance');
+    // Maintenance
+    Route::get('/maintenance', [MaintenanceController::class, 'index'])->name('maintenance.maintenance');
 
     // Alerts (masih hardcode view nanti)
     Route::get('/alerts', function () {
