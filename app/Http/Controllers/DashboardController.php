@@ -8,7 +8,7 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        // ===== STATISTIK =====
+        //statistik
         $stats = [
             'total_server' => 24,
             'total_aplikasi' => 20,
@@ -17,7 +17,7 @@ class DashboardController extends Controller
             'alerts' => 5,
         ];
 
-        // ===== DATA SERVER (6 data terakhir) =====
+        //data server
         $servers = [
             ['name' => 'SV-R - 001', 'ip' => '103.231.3.01', 'status' => 'Online', 'cpu' => '50%', 'ram' => '70%', 'disk' => '90%', 'uptime' => '20d 12h'],
             ['name' => 'SV-R - 002', 'ip' => '103.231.3.02', 'status' => 'Online', 'cpu' => '50%', 'ram' => '70%', 'disk' => '90%', 'uptime' => '12d 22h'],
@@ -27,7 +27,7 @@ class DashboardController extends Controller
             ['name' => 'SV-R - 006', 'ip' => '103.231.3.06', 'status' => 'Online', 'cpu' => '50%', 'ram' => '70%', 'disk' => '90%', 'uptime' => '9d 11h'],
         ];
 
-        // ===== DATA APLIKASI (5 data terakhir) =====
+        //data aplikasi
         $applications = [
             ['name' => 'GTK - Guru', 'server' => 'SV-R - 001', 'status' => 'Aktif', 'domain' => 'webGTK.com', 'licenses' => 'Microsoft SQL Server', 'maintenance' => '20 Agustus 2026'],
             ['name' => 'GTK - Pendidikan', 'server' => 'SV-R - 002', 'status' => 'Aktif', 'domain' => 'webGTK.com', 'licenses' => 'Django', 'maintenance' => '20 Agustus 2026'],

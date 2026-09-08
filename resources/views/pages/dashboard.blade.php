@@ -3,15 +3,14 @@
 @section('title', 'Dashboard')
 
 @section('content')
-{{-- CSS Terpisah --}}
+
 <link rel="stylesheet" href="{{ asset('css/dashboard.css') }}">
 
-<!-- header -->
 <div class="header">
     <h2 class="title-header">Dashboard</h2>
 </div>
 
-{{-- Kartu Statistik --}}
+<!--statistik-->
 <div class="grid-stats">
     <div class="stat-card">
         <p class="stat-label">Total Server</p>
@@ -39,7 +38,7 @@
     </div>
 </div>
 
-{{-- Tabel Server --}}
+<!-- Tabel Server -->
 <div class="table-container mb-8">
     <div class="table-header">
         <h3 class="table-title">Server</h3>
@@ -82,7 +81,7 @@
     </div>
 </div>
 
-{{-- Tabel Aplikasi --}}
+<!-- Tabel Aplikasi --> 
 <div class="table-container">
     <div class="table-header">
         <h3 class="table-title">Application</h3>

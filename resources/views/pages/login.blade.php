@@ -5,13 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - sim SPBE</title>
     
-    <!-- tailwindcss -->
     <script src="https://cdn.tailwindcss.com"></script>
     
-    <!-- Font -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     
-    <!-- CSS -->
     <link rel="stylesheet" href="{{ asset('css/login.css') }}">
 </head>
 <body>
@@ -27,13 +24,13 @@
         <!-- Card Login -->
         <div class="login-card">
             
-            <!-- Kolom Kiri: Branding -->
+            <!-- Kolom Kiri (logo) -->
             <div class="logo-kemendik">
                 <img src="{{ asset('images/logo kemendik.png') }}" alt="Logo Kemendikdasmen" class="branding-logo">
                 <p class="branding-title">DITJEN GTK</p>
             </div>
             
-            <!-- Kolom Kanan: Form Login -->
+            <!-- Kolom Kanan (Form Login) -->
             <div class="form-login">
                 
                 <h2 class="form-title">LOGIN</h2>

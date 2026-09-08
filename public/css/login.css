@@ -1,5 +1,3 @@
-/* ===== public/css/login.css ===== */
-
 /* Font & Body */
 body {
     font-family: 'Inter', sans-serif;
@@ -41,7 +39,7 @@ body {
     }
 }
 
-/* Kolom Kiri (Branding) */
+/* Kolom Kiri (logo) */
 .logo-kemendik {
     width: 100%;
     padding: 1.25rem 1rem 0.5rem;

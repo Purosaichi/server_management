@@ -6,10 +6,6 @@
 
 @section('content')
 
-<!-- ============================================ -->
-<!-- STATISTIK CARD MAINTENANCE -->
-<!-- ============================================ -->
-
 
 <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
     <!-- Total -->
@@ -38,9 +34,7 @@
     </div>
 </div>
 
-<!-- ============================================ -->
-<!-- TABEL MAINTENANCE -->
-<!-- ============================================ -->
+<!-- table maintenance -->
 <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
     <div class="px-6 py-4 border-b border-gray-100 flex justify-between items-center">
         <h3 class="text-lg font-semibold text-gray-800">Daftar Maintenance</h3>
