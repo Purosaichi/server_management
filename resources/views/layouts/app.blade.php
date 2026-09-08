@@ -31,7 +31,7 @@
                         <i class="fas fa-server w-5"></i>
                         <span class="ml-2">Server</span>
                     </a>
-                    <a href="{{ route('application.application') }}" class="flex items-center px-4 py-2 rounded-lg text-sm font-medium {{ request()->routeIs('application.*') ? 'sidebar-active' : 'sidebar-link text-gray-500' }}">
+                    <a href="{{ route('application.index') }}" class="flex items-center px-4 py-2 rounded-lg text-sm font-medium {{ request()->routeIs('application.*') ? 'sidebar-active' : 'sidebar-link text-gray-500' }}">
                         <i class="fas fa-window-maximize w-5"></i>
                         <span class="ml-2">Application</span>
                     </a>

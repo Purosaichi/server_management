@@ -1,0 +1,107 @@
+/* ===== public/css/server.css ===== */
+
+/* ===== Container Tabel ===== */
+.srv-table-container {
+    background: white;
+    border-radius: 0.75rem;
+    border: 1px solid #f3f4f6;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+}
+
+.srv-table-header {
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid #f3f4f6;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.srv-table-header .srv-table-title {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: #1f2937;
+}
+
+.srv-table-header .srv-table-count {
+    font-size: 0.875rem;
+    color: #6b7280;
+}
+
+.srv-table-wrapper {
+    overflow-x: auto;
+}
+
+.srv-table-wrapper table {
+    width: 100%;
+    font-size: 0.875rem;
+}
+
+.srv-table-wrapper thead {
+    background-color: #f9fafb;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.srv-table-wrapper thead th {
+    padding: 0.75rem 1.5rem;
+    text-align: left;
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: #6b7280;
+    text-transform: uppercase;
+    letter-spacing: 0.025em;
+}
+
+.srv-table-wrapper tbody tr {
+    transition: background-color 0.15s;
+    border-bottom: 1px solid #f3f4f6;
+}
+
+.srv-table-wrapper tbody tr:hover {
+    background-color: #f9fafb;
+}
+
+.srv-table-wrapper tbody td {
+    padding: 1rem 1.5rem;
+    color: #4b5563;
+}
+
+.srv-table-wrapper tbody td .srv-name {
+    font-weight: 500;
+    color: #111827;
+}
+
+/* ===== Badge Status ===== */
+.srv-badge {
+    padding: 0.25rem 0.625rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+    border-radius: 9999px;
+}
+
+.srv-badge-online {
+    background-color: #d1fae5;
+    color: #065f46;
+}
+
+.srv-badge-offline {
+    background-color: #fee2e2;
+    color: #991b1b;
+}
+
+/* ===== Tombol Detail ===== */
+.srv-btn-detail {
+    color: #2563eb;
+    font-weight: 500;
+    text-decoration: none;
+    font-size: 0.875rem;
+}
+
+.srv-btn-detail:hover {
+    text-decoration: underline;
+}
+
+/* ===== Text Center ===== */
+.srv-text-center {
+    text-align: center;
+}

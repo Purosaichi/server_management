@@ -27,7 +27,7 @@ Route::middleware(['auth.session'])->group(function () {
     Route::get('/server/{id}', [ServerController::class, 'show'])->name('server.detail');
 
     // Application
-    Route::get('/application', [ApplicationController::class, 'index'])->name('application.application');
+    Route::get('/application', [ApplicationController::class, 'index'])->name('application.index');
     Route::get('/application/{id}', [ApplicationController::class, 'show'])->name('application.detail');
 
     // Domain (masih hardcode view nanti)
