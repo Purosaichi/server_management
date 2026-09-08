@@ -26,26 +26,26 @@ Route::middleware(['auth.session'])->group(function () {
     Route::get('/server/{id}', [ServerController::class, 'show'])->name('server.detail');
 
     // Application
-    Route::get('/application', [ApplicationController::class, 'index'])->name('application.index');
+    Route::get('/application', [ApplicationController::class, 'index'])->name('application.application');
     Route::get('/application/{id}', [ApplicationController::class, 'show'])->name('application.detail');
 
     // Domain (masih hardcode view nanti)
     Route::get('/domain', function () {
-        return view('pages.domain.index');
-    })->name('domain.index');
+        return view('pages.domain.domain');
+    })->name('domain.domain');
 
     // Licenses (masih hardcode view nanti)
     Route::get('/licenses', function () {
-        return view('pages.licenses.index');
-    })->name('licenses.index');
+        return view('pages.licenses.licenses');
+    })->name('licenses.licenses');
 
     // Maintenance (masih hardcode view nanti)
     Route::get('/maintenance', function () {
-        return view('pages.maintenance.index');
-    })->name('maintenance.index');
+        return view('pages.maintenance.maintenance');
+    })->name('maintenance.maintenance');
 
     // Alerts (masih hardcode view nanti)
     Route::get('/alerts', function () {
-        return view('pages.alerts.index');
-    })->name('alerts.index');
+        return view('pages.alerts.alerts');
+    })->name('alerts.alerts');
 });

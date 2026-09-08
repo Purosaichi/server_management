@@ -66,7 +66,7 @@ class ApplicationController extends Controller
             ],
         ];
 
-        return view('pages.application.index', compact('applications'));
+        return view('pages.application.application', compact('applications'));
     }
 
     public function show($id)

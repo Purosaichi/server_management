@@ -77,7 +77,7 @@
         </table>
     </div>
     <div class="table-footer">
-        <a href="/server" class="link-all">Lihat Semua →</a>
+        <a href="{{ route('server.index') }}" class="link-all">Lihat Semua →</a>
     </div>
 </div>
 
@@ -118,7 +118,7 @@
         </table>
     </div>
     <div class="table-footer">
-        <a href="/application" class="link-all">Lihat Semua →</a>
+        <a href="{{ route('application.application') }}" class="link-all">Lihat Semua →</a>
     </div>
 </div>
 @endsection

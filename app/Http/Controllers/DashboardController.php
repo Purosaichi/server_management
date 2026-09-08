@@ -36,6 +36,6 @@ class DashboardController extends Controller
             ['name' => 'GTK - Kemendikdasmen', 'server' => 'SV-R - 005', 'status' => 'Aktif', 'domain' => 'webGTK.com', 'licenses' => 'Oracle', 'maintenance' => '20 Agustus 2026'],
         ];
 
-        return view('pages.dashboard', compact('stats', 'servers', 'applications'));
+        return view('pages.home.dashboard', compact('stats', 'servers', 'applications'));
     }
 }
