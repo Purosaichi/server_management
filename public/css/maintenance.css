@@ -211,3 +211,11 @@
     font-size: 0.875rem;
     color: #6b7280;
 }
+
+.footer {
+    background-color: #ffd000;
+    padding: 1rem 1.5rem;
+    text-align: center;
+    font-size: 0.875rem;
+    color: #000000;
+}

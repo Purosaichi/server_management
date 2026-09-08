@@ -14,4 +14,7 @@
 <div class="domain-empty-card">
     Belum ada data domain untuk ditampilkan.
 </div>
+<footer class="footer">
+    <p>&copy; 2026 Direktorat Jenderal Guru, Tenaga Kependidikan dan Pendidikan Guru - Kemendikdasmen</p>
+</footer>
 @endsection

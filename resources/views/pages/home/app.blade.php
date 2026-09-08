@@ -7,14 +7,15 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ asset('css/footer.css') }}">
     <style>
         * { font-family: 'Inter', sans-serif; }
         .sidebar-active { background: #2563eb; color: #fff; }
         .sidebar-link:hover { background: #f3f4f6; }
     </style>
 </head>
-<body class="bg-gray-50 min-h-screen">
-    <div class="flex min-h-screen">
+<body class="bg-gray-50 min-h-screen flex flex-col">
+    <div class="flex flex-1">
         <aside class="w-64 bg-white border-r border-gray-100 flex flex-col">
             <div class="px-6 py-5 border-b border-gray-100">
                 <p class="text-sm font-bold text-gray-800">sim SPBE</p>

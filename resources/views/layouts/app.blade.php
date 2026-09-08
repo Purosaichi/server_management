@@ -7,6 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ asset('css/footer.css') }}">
     <style>
         * { font-family: 'Inter', sans-serif; }
         .sidebar-active { background: #2563eb; color: #fff; }
@@ -14,8 +15,9 @@
     </style>
 </head>
 <body class="bg-gray-50 min-h-screen">
-    <div class="flex min-h-screen">
-        <aside class="w-64 bg-white border-r border-gray-100 flex flex-col">
+    <div class="flex min-h-screen flex-col">
+        <div class="flex flex-1">
+            <aside class="w-64 bg-white border-r border-gray-100 flex flex-col">
             <div class="px-6 py-5 border-b border-gray-100">
                 <p class="text-sm font-bold text-gray-800">sim SPBE</p>
                 <p class="text-xs text-gray-400">Monitoring GTK</p>
@@ -60,13 +62,14 @@
                     <button type="submit" class="text-sm text-red-600 hover:text-red-800">Logout</button>
                 </form>
             </div>
-        </aside>
-        <main class="flex-1 p-6">
-            <div class="mb-6 flex justify-center items-center border-b border-gray-200 pb-4">
-                <img src="{{ asset('images/logo kemendik2.png') }}" alt="Logo Kemendik" class="h-16 w-auto object-contain">
-            </div>
-            @yield('content')
-        </main>
+            </aside>
+            <main class="flex flex-1 flex-col p-6">
+                <div class="mb-6 flex justify-center items-center border-b border-gray-200 pb-4">
+                    <img src="{{ asset('images/logo kemendik2.png') }}" alt="Logo Kemendik" class="h-16 w-auto object-contain">
+                </div>
+                @yield('content')
+            </main>
+        </div>
     </div>
 </body>
 </html>

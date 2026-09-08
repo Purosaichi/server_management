@@ -121,4 +121,8 @@
         <a href="{{ route('application.index') }}" class="link-all">Lihat Semua →</a>
     </div>
 </div>
+
+<footer class="footer">
+    <p>&copy; 2026 Direktorat Jenderal Guru, Tenaga Kependidikan dan Pendidikan Guru - Kemendikdasmen</p>
+</footer>
 @endsection

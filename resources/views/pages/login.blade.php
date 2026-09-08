@@ -10,11 +10,12 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     
     <link rel="stylesheet" href="{{ asset('css/login.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/footer.css') }}">
 </head>
-<body>
+<body class="flex min-h-screen flex-col">
 
     <!-- Container Utama -->
-    <div class="min-h-screen flex items-center justify-center bg-gray-50 p-4 relative">
+    <div class="flex-1 flex items-center justify-center bg-gray-50 p-4 relative">
         
         <!-- Background map -->
         <div class="map-background">
@@ -77,12 +78,12 @@
                     </button>
                 </form>
 
-                <p class="form-footer">
-                    © 2026 Direktorat Jenderal Guru, Tenaga Kependidikan dan Pendidikan Guru - Kemendikdasmen
-                </p>
             </div>
         </div>
     </div>
+    <footer class="footer">
+        <p>&copy; 2026 Direktorat Jenderal Guru, Tenaga Kependidikan dan Pendidikan Guru - Kemendikdasmen</p>
+    </footer>
 
 </body>
 </html>

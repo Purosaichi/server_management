@@ -14,4 +14,7 @@
 <div class="alerts-empty-card">
     <p class="alerts-empty-text">Belum ada alert untuk ditampilkan.</p>
 </div>
+<footer class="footer">
+    <p>&copy; 2026 Direktorat Jenderal Guru, Tenaga Kependidikan dan Pendidikan Guru - Kemendikdasmen</p>
+</footer>
 @endsection

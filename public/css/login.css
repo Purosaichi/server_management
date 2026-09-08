@@ -183,3 +183,11 @@ form {
     color: #9ca3af;
     margin-top: 1.5rem;
 }
+
+.footer {
+    background-color: #ffd000;
+    padding: 1rem 1.5rem;
+    text-align: center;
+    font-size: 0.875rem;
+    color: #000000;
+}
