@@ -1,0 +1,165 @@
+/* ===== public/css/application.css ===== */
+
+/* ===== Container Tabel ===== */
+.app-table-container {
+    background: white;
+    border-radius: 0.75rem;
+    border: 1px solid #f3f4f6;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+}
+
+.app-table-header {
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid #f3f4f6;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.app-table-header .app-table-title {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: #1f2937;
+}
+
+.app-table-header .app-table-count {
+    font-size: 0.875rem;
+    color: #6b7280;
+}
+
+.app-table-wrapper {
+    overflow-x: auto;
+}
+
+.app-table-wrapper table {
+    width: 100%;
+    font-size: 0.875rem;
+}
+
+.app-table-wrapper thead {
+    background-color: #f9fafb;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.app-table-wrapper thead th {
+    padding: 0.75rem 1.5rem;
+    text-align: left;
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: #6b7280;
+    text-transform: uppercase;
+    letter-spacing: 0.025em;
+}
+
+.app-table-wrapper tbody tr {
+    transition: background-color 0.15s;
+    border-bottom: 1px solid #f3f4f6;
+}
+
+.app-table-wrapper tbody tr:hover {
+    background-color: #f9fafb;
+}
+
+.app-table-wrapper tbody td {
+    padding: 1rem 1.5rem;
+    color: #4b5563;
+}
+
+.app-table-wrapper tbody td .app-name {
+    font-weight: 500;
+    color: #111827;
+}
+
+/* ===== Badge Status ===== */
+.app-badge {
+    padding: 0.25rem 0.625rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+    border-radius: 9999px;
+}
+
+.app-badge-green {
+    background-color: #d1fae5;
+    color: #065f46;
+}
+
+.app-badge-red {
+    background-color: #fee2e2;
+    color: #991b1b;
+}
+
+.app-badge-yellow {
+    background-color: #fef3c7;
+    color: #92400e;
+}
+
+.app-badge-gray {
+    background-color: #f3f4f6;
+    color: #4b5563;
+}
+
+/* ===== Tombol Detail ===== */
+.app-btn-detail {
+    color: #2563eb;
+    font-weight: 500;
+    text-decoration: none;
+    font-size: 0.875rem;
+}
+
+.app-btn-detail:hover {
+    text-decoration: underline;
+}
+
+/* ===== Text Center ===== */
+.app-text-center {
+    text-align: center;
+}
+
+/* ===== Detail Page ===== */
+.app-detail-container {
+    background: white;
+    border-radius: 0.75rem;
+    border: 1px solid #f3f4f6;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    padding: 1.5rem;
+}
+
+.app-detail-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #1f2937;
+    margin-bottom: 1rem;
+}
+
+.app-detail-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+}
+
+.app-detail-grid .app-detail-item {
+    padding: 0.5rem 0;
+}
+
+.app-detail-grid .app-detail-item strong {
+    font-weight: 600;
+    color: #374151;
+}
+
+.app-detail-grid .app-detail-item span {
+    color: #4b5563;
+}
+
+.app-detail-back {
+    margin-top: 1.5rem;
+}
+
+.app-detail-back a {
+    color: #2563eb;
+    text-decoration: none;
+}
+
+.app-detail-back a:hover {
+    text-decoration: underline;
+}
