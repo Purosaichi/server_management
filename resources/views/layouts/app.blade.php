@@ -22,34 +22,34 @@
                 <p class="text-sm font-bold text-gray-800">sim SPBE</p>
                 <p class="text-xs text-gray-400">Monitoring GTK</p>
             </div>
-            <nav class="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
-                <a href="{{ route('dashboard') }}" class="flex items-center px-4 py-2.5 rounded-lg text-sm font-medium {{ request()->routeIs('dashboard') ? 'sidebar-active' : 'sidebar-link text-gray-500' }}">
+            <nav class="flex-1 px-3 py-5 space-y-5 overflow-y-auto">
+                <a href="{{ route('dashboard') }}" class="flex items-center px-4 py-5 rounded-lg text-sm font-medium {{ request()->routeIs('dashboard') ? 'sidebar-active' : 'sidebar-link text-gray-500' }}">
                     <i class="fas fa-home w-5"></i>
                     <span class="ml-1">Beranda</span>
                 </a>
-                <div class="pt-2">
+                <div class="pt-2 space-y-5">
                     <p class="px-4 text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">Monitoring</p>
-                    <a href="{{ route('server.index') }}" class="flex items-center px-4 py-2 rounded-lg text-sm font-medium {{ request()->routeIs('server.*') ? 'sidebar-active' : 'sidebar-link text-gray-500' }}">
+                    <a href="{{ route('server.index') }}" class="flex items-center px-4 py-5 rounded-lg text-sm font-medium {{ request()->routeIs('server.*') ? 'sidebar-active' : 'sidebar-link text-gray-500' }}">
                         <i class="fas fa-server w-5"></i>
                         <span class="ml-2">Server</span>
                     </a>
-                    <a href="{{ route('application.index') }}" class="flex items-center px-4 py-2 rounded-lg text-sm font-medium {{ request()->routeIs('application.*') ? 'sidebar-active' : 'sidebar-link text-gray-500' }}">
+                    <a href="{{ route('application.index') }}" class="flex items-center px-4 py-5 rounded-lg text-sm font-medium {{ request()->routeIs('application.*') ? 'sidebar-active' : 'sidebar-link text-gray-500' }}">
                         <i class="fas fa-window-maximize w-5"></i>
                         <span class="ml-2">Application</span>
                     </a>
-                    <a href="{{ route('domain.domain') }}" class="flex items-center px-4 py-2 rounded-lg text-sm font-medium {{ request()->routeIs('domain.*') ? 'sidebar-active' : 'sidebar-link text-gray-500' }}">
+                    <a href="{{ route('domain.domain') }}" class="flex items-center px-4 py-5 rounded-lg text-sm font-medium {{ request()->routeIs('domain.*') ? 'sidebar-active' : 'sidebar-link text-gray-500' }}">
                         <i class="fas fa-globe w-5"></i>
                         <span class="ml-2">Domain</span>
                     </a>
-                    <a href="{{ route('licenses.licenses') }}" class="flex items-center px-4 py-2 rounded-lg text-sm font-medium {{ request()->routeIs('licenses.*') ? 'sidebar-active' : 'sidebar-link text-gray-500' }}">
+                    <a href="{{ route('licenses.licenses') }}" class="flex items-center px-4 py-5 rounded-lg text-sm font-medium {{ request()->routeIs('licenses.*') ? 'sidebar-active' : 'sidebar-link text-gray-500' }}">
                         <i class="fas fa-key w-5"></i>
                         <span class="ml-2">Licenses</span>
                     </a>
-                    <a href="{{ route('maintenance.maintenance') }}" class="flex items-center px-4 py-2 rounded-lg text-sm font-medium {{ request()->routeIs('maintenance.*') ? 'sidebar-active' : 'sidebar-link text-gray-500' }}">
+                    <a href="{{ route('maintenance.maintenance') }}" class="flex items-center px-4 py-5 rounded-lg text-sm font-medium {{ request()->routeIs('maintenance.*') ? 'sidebar-active' : 'sidebar-link text-gray-500' }}">
                         <i class="fas fa-screwdriver-wrench w-5"></i>
                         <span class="ml-2">Maintenance</span>
                     </a>
-                    <a href="{{ route('alerts.alerts') }}" class="flex items-center px-4 py-2 rounded-lg text-sm font-medium {{ request()->routeIs('alerts.*') ? 'sidebar-active' : 'sidebar-link text-gray-500' }}">
+                    <a href="{{ route('alerts.alerts') }}" class="flex items-center px-4 py-5 rounded-lg text-sm font-medium {{ request()->routeIs('alerts.*') ? 'sidebar-active' : 'sidebar-link text-gray-500' }}">
                         <i class="fas fa-bell w-5"></i>
                         <span class="ml-2">Alerts</span>
                     </a>
