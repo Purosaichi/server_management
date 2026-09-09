@@ -34,7 +34,7 @@ class LoginTest extends TestCase
                 'email' => 'admin@kemendik.go.id',
                 'password' => 'password',
             ])
-            ->assertRedirect(route('server.index'))
+            ->assertRedirect(route('dashboard'))
             ->assertSessionHas('user_login', 'admin@kemendik.go.id');
     }
 

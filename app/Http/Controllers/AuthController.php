@@ -11,7 +11,7 @@ class AuthController extends Controller
     public function showLogin()
     {
         if (session()->has('user_id')) {
-            return redirect()->route('server.index');
+            return redirect()->route('dashboard');
         }
 
         return view('pages.login');
@@ -52,7 +52,7 @@ class AuthController extends Controller
         $request->session()->put('user_login', $user->nama_login);
         $request->session()->put('email', $user->nama_login);
 
-        return redirect()->route('server.index');
+        return redirect()->route('dashboard');
     }
 
     public function logout(Request $request)

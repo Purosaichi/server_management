@@ -9,7 +9,7 @@
     <h2 class="title-header">Alerts</h2>
 </div>
 
-<div class="alerts-empty-card">
+<div class="alerts-card">
     <p class="alerts-empty-text">Belum ada alert untuk ditampilkan.</p>
 </div>
 <footer class="footer">

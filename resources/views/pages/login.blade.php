@@ -81,9 +81,5 @@
             </div>
         </div>
     </div>
-    <footer class="footer">
-        <p>&copy; 2026 Direktorat Jenderal Guru, Tenaga Kependidikan dan Pendidikan Guru - Kemendikdasmen</p>
-    </footer>
-
 </body>
 </html>
