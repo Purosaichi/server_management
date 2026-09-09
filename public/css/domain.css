@@ -12,20 +12,113 @@
     border-radius: 0.5rem;
 }
 
-/* ===== Card Kosong ===== */
-.domain-empty-card {
+.dmn-table-container {
     background: white;
     border-radius: 0.75rem;
     border: 1px solid #f3f4f6;
-    padding: 1.5rem;
-    color: #6b7280;
-    margin-top: 1.5rem;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+    margin-top: 1rem;
 }
 
-.footer {
-    background-color: #ffd000;
+.dmn-table-header {
     padding: 1rem 1.5rem;
-    text-align: center;
+    border-bottom: 1px solid #f3f4f6;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.dmn-table-header .dmn-table-title {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: #1f2937;
+}
+
+.dmn-table-header .dmn-table-count {
     font-size: 0.875rem;
-    color: #000000;
+    color: #6b7280;
+}
+
+.dmn-table-wrapper {
+    overflow-x: auto;
+}
+
+.dmn-table-wrapper table {
+    width: 100%;
+    font-size: 0.875rem;
+}
+
+.dmn-table-wrapper thead {
+    background-color: #f9fafb;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.dmn-table-wrapper thead th {
+    padding: 0.75rem 1.5rem;
+    text-align: left;
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: #6b7280;
+    text-transform: uppercase;
+    letter-spacing: 0.025em;
+}
+
+.dmn-table-wrapper tbody tr {
+    transition: background-color 0.15s;
+    border-bottom: 1px solid #f3f4f6;
+}
+
+.dmn-table-wrapper tbody tr:hover {
+    background-color: #f9fafb;
+}
+
+.dmn-table-wrapper tbody td {
+    padding: 1rem 1.5rem;
+    color: #4b5563;
+}
+
+.dmn-table-wrapper tbody td .dmn-name {
+    font-weight: 500;
+    color: #111827;
+}
+
+/* ===== Badge Status ===== */
+.dmn-badge {
+    padding: 0.25rem 0.625rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+    border-radius: 9999px;
+}
+
+.dmn-badge-green {
+    background-color: #d1fae5;
+    color: #065f46;
+}
+
+.dmn-badge-red {
+    background-color: #fee2e2;
+    color: #991b1b;
+}
+
+.dmn-badge-yellow {
+    background-color: #fef3c7;
+    color: #92400e;
+}
+
+/* ===== Tombol Detail ===== */
+.dmn-btn-detail {
+    color: #2563eb;
+    font-weight: 500;
+    text-decoration: none;
+    font-size: 0.875rem;
+}
+
+.dmn-btn-detail:hover {
+    text-decoration: underline;
+}
+
+/* ===== Text Center ===== */
+.dmn-text-center {
+    text-align: center;
 }

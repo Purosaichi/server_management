@@ -6,6 +6,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ServerController;
 use App\Http\Controllers\ApplicationController;
 use App\Http\Controllers\MaintenanceController;
+use App\Http\Controllers\DomainController;
 
 // Halaman Login (rute default)
 Route::redirect('/', '/login');
@@ -30,10 +31,8 @@ Route::middleware(['auth.session'])->group(function () {
     Route::get('/application', [ApplicationController::class, 'index'])->name('application.index');
     Route::get('/application/{id}', [ApplicationController::class, 'show'])->name('application.detail');
 
-    // Domain (masih hardcode view nanti)
-    Route::get('/domain', function () {
-        return view('pages.domain.domain');
-    })->name('domain.domain');
+    // Domain
+    Route::get('/domain', [DomainController::class, 'index'])->name('domain.domain');
 
     // Licenses (masih hardcode view nanti)
     Route::get('/licenses', function () {
