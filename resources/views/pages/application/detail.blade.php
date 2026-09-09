@@ -6,7 +6,6 @@
 @section('page-subtitle', 'Informasi lengkap aplikasi')
 
 @section('content')
-{{-- CSS Terpisah --}}
 <link rel="stylesheet" href="{{ asset('css/application.css') }}">
 
 <div class="app-detail-container">

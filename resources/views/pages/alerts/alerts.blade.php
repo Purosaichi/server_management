@@ -3,7 +3,6 @@
 @section('title', 'Alerts')
 
 @section('content')
-{{-- CSS Terpisah --}}
 <link rel="stylesheet" href="{{ asset('css/alerts.css') }}">
 
 <div class="header">

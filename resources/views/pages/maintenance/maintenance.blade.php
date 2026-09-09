@@ -5,7 +5,6 @@
 @section('page-subtitle', 'Daftar jadwal pemeliharaan sistem')
 
 @section('content')
-{{-- CSS Terpisah --}}
 <link rel="stylesheet" href="{{ asset('css/maintenance.css') }}">
 
 <div class="header">

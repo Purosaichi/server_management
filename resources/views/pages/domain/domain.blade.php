@@ -3,7 +3,6 @@
 @section('title', 'Domain')
 
 @section('content')
-{{-- CSS Terpisah --}}
 <link rel="stylesheet" href="{{ asset('css/domain.css') }}">
 
 <div class="header">

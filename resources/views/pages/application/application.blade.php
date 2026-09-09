@@ -6,7 +6,6 @@
 @section('page-subtitle', 'Daftar semua aplikasi yang dimonitoring')
 
 @section('content')
-{{-- CSS Terpisah --}}
 <link rel="stylesheet" href="{{ asset('css/application.css') }}">
 
 <div class="header">
@@ -52,9 +51,7 @@
                     </td>
                     <td>{{ $app['maintenance'] }}</td>
                     <td class="app-text-center">
-                        <a href="{{ route('application.detail', $app['id']) }}" class="app-btn-detail">
-                            Selengkapnya →
-                        </a>
+                        <a href="{{ route('application.detail', $app['id']) }}" class="app-btn-detail">Selengkapnya →</a>
                     </td>
                 </tr>
                 @endforeach
