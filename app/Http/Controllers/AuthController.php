@@ -40,7 +40,7 @@ class AuthController extends Controller
 
         if (! $passwordValid && str_starts_with($storedPassword, '$')) {
             $passwordValid = Hash::check($request->password, $storedPassword);
-        }
+        }   
 
         if (! $passwordValid) {
             return back()->withInput()->with('error', 'Password salah.');

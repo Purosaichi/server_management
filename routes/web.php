@@ -7,6 +7,7 @@ use App\Http\Controllers\ServerController;
 use App\Http\Controllers\ApplicationController;
 use App\Http\Controllers\MaintenanceController;
 use App\Http\Controllers\DomainController;
+use App\Http\Controllers\LicenseController;
 
 // Halaman Login (rute default)
 Route::redirect('/', '/login');
@@ -34,10 +35,8 @@ Route::middleware(['auth.session'])->group(function () {
     // Domain
     Route::get('/domain', [DomainController::class, 'index'])->name('domain.domain');
 
-    // Licenses (masih hardcode view nanti)
-    Route::get('/licenses', function () {
-        return view('pages.licenses.licenses');
-    })->name('licenses.licenses');
+    // Licenses
+    Route::get('/licenses', [LicenseController::class, 'index'])->name('licenses.licenses');
 
     // Maintenance
     Route::get('/maintenance', [MaintenanceController::class, 'index'])->name('maintenance.maintenance');
