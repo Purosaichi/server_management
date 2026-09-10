@@ -83,7 +83,7 @@
     color: #111827;
 }
 
-/* ===== Badge Status ===== */
+/* Badge Status */
 .dmn-badge {
     padding: 0.25rem 0.625rem;
     font-size: 0.75rem;
@@ -106,7 +106,7 @@
     color: #92400e;
 }
 
-/* ===== Tombol Detail ===== */
+/* Tombol Detail */
 .dmn-btn-detail {
     color: #2563eb;
     font-weight: 500;
@@ -118,7 +118,7 @@
     text-decoration: underline;
 }
 
-/* ===== Text Center ===== */
+/* Text Center */
 .dmn-text-center {
     text-align: center;
 }

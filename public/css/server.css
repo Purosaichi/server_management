@@ -83,7 +83,7 @@
     color: #111827;
 }
 
-/* ===== Badge Status ===== */
+/* Badge Status */
 .srv-badge {
     padding: 0.25rem 0.625rem;
     font-size: 0.75rem;
@@ -101,7 +101,7 @@
     color: #991b1b;
 }
 
-/* ===== Tombol Detail ===== */
+/* tombol Details */
 .srv-btn-detail {
     color: #2563eb;
     font-weight: 500;
@@ -113,7 +113,7 @@
     text-decoration: underline;
 }
 
-/* ===== Text Center ===== */
+/* Text Center */
 .srv-text-center {
     text-align: center;
 }

@@ -83,7 +83,7 @@
     color: #111827;
 }
 
-/* ===== Badge Status ===== */
+/* Badge Status */
 .app-badge {
     padding: 0.25rem 0.625rem;
     font-size: 0.75rem;
@@ -111,7 +111,7 @@
     color: #4b5563;
 }
 
-/* ===== Tombol Detail ===== */
+/* Tombol Detail*/
 .app-btn-detail {
     color: #2563eb;
     font-weight: 500;
@@ -123,12 +123,12 @@
     text-decoration: underline;
 }
 
-/* ===== Text Center ===== */
+/* Text Center */
 .app-text-center {
     text-align: center;
 }
 
-/* ===== Detail Page ===== */
+/* Detail Page */
 .app-detail-container {
     background: white;
     border-radius: 0.75rem;

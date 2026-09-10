@@ -63,7 +63,7 @@
     color: #9ca3af;
 }
 
-/* ===== Tabel ===== */
+/*Tabel*/
 .mt-table-container {
     background: white;
     border-radius: 0.75rem;
@@ -166,7 +166,7 @@
     color: #9ca3af;
 }
 
-/* ===== Badge Kategori ===== */
+/*Badge Kategori*/
 .mt-badge {
     padding: 0.25rem 0.625rem;
     font-size: 0.75rem;
@@ -194,7 +194,7 @@
     color: #9a3412;
 }
 
-/* ===== Badge Status ===== */
+/*Badge Status*/
 .mt-status {
     padding: 0.25rem 0.625rem;
     font-size: 0.75rem;
@@ -217,7 +217,7 @@
     color: #92400e;
 }
 
-/* ===== Footer ===== */
+/*Footer*/
 .mt-table-footer {
     padding: 0.75rem 1.5rem;
     border-top: 1px solid #f3f4f6;
