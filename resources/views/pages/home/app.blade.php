@@ -10,6 +10,16 @@
     <link rel="stylesheet" href="{{ asset('css/footer.css') }}">
     <style>
         * { font-family: 'Inter', sans-serif; }
+        html, body, aside, aside nav {
+            scrollbar-width: none;
+            scroll-behavior: smooth;
+        }
+        html::-webkit-scrollbar,
+        body::-webkit-scrollbar,
+        aside::-webkit-scrollbar,
+        aside nav::-webkit-scrollbar {
+            display: none;
+        }
         .sidebar-active { background: #2563eb; color: #fff; }
         .sidebar-link:hover { background: #f3f4f6; }
     </style>
@@ -21,7 +31,7 @@
                 <p class="text-sm font-bold text-gray-800">sim SPBE</p>
                 <p class="text-xs text-gray-400">Monitoring GTK</p>
             </div>
-            <nav class="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
+            <nav class="flex-1 px-3 py-4 space-y-1">
                 <a href="{{ route('dashboard') }}" class="flex items-center px-4 py-2.5 rounded-lg sidebar-active text-sm font-medium">
                     <i class="fas fa-home w-5"></i>
                     <span class="ml-1">Beranda</span>

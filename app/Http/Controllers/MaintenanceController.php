@@ -436,6 +436,16 @@ class MaintenanceController extends Controller
             ],
         ];
 
-        return view('pages.maintenance.maintenance', compact('stats', 'maintenances'));
+        return view('pages.maintenance.maintenance', compact(
+            'stats',
+            'maintenances',
+            'ServerMaintenance',
+            'ApplicationMaintenance',
+            'DomainMaintenance'
+        ))->with([
+            'serverMaintenances' => $ServerMaintenance,
+            'applicationMaintenances' => $ApplicationMaintenance,
+            'domainMaintenances' => $DomainMaintenance,
+        ]);
     }
 }
