@@ -232,3 +232,91 @@
     font-size: 0.875rem;
     color: #000000;
 }
+
+/* ===== Kartu Statistik dengan Icon ===== */
+.mt-stat-card {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    background: white;
+    border-radius: 0.75rem;
+    border: 1px solid #f3f4f6;
+    padding: 1rem;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+}
+
+.mt-stat-icon {
+    width: 3rem;
+    height: 3rem;
+    border-radius: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    color: white;
+}
+
+.mt-stat-icon svg {
+    width: 1.5rem;
+    height: 1.5rem;
+}
+
+.mt-stat-icon.blue {
+    background-color: #2563eb;
+}
+
+.mt-stat-icon.green {
+    background-color: #16a34a;
+}
+
+.mt-stat-icon.yellow {
+    background-color: #f59e0b;
+}
+
+.mt-stat-icon.purple {
+    background-color: #8b5cf6;
+}
+
+.mt-stat-content {
+    flex: 1;
+}
+
+.mt-stat-content .mt-stat-label {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #1f2937;
+}
+
+.mt-stat-content .mt-stat-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #1f2937;
+}
+
+.mt-stat-content .mt-stat-value.green {
+    color: #16a34a;
+}
+
+.mt-stat-content .mt-stat-value.blue {
+    color: #2563eb;
+}
+
+.mt-stat-content .mt-stat-value.yellow {
+    color: #d97706;
+}
+
+.mt-stat-content .mt-stat-sub {
+    font-size: 0.75rem;
+    color: #9ca3af;
+}
+
+/* ===== Warna Badge ===== */
+.mt-badge-blue {
+    background-color: #dbeafe;
+    color: #1d4ed8;
+}
+
+.mt-badge-green {
+    background-color: #d1fae5;
+    color: #065f46;
+}
