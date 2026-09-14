@@ -64,6 +64,24 @@ class ApplicationController extends Controller
                 'licenses' => 'Aktif',
                 'maintenance' => '20 Agustus 2026'
             ],
+            [
+                'id' => 7,
+                'name' => 'GTK - 0023',
+                'server' => 'SRV - 002',
+                'status' => 'Aktif',
+                'domain' => 'webGTK.com',
+                'licenses' => 'Aktif',
+                'maintenance' => '30 September 2026' 
+            ],
+            [
+                'id' => 8,
+                'name' => 'GTK - 0024',
+                'server' => 'SRV - 003',
+                'status' => 'Nonaktif',
+                'domain' => 'webGTK.com',
+                'licenses' => 'Aktif',
+                'maintenance' => '12 September 2026'
+            ],
         ];
 
         return view('pages.application.application', compact('applications'));

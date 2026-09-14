@@ -22,6 +22,7 @@
                     <th>Status</th>
                     <th>Jumlah Lisensi</th>
                     <th>Tanggal Expired</th>
+                    <th>Aksi</th>
                 </tr>
             </thead>
             <tbody>
@@ -51,6 +52,11 @@
                                 <span class="lic-expired-note">{{ $lic['expired_note'] }}</span>
                             @endif
                         </div>
+                    </td>
+                    <td>
+                        <a href="{{ route('licenses.detail', ['id' => $loop->index + 1]) }}" class="lic-btn-detail">
+                          Selengkapnya →
+                        </a>
                     </td>
                 </tr>
                 @endforeach

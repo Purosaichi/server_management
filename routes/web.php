@@ -39,6 +39,7 @@ Route::middleware(['auth.session'])->group(function () {
 
     // Licenses
     Route::get('/licenses', [LicenseController::class, 'index'])->name('licenses.licenses');
+    Route::get('/licenses/{id}', [LicenseController::class, 'show'])->name('licenses.detail');
 
     // Maintenance
     Route::get('/maintenance', [MaintenanceController::class, 'index'])->name('maintenance.maintenance');
