@@ -17,6 +17,207 @@ class MaintenanceController extends Controller
             'period' => 'Agustus 2026'
         ];
 
+        //data maintenance - server
+        $ServerMaintenance = [
+            [
+                'id' => 'MTN-2026-001',
+                'target' => 'SVR-001',
+                'target_sub' => 'Application Server',
+                'jenis' => 'Update & Patch',
+                'kategori' => 'Server',
+                'jadwal' => '20 Agu 2026',
+                'jam' => '10:00 - 11:00',
+                'durasi' => '1 Jam',
+                'pic' => 'Slowrance Stroll',
+                'status' => 'In Progress'
+            ],
+
+            [
+                'id' => 'MTN-2026-002',
+                'target' => 'SVR-002',
+                'target_sub' => 'Database Server',
+                'jenis' => 'Database Optimization',
+                'kategori' => 'Server',
+                'jadwal' => '22 Agu 2026',
+                'jam' => '09:00 - 10:00',
+                'durasi' => '1 Jam',
+                'pic' => 'Slowrance Stroll',
+                'status' => 'Scheduled'
+            ],
+
+            [
+                'id' => 'MTN-2026-003',
+                'target' => 'SVR-003',
+                'target_sub' => 'Application Server',
+                'jenis' => 'Hardware Check',
+                'kategori' => 'Server',
+                'jadwal' => '25 Agu 2026',
+                'jam' => '13:00 - 15:00',
+                'durasi' => '2 Jam',
+                'pic' => 'Slowrance Stroll',
+                'status' => 'Scheduled'
+            ],
+
+            [
+                'id' => 'MTN-2026-004',
+                'target' => 'SVR-004',
+                'target_sub' => 'Database Server',
+                'jenis' => 'Hardware Upgrade',
+                'kategori' => 'Server',
+                'jadwal' => '28 Agu 2026',
+                'jam' => '13:00 - 15:00',
+                'durasi' => '2 Jam',
+                'pic' => 'Slowrance Stroll',
+                'status' => 'Scheduled'
+            ],
+
+            [
+                'id' => 'MTN-2026-005',
+                'target' => 'SVR-005',
+                'target_sub' => 'Application Server',
+                'jenis' => 'Server Cleanup',
+                'kategori' => 'Server',
+                'jadwal' => '30 Agu 2026',
+                'jam' => '13:00 - 15:00',
+                'durasi' => '2 Jam',
+                'pic' => 'Slowrance Stroll',
+                'status' => 'Scheduled'
+            ],
+
+            [
+                'id' => 'MTN-2026-006',
+                'target' => 'SVR-006',
+                'target_sub' => 'Database Server',
+                'jenis' => 'Update & Patch',
+                'kategori' => 'Server',
+                'jadwal' => '02 Sep 2026',
+                'jam' => '13:00 - 15:00',
+                'durasi' => '2 Jam',
+                'pic' => 'Slowrance Stroll',
+                'status' => 'Scheduled'
+            ],
+        ];
+
+        //application maintenance
+        $ApplicationMaintenance =[
+            [
+                'id' => 'MTN-2026-001',
+                'target' => 'GTK-Kemendikasmen',
+                'target_sub' => 'Application',
+                'jenis' => 'Database Optimization',
+                'kategori' => 'Application',
+                'jadwal' => '22 Agu 2026',
+                'jam' => '09:00-10:00',
+                'durasi' => '1 Jam',
+                'pic' => 'Slowrance Stroll',
+                'status' => 'Scheduled'
+            ],
+
+            [
+                'id' => 'MTN-2026-002',
+                'target' => 'GTK-Kemendikasmen',
+                'target_sub' => 'Application',
+                'jenis' => 'Update & Patch',
+                'kategori' => 'Application',
+                'jadwal' => '25 Agu 2026',
+                'jam' => '13:00-15:00',
+                'durasi' => '2 Jam',
+                'pic' => 'Slowrance Stroll',
+                'status' => 'Scheduled'
+            ],
+
+            [
+                'id' => 'MTN-2026-003',
+                'target' => 'GTK-Kemendikasmen',
+                'target_sub' => 'Application',
+                'jenis' => 'Server Cleanup',
+                'kategori' => 'Application',
+                'jadwal' => '28 Agu 2026',
+                'jam' => '13:00-15:00',
+                'durasi' => '2 Jam',
+                'pic' => 'Slowrance Stroll',
+                'status' => 'Scheduled'
+            ],
+
+            [
+                'id' => 'MTN-2026-001',
+                'target' => 'GTK-Kemendikasmen',
+                'target_sub' => 'Application',
+                'jenis' => 'Database Optimization',
+                'kategori' => 'Application',
+                'jadwal' => '22 Agu 2026',
+                'jam' => '09:00-10:00',
+                'durasi' => '1 Jam',
+                'pic' => 'Slowrance Stroll',
+                'status' => 'Scheduled'
+            ],
+
+            [
+                'id' => 'MTN-2026-002',
+                'target' => 'GTK-Kemendikasmen',
+                'target_sub' => 'Application',
+                'jenis' => 'Update & Patch',
+                'kategori' => 'Application',
+                'jadwal' => '25 Agu 2026',
+                'jam' => '13:00-15:00',
+                'durasi' => '2 Jam',
+                'pic' => 'Slowrance Stroll',
+                'status' => 'Scheduled'
+            ],
+
+            [
+                'id' => 'MTN-2026-003',
+                'target' => 'GTK-Kemendikasmen',
+                'target_sub' => 'Application',
+                'jenis' => 'Server Cleanup',
+                'kategori' => 'Application',
+                'jadwal' => '28 Agu 2026',
+                'jam' => '13:00-15:00',
+                'durasi' => '2 Jam',
+                'pic' => 'Slowrance Stroll',
+                'status' => 'Scheduled'
+            ],
+
+            [
+                'id' => 'MTN-2026-001',
+                'target' => 'GTK-Kemendikasmen',
+                'target_sub' => 'Application',
+                'jenis' => 'Database Optimization',
+                'kategori' => 'Application',
+                'jadwal' => '22 Agu 2026',
+                'jam' => '09:00-10:00',
+                'durasi' => '1 Jam',
+                'pic' => 'Slowrance Stroll',
+                'status' => 'Scheduled'
+            ],
+
+            [
+                'id' => 'MTN-2026-002',
+                'target' => 'GTK-Kemendikasmen',
+                'target_sub' => 'Application',
+                'jenis' => 'Update & Patch',
+                'kategori' => 'Application',
+                'jadwal' => '25 Agu 2026',
+                'jam' => '13:00-15:00',
+                'durasi' => '2 Jam',
+                'pic' => 'Slowrance Stroll',
+                'status' => 'Scheduled'
+            ],
+
+            [
+                'id' => 'MTN-2026-003',
+                'target' => 'GTK-Kemendikasmen',
+                'target_sub' => 'Application',
+                'jenis' => 'Server Cleanup',
+                'kategori' => 'Application',
+                'jadwal' => '28 Agu 2026',
+                'jam' => '13:00-15:00',
+                'durasi' => '2 Jam',
+                'pic' => 'Slowrance Stroll',
+                'status' => 'Scheduled'
+            ],
+        ];
+
         //data maintenance
         $maintenances = [
             [
