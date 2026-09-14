@@ -218,6 +218,165 @@ class MaintenanceController extends Controller
             ],
         ];
 
+        //domain maintenance
+        $DomainMaintenance = [
+            [
+                 'id' => 'MTN-2026-001',
+                'target' => 'WebGTK.com',
+                'target_sub' => 'Domain',
+                'jenis' => 'SSL Renewal',
+                'kategori' => 'Domain',
+                'jadwal' => '20 Agu 2026',
+                'jam' => '10:00 - 11:00',
+                'durasi' => '1 Jam',
+                'pic' => 'Slowrance Stroll',
+                'status' => 'Scheduled'
+            ],
+
+            [
+                'id' => 'MTN-2026-002',
+                'target' => 'WebGTK.com',
+                'target_sub' => 'Domain',
+                'jenis' => 'DNS Update',
+                'kategori' => 'Domain',
+                'jadwal' => '22 Agu 2026',
+                'jam' => '09:00 - 10:00',
+                'durasi' => '1 Jam',
+                'pic' => 'Slowrance Stroll',
+                'status' => 'Scheduled'
+            ],
+
+            [
+                'id' => 'MTN-2026-003',
+                'target' => 'WebGTK.com',
+                'target_sub' => 'Domain',
+                'jenis' => 'WHOIS Update',
+                'kategori' => 'Domain',
+                'jadwal' => '25 Agu 2026',
+                'jam' => '13:00 - 15:00',
+                'durasi' => '2 Jam',
+                'pic' => 'Slowrance Stroll',
+                'status' => 'Scheduled'
+            ],
+
+            [
+                'id' => 'MTN-2026-004',
+                'target' => 'WebGTK.com',
+                'target_sub' => 'Domain',
+                'jenis' => 'Registrar Update',
+                'kategori' => 'Domain',
+                'jadwal' => '28 Agu 2026',
+                'jam' => '13:00 - 15:00',
+                'durasi' => '2 Jam',
+                'pic' => 'Slowrance Stroll',
+                'status' => 'Scheduled'
+            ],
+
+            [
+                'id' => 'MTN-2026-005',
+                'target' => 'WebGTK.com',
+                'target_sub' => 'Domain',
+                'jenis' => 'DNSSEC Update',
+                'kategori' => 'Domain',
+                'jadwal' => '30 Agu 2026',
+                'jam' => '13:00 - 15:00',
+                'durasi' => '2 Jam',
+                'pic' => 'Slowrance Stroll',
+                'status' => 'Scheduled'
+            ],
+
+            [
+                'id' => 'MTN-2026-006',
+                'target' => 'WebGTK.com',
+                'target_sub' => 'Domain',
+                'jenis' => 'Registrar Update',
+                'kategori' => 'Domain',
+                'jadwal' => '02 Sep 2026',
+                'jam' => '13:00 - 15:00',
+                'durasi' => '2 Jam',
+                'pic' => 'Slowrance Stroll',
+                'status' => 'Scheduled'
+            ],
+
+            [
+                'id' => 'MTN-2026-007',
+                'target' => 'WebGTK.com',
+                'target_sub' => 'Domain',
+                'jenis' => 'SSL Renewal',
+                'kategori' => 'Domain',
+                'jadwal' => '05 Sep 2026',
+                'jam' => '13:00 - 15:00',
+                'durasi' => '2 Jam',
+                'pic' => 'Slowrance Stroll',
+                'status' => 'Scheduled'
+            ],
+
+            [
+                'id' => 'MTN-2026-008',
+                'target' => 'WebGTK.com',
+                'target_sub' => 'Domain',
+                'jenis' => 'DNS Update',
+                'kategori' => 'Domain',
+                'jadwal' => '08 Sep 2026',
+                'jam' => '13:00 - 15:00',
+                'durasi' => '2 Jam',
+                'pic' => 'Slowrance Stroll',
+                'status' => 'Scheduled'
+            ],
+
+            [
+                'id' => 'MTN-2026-009',
+                'target' => 'WebGTK.com',
+                'target_sub' => 'Domain',
+                'jenis' => 'WHOIS Update',
+                'kategori' => 'Domain',
+                'jadwal' => '11 Sep 2026',
+                'jam' => '13:00 - 15:00',
+                'durasi' => '2 Jam',
+                'pic' => 'Slowrance Stroll',
+                'status' => 'Scheduled'
+            ],
+
+            [
+                'id' => 'MTN-2026-010',
+                'target' => 'WebGTK.com',
+                'target_sub' => 'Domain',
+                'jenis' => 'DNSSEC Update',
+                'kategori' => 'Domain',
+                'jadwal' => '12 Sep 2026',
+                'jam' => '13:00 - 15:00',
+                'durasi' => '2 Jam',
+                'pic' => 'Slowrance Stroll',
+                'status' => 'Scheduled'
+            ],
+
+            [
+                'id' => 'MTN-2026-011',
+                'target' => 'WebGTK.com',
+                'target_sub' => 'Domain',
+                'jenis' => 'Registrar Update',
+                'kategori' => 'Domain',
+                'jadwal' => '14 Sep 2026',
+                'jam' => '13:00 - 15:00',
+                'durasi' => '2 Jam',
+                'pic' => 'Slowrance Stroll',
+                'status' => 'Scheduled'
+            ],
+
+            [
+                'id' => 'MTN-2026-012',
+                'target' => 'WebGTK.com',
+                'target_sub' => 'Domain',
+                'jenis' => 'SSL Renewal',
+                'kategori' => 'Domain',
+                'jadwal' => '17 Sep 2026',
+                'jam' => '13:00 - 15:00',
+                'durasi' => '2 Jam',
+                'pic' => 'Slowrance Stroll',
+                'status' => 'Scheduled'
+            ],
+        ];
+
         //data maintenance
         $maintenances = [
             [
