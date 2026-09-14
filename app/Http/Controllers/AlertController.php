@@ -16,7 +16,7 @@ class AlertController extends Controller
             'info' => 5,
         ];
 
-        // ===== DATA ALERT - SERVER =====
+        // alerts server
         $serverAlerts = [
             [
                 'waktu' => '20 Agu 2026',
@@ -98,7 +98,7 @@ class AlertController extends Controller
             ],
         ];
 
-        // ===== DATA ALERT - APPLICATION =====
+        //alerts application
         $applicationAlerts = [
             [
                 'waktu' => '20 Agu 2026',
@@ -180,7 +180,7 @@ class AlertController extends Controller
             ],
         ];
 
-        // ===== DATA ALERT - DOMAIN =====
+        //alerts domain
         $domainAlerts = [
             [
                 'waktu' => '20 Agu 2026',
@@ -223,7 +223,7 @@ class AlertController extends Controller
             ],
             [
                 'waktu' => '10 Nov 2026',
-                'jam' => '13:00-15:00',
+                'jam' => '13:00-15:00', 
                 'level' => 'Warning',
                 'target' => 'WebGTK-004',
                 'target_sub' => 'Domain Web',
