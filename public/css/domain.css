@@ -122,3 +122,38 @@
 .dmn-text-center {
     text-align: center;
 }
+
+.app-detail-container {
+    background: white;
+    border-radius: 0.75rem;
+    border: 1px solid #f3f4f6;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    padding: 1.5rem;
+}
+
+.app-detail-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #1f2937;
+    margin-bottom: 1rem;
+}
+
+.app-detail-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+}
+
+.app-detail-item {
+    padding: 0.5rem 0;
+}
+
+.app-detail-item strong {
+    font-weight: 600;
+    color: #374151;
+}
+
+.app-detail-back a {
+    color: #2563eb;
+    text-decoration: none;
+}

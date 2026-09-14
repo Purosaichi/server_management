@@ -80,4 +80,21 @@ class LicenseController extends Controller
 
         return view('pages.licenses.licenses', compact('licenses'));
     }
+
+    public function show($id)
+    {
+        $license = [
+            'id' => $id,
+            'name' => 'Microsoft SQL Server Standard',
+            'provider' => 'Microsoft',
+            'status' => 'Akan Expired',
+            'jumlah' => '2 License',
+            'expired' => '20 Sep 2026 (38 Hari Lagi)',
+            'pic' => 'Fathier Assyarief',
+            'digunakan_oleh' => 'SVR-001, SVR-002',
+            'keterangan' => 'Lisensi digunakan untuk database server utama.',
+        ];
+
+        return view('pages.licenses.detail', compact('license'));
+    }
 }

@@ -96,6 +96,19 @@ class AlertController extends Controller
                 'durasi' => '2 Jam',
                 'pic' => 'Slowrance Stroll'
             ],
+            [
+                'waktu' => '30 Nov 2026',
+                'jam' => '15:00-19:56',
+                'level' => 'Critical',
+                'target' => 'SVR-005',
+                'target_sub' => 'Database Server',
+                'type' => 'Server',
+                'deskripsi' => 'RAM mencapai 99%',
+                'keterangan' => 'Current 98%',
+                'status' => 'Aktif',
+                'durasi' => '5 jam',
+                'pic' => 'No name'
+            ],
         ];
 
         //alerts application
