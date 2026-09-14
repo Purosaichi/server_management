@@ -11,7 +11,7 @@
     <h2 class="title-header">Maintenance</h2>
 </div>
 
-{{-- Kartu Statistik --}}
+<!--statistik-->
 <div class="mt-stats-grid">
     <div class="mt-stat-card">
         <div class="mt-stat-icon blue">
@@ -63,7 +63,7 @@
     </div>
 </div>
 
-{{-- Tabel Maintenance --}}
+<!--table maintenance-->
 <div class="mt-table-container">
     <div class="mt-table-header">
         <h3 class="mt-table-title">Daftar Maintenance</h3>
@@ -89,7 +89,8 @@
                 </tr>   
             </thead>
             <tbody id="maintenance-table-body">
-                {{-- Server --}}
+
+                <!--server-->
                 @foreach($serverMaintenances as $mt)
                 <tr data-kategori="server">
                     <td><span class="mt-id">{{ $mt['id'] }}</span></td>
@@ -119,7 +120,7 @@
                 </tr>
                 @endforeach
 
-                {{-- Application --}}
+                <!--application-->
                 @foreach($applicationMaintenances as $mt)
                 <tr data-kategori="application">
                     <td><span class="mt-id">{{ $mt['id'] }}</span></td>
@@ -149,7 +150,7 @@
                 </tr>
                 @endforeach
 
-                {{-- Domain --}}
+                <!--domain-->
                 @foreach($domainMaintenances as $mt)
                 <tr data-kategori="domain">
                     <td><span class="mt-id">{{ $mt['id'] }}</span></td>
@@ -190,7 +191,7 @@
     <p>&copy; 2026 Direktorat Jenderal Guru, Tenaga Kependidikan dan Pendidikan Guru - Kemendikdasmen</p>
 </footer>
 
-{{-- JavaScript untuk filter --}}
+<!--js buat filter-->
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const filterButtons = document.querySelectorAll('.mt-filter-btn');
