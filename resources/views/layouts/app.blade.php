@@ -46,7 +46,7 @@
                         <i class="fas fa-window-maximize w-5"></i>
                         <span class="ml-2">Application</span>
                     </a>
-                    <a href="{{ route('domain.domain') }}" class="flex items-center px-4 py-5 rounded-lg text-sm font-medium {{ request()->routeIs('domain.*') ? 'sidebar-active' : 'sidebar-link text-gray-500' }}">
+                    <a href="{{ url('/domain') }}" class="flex items-center px-4 py-5 rounded-lg text-sm font-medium {{ request()->routeIs('domain.*') ? 'sidebar-active' : 'sidebar-link text-gray-500' }}">
                         <i class="fas fa-globe w-5"></i>
                         <span class="ml-2">Domain</span>
                     </a>

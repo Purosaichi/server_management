@@ -35,6 +35,7 @@ Route::middleware(['auth.session'])->group(function () {
 
     // Domain
     Route::get('/domain', [DomainController::class, 'index'])->name('domain.domain');
+    Route::get('/domain/{id}', [DomainController::class, 'show'])->name('domain.detail');
 
     // Licenses
     Route::get('/licenses', [LicenseController::class, 'index'])->name('licenses.licenses');

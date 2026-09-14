@@ -50,7 +50,7 @@
                     </td>
                     <td>{{ $domain['last_activity'] }}</td>
                     <td class="dmn-text-center">
-                        <a href="#" class="dmn-btn-detail">
+                        <a href="{{ url('/domain/' . ($loop->index + 1)) }}" class="dmn-btn-detail">
                             Selengkapnya →
                         </a>
                     </td>

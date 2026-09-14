@@ -23,4 +23,25 @@ class DomainController extends Controller
 
         return view('pages.domain.domain', compact('domains'));
     }
-}
+    
+
+    public function show($id)
+    {
+        // Data dummy domain (bisa diganti nanti)
+        $domain = [
+            'id' => $id,
+            'domain' => 'WebGTK-0' . $id . '.com',
+            'application' => 'App GTK 0' . $id,
+            'status' => 'Aktif',
+            'pic' => 'Seseorang',
+            'ssl' => 'Aktif',
+            'last_activity' => '20 Agustus 2026',
+            'created_at' => '15 Januari 2023',
+            'expired_at' => '20 Agustus 2026',
+            'registrar' => 'Domain Registrar Indonesia',
+            'nameserver' => 'ns1.webgtk.com',
+        ];
+        
+        return view('pages.domain.detail', compact('domain'));
+    }
+}        
