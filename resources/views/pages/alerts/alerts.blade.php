@@ -10,6 +10,13 @@
 </div>
 
 <div class="alerts-card">
+    <div class="alerts-item-header">
+        <span class="alerts-badge badge-critical">Critical</span>
+        <span class="alerts-time">2 Jam yang lalu</span>
+    </div>       
+    <h3 class="alerts-item-title">Server SVR-003 Offline</h3>
+    <p class="alerts-item-text">Server SVR-003 tidak merespon sejak 2 jam yang lalu. Segera cek koneksi dan status hardware.</p>
+    <span class="alerts-item-target">Target: SVR-003</span> 
     <p class="alerts-empty-text">Belum ada alert untuk ditampilkan.</p>
 </div>
 <footer class="footer">
