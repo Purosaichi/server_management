@@ -16,7 +16,7 @@
     color: #6b7280;
 }
 
-/* ===== Kartu Statistik ===== */
+/* card statistik*/
 .alerts-stats-grid {
     display: grid;
     grid-template-columns: repeat(1, 1fr);
@@ -197,7 +197,7 @@
     color: #9ca3af;
 }
 
-/* ===== Badge Level ===== */
+/*badge level*/
 .alerts-badge {
     padding: 0.25rem 0.625rem;
     font-size: 0.75rem;
@@ -220,7 +220,7 @@
     color: #1e40af;
 }
 
-/* ===== Badge Type ===== */
+/*badge type*/
 .alerts-type-badge {
     padding: 0.25rem 0.625rem;
     font-size: 0.75rem;
@@ -243,7 +243,7 @@
     color: #6b21a8;
 }
 
-/* ===== Badge Status ===== */
+/*Badge status*/
 .alerts-status {
     padding: 0.25rem 0.625rem;
     font-size: 0.75rem;

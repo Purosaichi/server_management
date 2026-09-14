@@ -13,7 +13,7 @@
     <p>Peringatan kondisi server dan aplikasi.</p>
 </div>
 
-{{-- Kartu Statistik --}}
+<!--statistic-->
 <div class="alerts-stats-grid">
     <div class="alerts-stat-card">
         <div class="alerts-stat-icon blue">
@@ -65,7 +65,7 @@
     </div>
 </div>
 
-{{-- Tabel Alerts --}}
+<!--table-->
 <div class="alerts-table-container">
     <div class="alerts-table-header">
         <h3 class="alerts-table-title">Daftar Maintenance</h3>
@@ -91,7 +91,8 @@
                 </tr>   
             </thead>
             <tbody id="alerts-table-body">
-                {{-- Server Alerts --}}
+                
+            <!--Server-->
                 @foreach($serverAlerts as $alert)
                 <tr data-kategori="server">
                     <td>
@@ -129,8 +130,8 @@
                     <td>{{ $alert['pic'] }}</td>
                 </tr>
                 @endforeach
-
-                {{-- Application Alerts --}}
+                
+                <!--application-->
                 @foreach($applicationAlerts as $alert)
                 <tr data-kategori="application">
                     <td>
@@ -169,7 +170,7 @@
                 </tr>
                 @endforeach
 
-                {{-- Domain Alerts --}}
+                <!--doomain-->
                 @foreach($domainAlerts as $alert)
                 <tr data-kategori="domain">
                     <td>
@@ -219,7 +220,7 @@
     <p>&copy; 2026 Direktorat Jenderal Guru, Tenaga Kependidikan dan Pendidikan Guru - Kemendikdasmen</p>
 </footer>
 
-{{-- JavaScript untuk Filter --}}
+<!--js buat filter-->
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const filterButtons = document.querySelectorAll('.alerts-filter-btn');
