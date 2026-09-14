@@ -262,7 +262,7 @@ class AlertController extends Controller
             ],
         ];
 
-        return view('pages.alerts.index', compact(
+        return view('pages.alerts.alerts', compact(
             'stats',
             'serverAlerts',
             'applicationAlerts',

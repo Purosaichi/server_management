@@ -6,6 +6,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ServerController;
 use App\Http\Controllers\ApplicationController;
 use App\Http\Controllers\MaintenanceController;
+use App\Http\Controllers\AlertController;
 use App\Http\Controllers\DomainController;
 use App\Http\Controllers\LicenseController;
 
@@ -41,8 +42,6 @@ Route::middleware(['auth.session'])->group(function () {
     // Maintenance
     Route::get('/maintenance', [MaintenanceController::class, 'index'])->name('maintenance.maintenance');
 
-    // Alerts (masih hardcode view nanti)
-    Route::get('/alerts', function () {
-        return view('pages.alerts.alerts');
-    })->name('alerts.alerts');
+    // Alerts
+    Route::get('/alerts', [AlertController::class, 'index'])->name('alerts.alerts');
 });
