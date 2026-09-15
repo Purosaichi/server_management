@@ -13,7 +13,10 @@
 
 <!-- Card Detail License -->
 <div class="alerts-card">
-    <h3 class="detail-title">{{ $license['name'] }}</h3>
+    <div class="detail-header">
+        <img src="{{ asset('images/' . $license['logo']) }}" alt="{{ $license['name'] }}" class="detail-license-logo">
+        <h3 class="detail-title">{{ $license['name'] }}</h3>
+    </div>
 
     <div class="detail-grid">
         <div class="detail-item">

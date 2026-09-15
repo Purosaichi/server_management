@@ -85,6 +85,7 @@ class LicenseController extends Controller
     {
         $licenses = [
             1 => [
+                'logo' => 'SWL_server.png',
                 'name' => 'Microsoft SQL Server Standard',
                 'provider' => 'Microsoft',
                 'status' => 'Akan Expired',
@@ -95,6 +96,7 @@ class LicenseController extends Controller
                 'keterangan' => 'Lisensi digunakan untuk database server utama.',
             ],
             2 => [
+                'logo' => 'DJango.png',
                 'name' => 'Django',
                 'provider' => 'Django Software Foundation',
                 'status' => 'Aman',
@@ -105,6 +107,7 @@ class LicenseController extends Controller
                 'keterangan' => 'Framework aplikasi yang digunakan untuk pengembangan sistem.',
             ],
             3 => [
+                'logo' => 'microsoft.png',
                 'name' => 'Microsoft 365',
                 'provider' => 'Microsoft',
                 'status' => 'Aman',
@@ -115,6 +118,7 @@ class LicenseController extends Controller
                 'keterangan' => 'Lisensi produktivitas untuk kebutuhan operasional kantor.',
             ],
             4 => [
+                'logo' => 'VMware.png',
                 'name' => 'VMware vSphere Enterprise Plus',
                 'provider' => 'VMware vSphere Foundation',
                 'status' => 'Expired',
@@ -125,6 +129,7 @@ class LicenseController extends Controller
                 'keterangan' => 'Lisensi virtualisasi untuk infrastruktur server.',
             ],
             5 => [
+                'logo' => 'oracle.png',
                 'name' => 'Oracle Database Enterprise Edition',
                 'provider' => 'Oracle',
                 'status' => 'Akan Expired',
@@ -135,6 +140,7 @@ class LicenseController extends Controller
                 'keterangan' => 'Lisensi database untuk aplikasi layanan utama.',
             ],
             6 => [
+                'logo' => 'adobe.png',
                 'name' => 'Adobe Acrobat Pro',
                 'provider' => 'Adobe',
                 'status' => 'Aman',

@@ -67,4 +67,12 @@ class LoginTest extends TestCase
             ->assertRedirect('/login')
             ->assertSessionHas('error');
     }
+
+    public function test_license_detail_page_shows_application_logo(): void
+    {
+        $this->withSession(['user_id' => 1, 'user_name' => 'Administrator'])
+            ->get('/licenses/1')
+            ->assertOk()
+            ->assertSee('images/SWL_server.png', false);
+    }
 }
