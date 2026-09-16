@@ -35,7 +35,7 @@
                 @foreach($servers as $server)
                 <tr>
                     <td><span class="srv-name">{{ $server['name'] }}</span></td>
-                    <td>{{ $server['ip'] }}</td>
+                    <td>{{ $server['ip_address'] ?? $server['ip'] }}</td>
                     <td>
                         <span class="srv-badge 
                             {{ $server['status'] == 'Online' ? 'srv-badge-online' : 'srv-badge-offline' }}">
