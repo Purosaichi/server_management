@@ -2,13 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-
 class DashboardController extends Controller
 {
     public function index()
     {
-        //statistik
         $stats = [
              'total_server' => 24,
             'server_online' => 22,

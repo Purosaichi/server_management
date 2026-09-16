@@ -2,13 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-
 class AlertController extends Controller
 {
     public function index()
     {
-        // ===== STATISTIK =====
         $stats = [
             'total' => 20,
             'critical' => 5,

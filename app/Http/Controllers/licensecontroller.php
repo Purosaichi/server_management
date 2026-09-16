@@ -2,13 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-
 class LicenseController extends Controller
 {
     public function index()
     {
-        // ===== DATA LISENSI =====
         $licenses = [
             [
                 'logo' => 'SWL_server.png',
@@ -94,6 +91,17 @@ class LicenseController extends Controller
                 'pic' => 'Fathier Assyarief',
                 'digunakan_oleh' => 'SVR-001, SVR-002',
                 'keterangan' => 'Lisensi digunakan untuk database server utama.',
+                'start_date' => '14 Agustus 2025',
+                'last_payment' => '14 Agustus 2025',
+                'next_due_date' => '20 September 2026',
+                'amount' => '267.000',
+                'payment_method' => 'Transfer bank',
+                'license_number' => 'MSQL-STD-2025-ABCD1234',
+                'license_type' => 'Subscription',
+                'asset_name' => 'Server Database Utama',
+                'hostname' => 'DB-PROD-01',
+                'ip_address' => '10.10.10.5',
+                'location' => 'Data Center Jakarta',
             ],
             2 => [
                 'logo' => 'DJango.png',
@@ -105,6 +113,17 @@ class LicenseController extends Controller
                 'pic' => 'Fathier Assyarief',
                 'digunakan_oleh' => 'APP-001, APP-002',
                 'keterangan' => 'Framework aplikasi yang digunakan untuk pengembangan sistem.',
+                'start_date' => '15 Maret 2026',
+                'last_payment' => '15 Maret 2026',
+                'next_due_date' => '15 Maret 2027',
+                'amount' => '150.000',
+                'payment_method' => 'Transfer bank',
+                'license_number' => 'DJANGO-OPEN-SOURCE',
+                'license_type' => 'Open source',
+                'asset_name' => 'Application Platform',
+                'hostname' => 'APP-PROD-01',
+                'ip_address' => '10.10.20.10',
+                'location' => 'Data Center Jakarta',
             ],
             3 => [
                 'logo' => 'microsoft.png',
@@ -116,6 +135,17 @@ class LicenseController extends Controller
                 'pic' => 'Fathier Assyarief',
                 'digunakan_oleh' => 'USR-001 sampai USR-007',
                 'keterangan' => 'Lisensi produktivitas untuk kebutuhan operasional kantor.',
+                'start_date' => '26 Mei 2026',
+                'last_payment' => '26 Mei 2026',
+                'next_due_date' => '26 Mei 2027',
+                'amount' => '1.200.000',
+                'payment_method' => 'Transfer bank',
+                'license_number' => 'M365-BUSINESS-2026',
+                'license_type' => 'Subscription',
+                'asset_name' => 'Office User Accounts',
+                'hostname' => 'M365-TENANT',
+                'ip_address' => 'Cloud service',
+                'location' => 'Microsoft Cloud',
             ],
             4 => [
                 'logo' => 'VMware.png',
@@ -127,6 +157,17 @@ class LicenseController extends Controller
                 'pic' => 'Fathier Assyarief',
                 'digunakan_oleh' => 'SVR-001 sampai SVR-003',
                 'keterangan' => 'Lisensi virtualisasi untuk infrastruktur server.',
+                'start_date' => '20 Agustus 2025',
+                'last_payment' => '20 Agustus 2025',
+                'next_due_date' => '20 Agustus 2026',
+                'amount' => '8.500.000',
+                'payment_method' => 'Transfer bank',
+                'license_number' => 'VMW-VSF-2025-001',
+                'license_type' => 'Subscription',
+                'asset_name' => 'Virtualization Cluster',
+                'hostname' => 'VMWARE-CLUSTER-01',
+                'ip_address' => '10.10.30.10',
+                'location' => 'Data Center Jakarta',
             ],
             5 => [
                 'logo' => 'oracle.png',
@@ -138,6 +179,17 @@ class LicenseController extends Controller
                 'pic' => 'Fathier Assyarief',
                 'digunakan_oleh' => 'DB-001 sampai DB-010',
                 'keterangan' => 'Lisensi database untuk aplikasi layanan utama.',
+                'start_date' => '7 Oktober 2025',
+                'last_payment' => '7 Oktober 2025',
+                'next_due_date' => '7 Oktober 2026',
+                'amount' => '12.000.000',
+                'payment_method' => 'Transfer bank',
+                'license_number' => 'ORA-DB-ENT-2025-001',
+                'license_type' => 'Subscription',
+                'asset_name' => 'Enterprise Database Cluster',
+                'hostname' => 'ORA-PROD-01',
+                'ip_address' => '10.10.40.10',
+                'location' => 'Data Center Jakarta',
             ],
             6 => [
                 'logo' => 'adobe.png',
@@ -149,6 +201,17 @@ class LicenseController extends Controller
                 'pic' => 'Fathier Assyarief',
                 'digunakan_oleh' => 'USR-008 sampai USR-015',
                 'keterangan' => 'Lisensi pengolahan dokumen PDF untuk pengguna terkait.',
+                'start_date' => '30 Juni 2026',
+                'last_payment' => '30 Juni 2026',
+                'next_due_date' => '30 Juni 2027',
+                'amount' => '4.000.000',
+                'payment_method' => 'Transfer bank',
+                'license_number' => 'ADOBE-ACROBAT-2026',
+                'license_type' => 'Subscription',
+                'asset_name' => 'Document Management Users',
+                'hostname' => 'ADOBE-ADMIN',
+                'ip_address' => 'Cloud service',
+                'location' => 'Adobe Cloud',
             ],
         ];
 

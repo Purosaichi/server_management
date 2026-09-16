@@ -2,13 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-
 class ApplicationController extends Controller
 {
     public function index()
     {
-        // Data dummy aplikasi
         $applications = [
             [
                 'id' => 1,
@@ -98,7 +95,6 @@ class ApplicationController extends Controller
 
     public function show($id)
     {
-        // Data dummy untuk detail aplikasi
         $application = [
             'id' => $id,
             'name' => 'GTK - Guru',

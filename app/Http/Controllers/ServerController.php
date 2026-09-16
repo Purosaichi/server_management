@@ -2,48 +2,54 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Server;
+use App\Models\Aset;
+
 class ServerController extends Controller
 {
     public function index()
     {
-        $servers = $this->servers();
+        // Ambil data server + relasi aset
+        $servers = Server::with('aset')->get()->map(function ($server) {
+            return [
+                'id' => $server->id_server,
+                'name' => $server->aset->nama_aset ?? 'SVR-' . $server->id_server,
+                'ip' => $server->alamat_ip_manajemen ?? '-',
+                'status' => $server->aset->status_aset ?? 'Offline',
+                'cpu' => $server->jumlah_prosessor ? $server->jumlah_prosessor . ' Core' : '-',
+                'ram' => $server->kapasitas_memori ? $server->kapasitas_memori . ' GB' : '-',
+                'disk' => $server->kapasitas_penyimpanan ? $server->kapasitas_penyimpanan . ' GB' : '-',
+                'uptime' => '-', 
+            ];
+        });
 
         return view('pages.server.server', compact('servers'));
     }
 
     public function show(int $id)
     {
-        $server = collect($this->servers())->firstWhere('id', $id);
+        // detail server
+        $server = Server::with('aset')->find($id);
 
         abort_unless($server, 404);
 
-        $server += [
-            'hostname' => strtolower(str_replace(' ', '-', $server['name'])),
-            'os' => 'Linux Ubuntu 22.04',
+        // Format data 
+        $serverData = [
+            'id' => $server->id_server,
+            'name' => $server->aset->nama_aset ?? 'SVR-' . $server->id_server,
+            'ip' => $server->alamat_ip_manajemen ?? '-',
+            'ip_produksi' => $server->alamat_ip_produksi ?? '-',
+            'status' => $server->aset->status_aset ?? 'Offline',
+            'cpu' => $server->jumlah_prosessor ? $server->jumlah_prosessor . ' Core' : '-',
+            'ram' => $server->kapasitas_memori ? $server->kapasitas_memori . ' GB' : '-',
+            'disk' => $server->kapasitas_penyimpanan ? $server->kapasitas_penyimpanan . ' GB' : '-',
+            'uptime' => '-',
+            'hostname' => $server->nama_cluster ?? strtolower(str_replace(' ', '-', $server->aset->nama_aset ?? 'server')),
+            'os' => $server->sistem_operasi ?? '-',
             'location' => 'Data Center Kemendikdasmen',
-            'last_check' => '08 September 2026, 10:30',
+            'last_check' => now()->format('d F Y, H:i'),
         ];
 
-        return view('pages.server.detail', compact('server'));
-    }
-
-    private function servers(): array
-    {
-        return [
-            ['id' => 1, 'name' => 'SV-R - 001', 'ip' => '103.231.3.01', 'status' => 'Online', 'cpu' => '50%', 'ram' => '70%', 'disk' => '90%', 'uptime' => '20d 12h'],
-            ['id' => 2, 'name' => 'SV-R - 002', 'ip' => '103.231.3.02', 'status' => 'Online', 'cpu' => '50%', 'ram' => '70%', 'disk' => '90%', 'uptime' => '12d 22h'],
-            ['id' => 3, 'name' => 'SV-R - 003', 'ip' => '103.231.3.03', 'status' => 'Offline', 'cpu' => '50%', 'ram' => '70%', 'disk' => '90%', 'uptime' => '9d 11h'],
-            ['id' => 4, 'name' => 'SV-R - 004', 'ip' => '103.231.3.04', 'status' => 'Online', 'cpu' => '50%', 'ram' => '70%', 'disk' => '90%', 'uptime' => '32d 1h'],
-            ['id' => 5, 'name' => 'SV-R - 005', 'ip' => '103.231.3.05', 'status' => 'Offline', 'cpu' => '---', 'ram' => '---', 'disk' => '---', 'uptime' => '---'],
-            ['id' => 6, 'name' => 'SV-R - 006', 'ip' => '103.231.3.06', 'status' => 'Online', 'cpu' => '50%', 'ram' => '70%', 'disk' => '90%', 'uptime' => '9d 11h'],
-            ['id' => 7, 'name' => 'SV-R - 007', 'ip' => '103.231.3.06', 'status' => 'Online', 'cpu' => '50%', 'ram' => '70%', 'disk' => '90%', 'uptime' => '9d 11h'],
-            ['id' => 8, 'name' => 'SV-R - 008', 'ip' => '103.231.3.06', 'status' => 'Offline', 'cpu' => '---', 'ram' => '---', 'disk' => '---', 'uptime' => '---'],
-            ['id' => 9, 'name' => 'SV-R - 009', 'ip' => '103.231.3.06', 'status' => 'Online', 'cpu' => '50%', 'ram' => '70%', 'disk' => '90%', 'uptime' => '9d 11h'],
-            ['id' => 10, 'name' => 'SV-R - 010', 'ip' => '103.231.3.06', 'status' => 'Online', 'cpu' => '50%', 'ram' => '70%', 'disk' => '90%', 'uptime' => '9d 11h'],
-            ['id' => 11, 'name' => 'SV-R - 011', 'ip' => '103.231.3.06', 'status' => 'Offline', 'cpu' => '---', 'ram' => '---', 'disk' => '---', 'uptime' => '---'],
-            ['id' => 12, 'name' => 'SV-R - 012', 'ip' => '103.231.3.06', 'status' => 'Online', 'cpu' => '50%', 'ram' => '70%', 'disk' => '90%', 'uptime' => '9d 11h'],
-            ['id' => 13, 'name' => 'SV-R - 013', 'ip' => '103.231.3.06', 'status' => 'Online', 'cpu' => '50%', 'ram' => '70%', 'disk' => '90%', 'uptime' => '9d 11h'],
-            ['id' => 14, 'name' => 'SV-R - 014', 'ip' => '103.231.3.06', 'status' => 'Offline', 'cpu' => '---', 'ram' => '---', 'disk' => '---', 'uptime' => '---'],
-        ];
+        return view('pages.server.detail', ['server' => $serverData]);
     }
 }

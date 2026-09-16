@@ -2,13 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-
 class DomainController extends Controller
 {
     public function index()
     {
-        // ===== DATA DOMAIN =====
         $domains = [
             ['domain' => 'WebGTK-01.com', 'application' => 'App GTK 01', 'status' => 'Nonaktif', 'pic' => 'Seseorang', 'ssl' => 'Aktif', 'last_activity' => '20 Agustus 2026'],
             ['domain' => 'WebGTK-02.com', 'application' => 'App GTK 02', 'status' => 'Aktif', 'pic' => 'Seseorang', 'ssl' => 'Aktif', 'last_activity' => '20 Agustus 2026'],
@@ -27,7 +24,6 @@ class DomainController extends Controller
 
     public function show($id)
     {
-        // Data dummy domain (bisa diganti nanti)
         $domain = [
             'id' => $id,
             'domain' => 'WebGTK-0' . $id . '.com',

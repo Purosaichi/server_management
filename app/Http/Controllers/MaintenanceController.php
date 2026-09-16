@@ -2,13 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-
 class MaintenanceController extends Controller
 {
     public function index()
     {
-        //data statistik
         $stats = [
             'total' => 67,
             'completed' => 4,
