@@ -14,7 +14,7 @@ class MaintenanceController extends Controller
             'period' => 'Agustus 2026'
         ];
 
-        //data maintenance - server
+        // Maintenance server
         $ServerMaintenance = [
             [
                 'id' => 'MTN-2026-001',
@@ -95,7 +95,7 @@ class MaintenanceController extends Controller
             ],
         ];
 
-        //application maintenance
+        // Maintenance aplikasi
         $ApplicationMaintenance =[
             [
                 'id' => 'MTN-2026-001',
@@ -215,7 +215,7 @@ class MaintenanceController extends Controller
             ],
         ];
 
-        //domain maintenance
+        // Maintenance domain
         $DomainMaintenance = [
             [
                  'id' => 'MTN-2026-001',
@@ -374,7 +374,7 @@ class MaintenanceController extends Controller
             ],
         ];
 
-        //data maintenance
+        // Data maintenance
         $maintenances = [
             [
                 'id' => 'MTN-2026-001',

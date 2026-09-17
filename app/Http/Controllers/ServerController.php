@@ -4,9 +4,7 @@ namespace App\Http\Controllers;
 
 class ServerController extends Controller
 {
-    /**
-     * Halaman daftar server
-     */
+    // Daftar server
     public function index()
     {
         $servers = $this->servers();
@@ -14,30 +12,24 @@ class ServerController extends Controller
         return view('pages.server.server', compact('servers'));
     }
 
-    /**
-     * Halaman detail server
-     * Data diambil dari method servers() + tambahan detail
-     */
+    // Detail server
     public function show(int $id)
     {
-        // Ambil data server dari sumber yang sama dengan index
+        // Ambil data utama
         $server = collect($this->servers())->firstWhere('id', $id);
 
         abort_unless($server, 404);
 
-        // Tambahin data detail (data teknis)
+        // Gabungkan detail
         $server = array_merge($server, $this->serverDetails($server));
 
         return view('pages.server.detail', compact('server'));
     }
 
-    /**
-     * Data detail server (data teknis)
-     * Data ini ngikut data server utama
-     */
+    // Data detail server
     private function serverDetails(array $server): array
     {
-        // Kalo server offline, data teknis dikosongin
+        // Kosongkan data saat offline
         $isOffline = $server['status'] === 'Offline';
 
         return [
@@ -51,7 +43,7 @@ class ServerController extends Controller
             'last_check' => $isOffline ? '-' : '13 Agustus 2026, 09:20:15',
             'last_check_note' => $isOffline ? '-' : '(2 Hari yang lalu)',
 
-            // Resource Utilization (kalo offline, 0%)
+            // Resource
             'cpu_percent' => $isOffline ? 0 : (int) str_replace('%', '', $server['cpu']),
             'cpu_detail' => $isOffline ? '-' : '2 Core (4.2 GHz)',
             'memory_percent' => $isOffline ? 0 : (int) str_replace('%', '', $server['ram']),
@@ -59,7 +51,7 @@ class ServerController extends Controller
             'storage_percent' => $isOffline ? 0 : (int) str_replace('%', '', $server['disk']),
             'storage_detail' => $isOffline ? '-' : '85 TB / 100 TB',
 
-            // Informasi Dasar
+            // Info dasar
             'server_type' => 'Physical',
             'server_role' => 'Application & Database Server',
             'manufacture' => $isOffline ? '-' : 'Dell Inc.',
@@ -69,12 +61,12 @@ class ServerController extends Controller
             'warranty' => 'Hingga 15 Januari 2028',
             'server_status' => $server['status'],
 
-            // Spesifikasi Hardware
+            // Hardware
             'cpu_spec' => $isOffline ? '-' : 'AMD EPYC 9655 (96 Core/192 Thread)',
             'ram_spec' => $isOffline ? '-' : '1024 GB DDR5 ECC RDIMM',
             'storage_spec' => $isOffline ? '-' : '10 TB NVMe Enterprise U.2/U.3',
 
-            // Informasi Jaringan
+            // Jaringan
             'subnet_mask' => '255.255.255.0',
             'gateway' => '192.168.1.1',
             'dns_server' => '8.8.8.8, 1.1.1.1',
@@ -83,12 +75,12 @@ class ServerController extends Controller
             'network_usage_down' => $isOffline ? '-' : '125 Mbps',
             'network_usage_up' => $isOffline ? '-' : '48 Mbps',
 
-            // Catatan Terakhir
+            // Catatan terakhir
             'last_note' => $isOffline ? 'Server sedang offline' : 'Disk sudah mulai penuh',
             'last_note_by' => 'Fathier Assyarief',
             'last_note_date' => $isOffline ? '-' : '12 Agustus 2026, 12:12',
 
-            // Riwayat Maintenance
+            // Riwayat maintenance
             'maintenance_history' => $isOffline ? [] : [
                 [
                     'tanggal' => '12 Agustus 2026, 12:12',
@@ -100,10 +92,7 @@ class ServerController extends Controller
         ];
     }
 
-    /**
-     * ===== SUMBER DATA UTAMA SERVER =====
-     * Data ini dipake di index() dan show()
-     */
+    // Data utama server
     private function servers(): array
     {
         return [

@@ -200,7 +200,7 @@
 
         filterButtons.forEach(button => {
             button.addEventListener('click', function() {
-                // Ganti class active
+                // Set active
                 filterButtons.forEach(btn => {
                     btn.classList.remove('active');
                     btn.classList.add('inactive');
@@ -211,7 +211,7 @@
                 const filter = this.getAttribute('data-filter');
                 let visibleCount = 0;
 
-                // Filter baris tabel
+                // Filter tabel
                 tableRows.forEach(row => {
                     if (filter === 'all' || row.getAttribute('data-kategori') === filter) {
                         row.style.display = '';
@@ -221,7 +221,7 @@
                     }
                 });
 
-                // Update jumlah baris
+                // Update jumlah
                 rowCount.textContent = visibleCount;
             });
         });

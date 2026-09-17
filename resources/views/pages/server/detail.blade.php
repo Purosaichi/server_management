@@ -8,7 +8,7 @@
 @section('content')
 <link rel="stylesheet" href="{{ asset('css/server-detail.css') }}">
 
-{{-- Tombol Back --}}
+{{-- Kembali --}}
 <div class="back-wrapper">
     <a href="{{ route('server.index') }}" class="back-btn">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -18,7 +18,7 @@
     </a>
 </div>
 
-{{-- Header Card --}}
+{{-- Header --}}
 <div class="header-card">
     <div class="header-left">
         <div class="server-icon">
@@ -78,18 +78,18 @@
     </div>
 </div>
 
-{{-- Tab Navigasi --}}
+{{-- Navigasi tab --}}
 <div class="tabs">
     <a href="#" class="tab active" onclick="showTab(event, 'overview')">Overview</a>
     <a href="#" class="tab" onclick="showTab(event, 'application')">Application</a>
     <a href="#" class="tab" onclick="showTab(event, 'history')">History</a>
 </div>
 
-{{-- Tab Overview --}}
+{{-- Overview --}}
 <div id="tab-overview" class="tab-content active">
     <div class="content-grid">
         
-        {{-- Kolom 1: Resource Utilization --}}
+        {{-- Resource --}}
         <div class="column">
             <div class="card">
                 <h3 class="card-title">
@@ -173,7 +173,7 @@
             </div>
         </div>
         
-        {{-- Kolom 2: Informasi Dasar + Spesifikasi Hardware --}}
+        {{-- Info dasar dan hardware --}}
         <div class="column">
             <div class="card">
                 <h3 class="card-title">
@@ -211,7 +211,7 @@
             </div>
         </div>
         
-        {{-- Kolom 3: Informasi Jaringan + Catatan + Riwayat --}}
+        {{-- Jaringan dan catatan --}}
         <div class="column">
             <div class="card">
                 <h3 class="card-title">
@@ -250,7 +250,7 @@
     </div>
 </div>
 
-{{-- Tab Application --}}
+{{-- Application --}}
 <div id="tab-application" class="tab-content">
     <div class="card">
         <h3 class="card-title">Application</h3>
@@ -258,7 +258,7 @@
     </div>
 </div>
 
-{{-- Tab History --}}
+{{-- History --}}
 <div id="tab-history" class="tab-content">
     <div class="card">
         <h3 class="card-title">History</h3>
@@ -274,15 +274,15 @@
     function showTab(event, tabName) {
         event.preventDefault();
         
-        // Sembunyikan semua tab content
+        // Sembunyikan semua tab
         document.querySelectorAll('.tab-content').forEach(el => {
             el.classList.remove('active');
         });
         
-        // Tampilkan tab yang dipilih
+        // Tampilkan tab aktif
         document.getElementById('tab-' + tabName).classList.add('active');
         
-        // Update class active
+        // Set active
         document.querySelectorAll('.tab').forEach(el => {
             el.classList.remove('active');
         });

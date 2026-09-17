@@ -21,7 +21,7 @@ class Server extends Model
         'alamat_ip_produksi', 'id_Aset'
     ];
 
-    // Relasi ke tabel aset
+    // Relasi aset
     public function aset()
     {
         return $this->belongsTo(Aset::class, 'id_Aset', 'id_aset');

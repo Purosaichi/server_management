@@ -4,9 +4,7 @@ namespace App\Http\Controllers;
 
 class ApplicationController extends Controller
 {
-    /**
-     * Halaman daftar aplikasi
-     */
+    // Daftar aplikasi
     public function index()
     {
         $applications = $this->applications();
@@ -14,25 +12,21 @@ class ApplicationController extends Controller
         return view('pages.application.application', compact('applications'));
     }
 
-    /**
-     * Halaman detail aplikasi
-     */
+    // Detail aplikasi
     public function show(int $id)
     {
-        // Ambil data dari sumber utama
+        // Ambil data utama
         $app = collect($this->applications())->firstWhere('id', $id);
 
         abort_unless($app, 404);
 
-        // Gabungin dengan data detail
+        // Gabungkan detail
         $application = array_merge($app, $this->applicationDetails($app));
 
         return view('pages.application.detail', compact('application'));
     }
 
-    /**
-     * Data detail aplikasi (ngikut data utama)
-     */
+    // Data detail aplikasi
     private function applicationDetails(array $app): array
     {
         $isDown = $app['status'] === 'Down';
@@ -48,7 +42,7 @@ class ApplicationController extends Controller
             'since' => $isDown ? '-' : '15 Januari 2023',
             'since_duration' => $isDown ? '-' : '(3 Tahun 7 Bulan)',
 
-            // Server & Infrastruktur
+            // Server
             'server' => $app['server_name'],
             'ip_address' => $isDown ? '-' : '127.000.0.10',
             'os' => $isDown ? '-' : 'Windows Server 2022',
@@ -60,7 +54,7 @@ class ApplicationController extends Controller
             'ssl_expired' => $isDown ? '-' : '12 Desember 2026',
             'domain_status' => $isDown ? 'Tidak Aktif' : 'Aktif',
 
-            // Licenses
+            // Lisensi
             'license_name' => $app['licenses'] ?? '-',
             'license_provider' => $isDown ? '-' : 'Microsoft',
             'license_count' => $isDown ? '-' : '2 License',
@@ -68,14 +62,14 @@ class ApplicationController extends Controller
             'license_expired_note' => $isDown ? '-' : '(38 Hari Lagi)',
             'license_status' => $isDown ? 'Expired' : 'Akan Expired',
 
-            // Pengurus / PIC
+            // PIC
             'pic_name' => 'Fathier Assyarief',
             'pic_jabatan' => 'Data Analyst',
             'pic_email' => 'Fathier.assyarief@gmail.com',
             'pic_telepon' => '+62 813 8306 5203',
             'pic_divisi' => 'IT Infrastructure',
 
-            // Maintenance Terakhir
+            // Maintenance terakhir
             'last_maintenance' => $isDown ? null : [
                 'tanggal' => '20 Agustus 2026',
                 'jenis' => 'Update & Patch',
@@ -83,7 +77,7 @@ class ApplicationController extends Controller
                 'status' => 'Completed',
             ],
 
-            // Maintenance Berikutnya
+            // Maintenance berikutnya
             'next_maintenance' => $isDown ? null : [
                 'tanggal' => '12 September 2026',
                 'jenis' => 'Upgrade RAM',
@@ -91,7 +85,7 @@ class ApplicationController extends Controller
                 'status' => 'Scheduled',
             ],
 
-            // Riwayat Maintenance
+            // Riwayat maintenance
             'maintenance_history' => $isDown ? [] : [
                 ['tanggal' => '20 Agustus 2026', 'jenis' => 'Update & Patch', 'status' => 'Completed'],
                 ['tanggal' => '12 Juli 2026', 'jenis' => 'Upgrade SSD', 'status' => 'Completed'],
@@ -103,9 +97,7 @@ class ApplicationController extends Controller
         ];
     }
 
-    /**
-     * ===== SUMBER DATA UTAMA APLIKASI =====
-     */
+    // Data utama aplikasi
     private function applications(): array
     {
         return [

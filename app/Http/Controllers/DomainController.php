@@ -4,9 +4,7 @@ namespace App\Http\Controllers;
 
 class DomainController extends Controller
 {
-    /**
-     * Halaman daftar domain
-     */
+    // Daftar domain
     public function index()
     {
         $domains = $this->domains();
@@ -14,31 +12,27 @@ class DomainController extends Controller
         return view('pages.domain.domain', compact('domains'));
     }
 
-    /**
-     * Halaman detail domain
-     */
+    // Detail domain
     public function show(int $id)
     {
-        // Ambil data dari sumber utama
+        // Ambil data utama
         $domain = collect($this->domains())->firstWhere('id', $id);
 
         abort_unless($domain, 404);
 
-        // Gabungin dengan data detail
+        // Gabungkan detail
         $domain = array_merge($domain, $this->domainDetails($domain));
 
         return view('pages.domain.detail', compact('domain'));
     }
 
-    /**
-     * Data detail domain (ngikut data utama)
-     */
+    // Data detail domain
     private function domainDetails(array $domain): array
     {
         $isInactive = $domain['status'] === 'Tidak Aktif';
 
         return [
-            // Info Utama
+            // Info utama
             'purchase_date' => '13 Januari 2024',
             'expiration_date' => '19 November 2028',
             'auto_renewal' => $isInactive ? 'Inactive' : 'Active',
@@ -50,14 +44,14 @@ class DomainController extends Controller
             'pic_email' => 'Fathier.assyarief@gmail.com',
             'pic_telepon' => '+62 813 8306 5203',
 
-            // SSL Certificate
+            // SSL
             'ssl_provider' => $isInactive ? '-' : "Let's Encrypt",
             'ssl_status' => $isInactive ? 'Invalid' : 'Valid',
             'ssl_issued_date' => $isInactive ? '-' : '16 Agustus 2026',
             'ssl_expiration_date' => $isInactive ? '-' : '19 November 2028',
             'ssl_certificate_type' => $isInactive ? '-' : 'Domain Validation (DV)',
 
-            // Billing Information
+            // Billing
             'billing_status' => $isInactive ? 'Unpaid' : 'Paid',
             'billing_cycle' => '1 Tahun',
             'last_payment' => '15 Agustus 2026',
@@ -65,7 +59,7 @@ class DomainController extends Controller
             'amount' => '250.000',
             'payment_method' => 'Transfer bank',
 
-            // Upcoming Reminders
+            // Reminder
             'reminders' => $isInactive ? [] : [
                 [
                     'type' => 'warning',
@@ -87,7 +81,7 @@ class DomainController extends Controller
                 ],
             ],
 
-            // Renewal / Activity History
+            // Riwayat aktivitas
             'activity_history' => $isInactive ? [] : [
                 [
                     'tanggal' => '11 Agustus 2026',
@@ -100,9 +94,7 @@ class DomainController extends Controller
         ];
     }
 
-    /**
-     * ===== SUMBER DATA UTAMA DOMAIN =====
-     */
+    // Data utama domain
     private function domains(): array
     {
         return [
