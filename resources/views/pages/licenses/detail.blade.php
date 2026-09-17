@@ -9,7 +9,12 @@
 
 {{-- Tombol Back --}}
 <div class="lic-back-wrap">
-    <a href="{{ route('licenses.licenses') }}" class="lic-back">← Back</a>
+    <a href="{{ route('licenses.licenses') }}" class="lic-back">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+        </svg>
+        Back
+    </a>
 </div>
 
 {{-- ============ HEADER CARD ============ --}}

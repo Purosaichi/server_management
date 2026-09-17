@@ -3,18 +3,32 @@
 
 /* ===== Tombol Back ===== */
 .lic-back-wrap {
-    margin: -0.5rem 0 1rem;
+    margin-bottom: 1rem;
 }
 
 .lic-back {
-    color: #1f2937;
-    font-size: 0.85rem;
-    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.5rem;
+    color: #374151;
+    font-size: 0.875rem;
+    font-weight: 500;
     text-decoration: none;
+    transition: all 0.2s;
 }
 
 .lic-back:hover {
-    color: #2563eb;
+    background-color: #f9fafb;
+    border-color: #d1d5db;
+}
+
+.lic-back svg {
+    width: 1rem;
+    height: 1rem;
 }
 
 /* ===== Header Card ===== */
@@ -269,7 +283,7 @@
     text-align: center;
     font-size: 0.875rem;
     color: #000000;
-    margin-top: 2rem;
+    margin-top: auto;
 }
 
 /* ===== Responsive ===== */
