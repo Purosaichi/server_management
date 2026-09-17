@@ -20,7 +20,6 @@
 }
 
 
-/*statistik*/
 .stat-card {
     background: white;
     border-radius: 0.75rem;
@@ -65,7 +64,6 @@
     color: #2563eb;
 }
 
-/* ===== Grid 4 Kolom ===== */
 .grid-stats-4 {
     display: grid;
     grid-template-columns: repeat(1, 1fr);
@@ -85,7 +83,6 @@
     }
 }
 
-/*table*/
 .table-container {
     background: white;
     border-radius: 0.75rem;
@@ -165,7 +162,6 @@
     color: #111827;
 }
 
-/*logo*/
 .badge {
     padding: 0.25rem 0.625rem;
     font-size: 0.75rem;
@@ -188,7 +184,6 @@
     color: #92400e;
 }
 
-/*footer table*/
 .table-footer {
     padding: 0.75rem 1.5rem;
     border-top: 1px solid #f3f4f6;
@@ -206,7 +201,6 @@
     text-decoration: underline;
 }
 
-/*grid*/
 .grid-stats {
     display: grid;
     grid-template-columns: repeat(1, 1fr);
@@ -226,7 +220,6 @@
     }
 }
 
-/*spacing*/
 .mb-8 {
     margin-bottom: 2rem;
 }

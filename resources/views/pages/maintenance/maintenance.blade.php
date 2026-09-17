@@ -11,7 +11,6 @@
     <h2 class="title-header">Maintenance</h2>
 </div>
 
-<!--statistik-->
 <div class="mt-stats-grid">
     <div class="mt-stat-card">
         <div class="mt-stat-icon blue">
@@ -63,7 +62,6 @@
     </div>
 </div>
 
-<!--table maintenance-->
 <div class="mt-table-container">
     <div class="mt-table-header">
         <h3 class="mt-table-title">Daftar Maintenance</h3>
@@ -90,7 +88,6 @@
             </thead>
             <tbody id="maintenance-table-body">
 
-                <!--server-->
                 @foreach($serverMaintenances as $mt)
                 <tr data-kategori="server">
                     <td><span class="mt-id">{{ $mt['id'] }}</span></td>
@@ -120,7 +117,6 @@
                 </tr>
                 @endforeach
 
-                <!--application-->
                 @foreach($applicationMaintenances as $mt)
                 <tr data-kategori="application">
                     <td><span class="mt-id">{{ $mt['id'] }}</span></td>
@@ -150,7 +146,6 @@
                 </tr>
                 @endforeach
 
-                <!--domain-->
                 @foreach($domainMaintenances as $mt)
                 <tr data-kategori="domain">
                     <td><span class="mt-id">{{ $mt['id'] }}</span></td>
@@ -191,7 +186,6 @@
     <p>&copy; 2026 Direktorat Jenderal Guru, Tenaga Kependidikan dan Pendidikan Guru - Kemendikdasmen</p>
 </footer>
 
-<!--js buat filter-->
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const filterButtons = document.querySelectorAll('.mt-filter-btn');
@@ -200,7 +194,6 @@
 
         filterButtons.forEach(button => {
             button.addEventListener('click', function() {
-                // Set active
                 filterButtons.forEach(btn => {
                     btn.classList.remove('active');
                     btn.classList.add('inactive');
@@ -211,7 +204,6 @@
                 const filter = this.getAttribute('data-filter');
                 let visibleCount = 0;
 
-                // Filter tabel
                 tableRows.forEach(row => {
                     if (filter === 'all' || row.getAttribute('data-kategori') === filter) {
                         row.style.display = '';
@@ -221,7 +213,6 @@
                     }
                 });
 
-                // Update jumlah
                 rowCount.textContent = visibleCount;
             });
         });

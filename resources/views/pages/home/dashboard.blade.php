@@ -10,9 +10,7 @@
     <h2 class="title-header">Dashboard</h2>
 </div>
 
-<!--statistik-->
 <div class="grid-stats-4">
-    <!--Total Server-->
     <div class="stat-card">
         <p class="stat-label">Total Server</p>
         <p class="stat-value">{{ $stats['total_server'] }}</p>
@@ -22,7 +20,6 @@
         </p>
     </div>
 
-    <!--Total Aplikasi-->
     <div class="stat-card">
         <p class="stat-label">Total Aplikasi</p>
         <p class="stat-value">{{ $stats['total_aplikasi'] }}</p>
@@ -32,14 +29,12 @@
         </p>
     </div>
 
-    <!--Jadwal Maintenance-->
     <div class="stat-card">
         <p class="stat-label">Jadwal Maintenance</p>
         <p class="stat-value">{{ $stats['jadwal_maintenance'] }}</p>
         <p class="stat-detail">Dalam 5 hari ke depan</p>
     </div>
 
-    <!--Akan Expired-->
     <div class="stat-card">
         <p class="stat-label">Akan Expired</p>
         <p class="stat-value">{{ $stats['akan_expired'] }}</p>
@@ -47,7 +42,6 @@
     </div>
 </div>
 
-<!--table server-->
 <div class="table-container mb-8">
     <div class="table-header">
         <h3 class="table-title">Server</h3>
@@ -90,7 +84,6 @@
     </div>
 </div>
 
-<!--table aplikasi-->
 <div class="table-container">
     <div class="table-header">
         <h3 class="table-title">Application</h3>

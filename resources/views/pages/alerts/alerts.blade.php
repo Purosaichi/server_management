@@ -13,7 +13,6 @@
     <p>Peringatan kondisi server dan aplikasi.</p>
 </div>
 
-<!--statistic-->
 <div class="alerts-stats-grid">
     <div class="alerts-stat-card">
         <div class="alerts-stat-icon blue">
@@ -65,7 +64,6 @@
     </div>
 </div>
 
-<!--table-->
 <div class="alerts-table-container">
     <div class="alerts-table-header">
         <h3 class="alerts-table-title">Daftar Maintenance</h3>
@@ -92,7 +90,6 @@
             </thead>
             <tbody id="alerts-table-body">
                 
-            <!--Server-->
                 @foreach($serverAlerts as $alert)
                 <tr data-kategori="server">
                     <td>
@@ -131,7 +128,6 @@
                 </tr>
                 @endforeach
                 
-                <!--application-->
                 @foreach($applicationAlerts as $alert)
                 <tr data-kategori="application">
                     <td>
@@ -170,7 +166,6 @@
                 </tr>
                 @endforeach
 
-                <!--doomain-->
                 @foreach($domainAlerts as $alert)
                 <tr data-kategori="domain">
                     <td>
@@ -220,7 +215,6 @@
     <p>&copy; 2026 Direktorat Jenderal Guru, Tenaga Kependidikan dan Pendidikan Guru - Kemendikdasmen</p>
 </footer>
 
-<!--js buat filter-->
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const filterButtons = document.querySelectorAll('.alerts-filter-btn');
@@ -229,7 +223,6 @@
 
         filterButtons.forEach(button => {
             button.addEventListener('click', function() {
-                // Set active
                 filterButtons.forEach(btn => {
                     btn.classList.remove('active');
                     btn.classList.add('inactive');
@@ -240,7 +233,6 @@
                 const filter = this.getAttribute('data-filter');
                 let visibleCount = 0;
 
-                // Filter tabel
                 tableRows.forEach(row => {
                     if (filter === 'all' || row.getAttribute('data-kategori') === filter) {
                         row.style.display = '';
@@ -250,7 +242,6 @@
                     }
                 });
 
-                // Update jumlah
                 rowCount.textContent = visibleCount;
             });
         });

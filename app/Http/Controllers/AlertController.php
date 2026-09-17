@@ -13,7 +13,6 @@ class AlertController extends Controller
             'info' => 5,
         ];
 
-        // Alert server
         $serverAlerts = [
             [
                 'waktu' => '20 Agu 2026',
@@ -108,7 +107,6 @@ class AlertController extends Controller
             ],
         ];
 
-        // Alert aplikasi
         $applicationAlerts = [
             [
                 'waktu' => '20 Agu 2026',
@@ -190,7 +188,6 @@ class AlertController extends Controller
             ],
         ];
 
-        // Alert domain
         $domainAlerts = [
             [
                 'waktu' => '20 Agu 2026',

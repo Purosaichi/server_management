@@ -12,20 +12,17 @@ class User extends Authenticatable
     /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable;
 
-    // Field yang bisa diisi
     protected $fillable = [
         'name',
         'email',
         'password',
     ];
 
-    // Field yang disembunyikan
     protected $hidden = [
         'password',
         'remember_token',
     ];
 
-    // Tipe data field
     protected function casts(): array
     {
         return [

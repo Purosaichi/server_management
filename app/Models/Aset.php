@@ -19,7 +19,6 @@ class Aset extends Model
         'tanggal_penghapusan', 'keterangan'
     ];
 
-    // Relasi server
     public function server()
     {
         return $this->hasOne(Server::class, 'id_Aset', 'id_aset');

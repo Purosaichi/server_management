@@ -1,7 +1,3 @@
-/* ===== public/css/licenses-detail.css ===== */
-/* CSS untuk halaman DETAIL LISENSI */
-
-/* ===== Tombol Back ===== */
 .lic-back-wrap {
     margin-bottom: 1rem;
 }
@@ -31,7 +27,6 @@
     height: 1rem;
 }
 
-/* ===== Header Card ===== */
 .lic-detail-header {
     display: grid;
     grid-template-columns: 1.8fr 1fr 1fr 1.15fr;
@@ -161,7 +156,6 @@
     color: #dc2626;
 }
 
-/* ===== 3 Card Info ===== */
 .lic-info-grid {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -225,7 +219,6 @@
     text-align: right;
 }
 
-/* ===== Tabel Riwayat Pembayaran ===== */
 .lic-payment-card {
     overflow: hidden;
     padding: 0.25rem;
@@ -276,7 +269,6 @@
     color: #374151;
 }
 
-/* ===== Footer ===== */
 .footer {
     background-color: #ffd000;
     padding: 1rem 1.5rem;
@@ -286,7 +278,6 @@
     margin-top: auto;
 }
 
-/* ===== Responsive ===== */
 @media (max-width: 900px) {
     .lic-detail-header {
         grid-template-columns: 1.5fr 1fr 1fr;

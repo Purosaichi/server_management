@@ -8,7 +8,6 @@
 @section('content')
 <link rel="stylesheet" href="{{ asset('css/server-detail.css') }}">
 
-{{-- Kembali --}}
 <div class="back-wrapper">
     <a href="{{ route('server.index') }}" class="back-btn">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -18,7 +17,6 @@
     </a>
 </div>
 
-{{-- Header --}}
 <div class="header-card">
     <div class="header-left">
         <div class="server-icon">
@@ -78,18 +76,15 @@
     </div>
 </div>
 
-{{-- Navigasi tab --}}
 <div class="tabs">
     <a href="#" class="tab active" onclick="showTab(event, 'overview')">Overview</a>
     <a href="#" class="tab" onclick="showTab(event, 'application')">Application</a>
     <a href="#" class="tab" onclick="showTab(event, 'history')">History</a>
 </div>
 
-{{-- Overview --}}
 <div id="tab-overview" class="tab-content active">
     <div class="content-grid">
         
-        {{-- Resource --}}
         <div class="column">
             <div class="card">
                 <h3 class="card-title">
@@ -173,7 +168,6 @@
             </div>
         </div>
         
-        {{-- Info dasar dan hardware --}}
         <div class="column">
             <div class="card">
                 <h3 class="card-title">
@@ -211,7 +205,6 @@
             </div>
         </div>
         
-        {{-- Jaringan dan catatan --}}
         <div class="column">
             <div class="card">
                 <h3 class="card-title">
@@ -250,7 +243,6 @@
     </div>
 </div>
 
-{{-- Application --}}
 <div id="tab-application" class="tab-content">
     <div class="card">
         <h3 class="card-title">Application</h3>
@@ -258,7 +250,6 @@
     </div>
 </div>
 
-{{-- History --}}
 <div id="tab-history" class="tab-content">
     <div class="card">
         <h3 class="card-title">History</h3>
@@ -274,15 +265,12 @@
     function showTab(event, tabName) {
         event.preventDefault();
         
-        // Sembunyikan semua tab
         document.querySelectorAll('.tab-content').forEach(el => {
             el.classList.remove('active');
         });
         
-        // Tampilkan tab aktif
         document.getElementById('tab-' + tabName).classList.add('active');
         
-        // Set active
         document.querySelectorAll('.tab').forEach(el => {
             el.classList.remove('active');
         });

@@ -14,24 +14,19 @@
 </head>
 <body class="flex min-h-screen flex-col">
 
-    <!-- Container Utama -->
     <div class="flex-1 flex items-center justify-center bg-gray-50 p-4 relative">
         
-        <!-- Background map -->
         <div class="map-background">
             <img src="{{ asset('images/map indo.png') }}" alt="Peta Indonesia">
         </div>
 
-        <!-- Card Login -->
         <div class="login-card">
             
-            <!-- Kolom Kiri (logo) -->
             <div class="logo-kemendik">
                 <img src="{{ asset('images/logo kemendik.png') }}" alt="Logo Kemendikdasmen" class="branding-logo">
                 <p class="branding-title">DITJEN GTK</p>
             </div>
             
-            <!-- Kolom Kanan (Form Login) -->
             <div class="form-login">
                 
                 <h2 class="form-title">LOGIN</h2>

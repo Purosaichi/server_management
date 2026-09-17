@@ -1,9 +1,7 @@
-/* Font & Body */
 body {
     font-family: 'Inter', sans-serif;
 }
 
-/* Background Map */
 .map-background {
     position: absolute;
     inset: 0;
@@ -17,7 +15,6 @@ body {
     object-fit: cover;
 }
 
-/* Card Login */
 .login-card {
     position: relative;
     z-index: 10;
@@ -39,7 +36,6 @@ body {
     }
 }
 
-/* Kolom Kiri (logo) */
 .logo-kemendik {
     width: 100%;
     padding: 1.25rem 1rem 0.5rem;
@@ -78,7 +74,6 @@ body {
     }
 }
 
-/* Kolom Kanan (Form Login) */
 .form-login {
     width: 100%;
     padding: 2rem;
