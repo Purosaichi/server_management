@@ -41,8 +41,7 @@ class ServerController extends Controller
         $isOffline = $server['status'] === 'Offline';
 
         return [
-            'ip' => $server['ip_address'] ?? $server['ip'] ?? '-',
-            'ip_address' => $server['ip_address'] ?? $server['ip'] ?? '-',
+            'ip_address' => $server['ip_address'] ?? '-',
             'subtitle' => 'Server Utama Aplikasi & Database',
             'hostname' => strtolower($server['name']) . '.kemendik.local',
             'location' => 'Data Center, Rack A0' . $server['id'],
@@ -108,20 +107,20 @@ class ServerController extends Controller
     private function servers(): array
     {
         return [
-            ['id' => 1, 'name' => 'SVR-001', 'ip' => '103.231.3.01', 'ip_address' => '103.231.3.01', 'status' => 'Online', 'cpu' => '60%', 'ram' => '70%', 'disk' => '90%', 'uptime' => '20d 12h'],
-            ['id' => 2, 'name' => 'SVR-002', 'ip' => '103.231.3.02', 'ip_address' => '103.231.3.02', 'status' => 'Online', 'cpu' => '45%', 'ram' => '65%', 'disk' => '85%', 'uptime' => '15d 8h'],
-            ['id' => 3, 'name' => 'SVR-003', 'ip' => '103.231.3.03', 'ip_address' => '103.231.3.03', 'status' => 'Online', 'cpu' => '80%', 'ram' => '90%', 'disk' => '70%', 'uptime' => '5d 3h'],
-            ['id' => 4, 'name' => 'SVR-004', 'ip' => '103.231.3.04', 'ip_address' => '103.231.3.04', 'status' => 'Offline', 'cpu' => '-', 'ram' => '-', 'disk' => '-', 'uptime' => '-'],
-            ['id' => 5, 'name' => 'SVR-005', 'ip' => '103.231.3.05', 'ip_address' => '103.231.3.05', 'status' => 'Offline', 'cpu' => '60%', 'ram' => '75%', 'disk' => '80%', 'uptime' => '30d 2h'],
-            ['id' => 6, 'name' => 'SVR-006', 'ip' => '103.231.3.06', 'ip_address' => '103.231.3.06', 'status' => 'Online', 'cpu' => '55%', 'ram' => '60%', 'disk' => '75%', 'uptime' => '10d 5h'],
-            ['id' => 7, 'name' => 'SVR-007', 'ip' => '103.231.3.07', 'ip_address' => '103.231.3.07', 'status' => 'Online', 'cpu' => '40%', 'ram' => '50%', 'disk' => '60%', 'uptime' => '25d 18h'],
-            ['id' => 8, 'name' => 'SVR-008', 'ip' => '103.231.3.08', 'ip_address' => '103.231.3.08', 'status' => 'Online', 'cpu' => '-', 'ram' => '-', 'disk' => '-', 'uptime' => '-'],
-            ['id' => 9, 'name' => 'SVR-009', 'ip' => '103.231.3.09', 'ip_address' => '103.231.3.09', 'status' => 'Online', 'cpu' => '70%', 'ram' => '80%', 'disk' => '85%', 'uptime' => '8d 4h'],
-            ['id' => 10, 'name' => 'SVR-010', 'ip' => '103.231.3.10', 'ip_address' => '103.231.3.10', 'status' => 'Online', 'cpu' => '30%', 'ram' => '40%', 'disk' => '50%', 'uptime' => '40d 10h'],
-            ['id' => 11, 'name' => 'SVR-011', 'ip' => '103.231.3.11', 'ip_address' => '103.231.3.11', 'status' => 'Offline', 'cpu' => '-', 'ram' => '-', 'disk' => '-', 'uptime' => '-'],
-            ['id' => 12, 'name' => 'SVR-012', 'ip' => '103.231.3.12', 'ip_address' => '103.231.3.12', 'status' => 'Online', 'cpu' => '65%', 'ram' => '70%', 'disk' => '88%', 'uptime' => '12d 6h'],
-            ['id' => 13, 'name' => 'SVR-013', 'ip' => '103.231.3.13', 'ip_address' => '103.231.3.13', 'status' => 'Online', 'cpu' => '45%', 'ram' => '55%', 'disk' => '65%', 'uptime' => '18d 14h'],
-            ['id' => 14, 'name' => 'SVR-014', 'ip' => '103.231.3.14', 'ip_address' => '103.231.3.14', 'status' => 'Online', 'cpu' => '35%', 'ram' => '45%', 'disk' => '55%', 'uptime' => '22d 20h'],
+            ['id' => 1, 'name' => 'SVR-001', 'ip_address' => '103.231.3.01', 'status' => 'Online', 'cpu' => '60%', 'ram' => '70%', 'disk' => '90%', 'uptime' => '20d 12h'],
+            ['id' => 2, 'name' => 'SVR-002', 'ip_address' => '103.231.3.02', 'status' => 'Online', 'cpu' => '45%', 'ram' => '65%', 'disk' => '85%', 'uptime' => '15d 8h'],
+            ['id' => 3, 'name' => 'SVR-003', 'ip_address' => '103.231.3.03', 'status' => 'Online', 'cpu' => '80%', 'ram' => '90%', 'disk' => '70%', 'uptime' => '5d 3h'],
+            ['id' => 4, 'name' => 'SVR-004', 'ip_address' => '103.231.3.04', 'status' => 'Offline', 'cpu' => '-', 'ram' => '-', 'disk' => '-', 'uptime' => '-'],
+            ['id' => 5, 'name' => 'SVR-005', 'ip_address' => '103.231.3.05', 'status' => 'Offline', 'cpu' => '60%', 'ram' => '75%', 'disk' => '80%', 'uptime' => '30d 2h'],
+            ['id' => 6, 'name' => 'SVR-006', 'ip_address' => '103.231.3.06', 'status' => 'Online', 'cpu' => '55%', 'ram' => '60%', 'disk' => '75%', 'uptime' => '10d 5h'],
+            ['id' => 7, 'name' => 'SVR-007', 'ip_address' => '103.231.3.07', 'status' => 'Online', 'cpu' => '40%', 'ram' => '50%', 'disk' => '60%', 'uptime' => '25d 18h'],
+            ['id' => 8, 'name' => 'SVR-008', 'ip_address' => '103.231.3.08', 'status' => 'Online', 'cpu' => '-', 'ram' => '-', 'disk' => '-', 'uptime' => '-'],
+            ['id' => 9, 'name' => 'SVR-009', 'ip_address' => '103.231.3.09', 'status' => 'Online', 'cpu' => '70%', 'ram' => '80%', 'disk' => '85%', 'uptime' => '8d 4h'],
+            ['id' => 10, 'name' => 'SVR-010', 'ip_address' => '103.231.3.10', 'status' => 'Online', 'cpu' => '30%', 'ram' => '40%', 'disk' => '50%', 'uptime' => '40d 10h'],
+            ['id' => 11, 'name' => 'SVR-011', 'ip_address' => '103.231.3.11', 'status' => 'Offline', 'cpu' => '-', 'ram' => '-', 'disk' => '-', 'uptime' => '-'],
+            ['id' => 12, 'name' => 'SVR-012', 'ip_address' => '103.231.3.12', 'status' => 'Online', 'cpu' => '65%', 'ram' => '70%', 'disk' => '88%', 'uptime' => '12d 6h'],
+            ['id' => 13, 'name' => 'SVR-013', 'ip_address' => '103.231.3.13', 'status' => 'Online', 'cpu' => '45%', 'ram' => '55%', 'disk' => '65%', 'uptime' => '18d 14h'],
+            ['id' => 14, 'name' => 'SVR-014', 'ip_address' => '103.231.3.14', 'status' => 'Online', 'cpu' => '35%', 'ram' => '45%', 'disk' => '55%', 'uptime' => '22d 20h'],
         ];
     }
 }

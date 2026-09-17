@@ -46,7 +46,7 @@
             
             <div class="info-grid">
                 <span class="info-label">IP Address</span>
-                <span class="info-value">{{ $server['ip_address'] ?? $server['ip'] ?? '-' }}</span>
+                <span class="info-value">{{ $server['ip_address'] }}</span>
                 
                 <span class="info-label">Hostname</span>
                 <span class="info-value">{{ $server['hostname'] }}</span>
@@ -221,7 +221,7 @@
                     Informasi Jaringan
                 </h3>
                 <div class="info-list">
-                    <div class="info-row"><span class="info-label">IP Address</span><span class="info-value">{{ $server['ip_address'] ?? $server['ip'] ?? '-' }}</span></div>
+                    <div class="info-row"><span class="info-label">IP Address</span><span class="info-value">{{ $server['ip_address'] }}</span></div>
                     <div class="info-row"><span class="info-label">Subnet Mask</span><span class="info-value">{{ $server['subnet_mask'] }}</span></div>
                     <div class="info-row"><span class="info-label">Gateway</span><span class="info-value">{{ $server['gateway'] }}</span></div>
                     <div class="info-row"><span class="info-label">DNS Server</span><span class="info-value">{{ $server['dns_server'] }}</span></div>

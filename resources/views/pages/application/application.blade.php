@@ -34,7 +34,7 @@
                 @foreach($applications as $app)
                 <tr>
                     <td><span class="app-name">{{ $app['name'] }}</span></td>
-                    <td>{{ $app['server'] }}</td>
+                    <td>{{ $app['server_name'] }}</td>
                     <td>
                         <span class="app-badge 
                             {{ $app['status'] == 'Aktif' ? 'app-badge-green' : 'app-badge-red' }}">
@@ -49,7 +49,7 @@
                             {{ $app['licenses'] }}
                         </span>
                     </td>
-                    <td>{{ $app['maintenance'] }}</td>
+                    <td>{{ $app['next_maintenance'] }}</td>
                     <td class="app-text-center">
                         <a href="{{ route('application.detail', $app['id']) }}" class="app-btn-detail">Selengkapnya →</a>
                     </td>
