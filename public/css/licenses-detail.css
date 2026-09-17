@@ -8,7 +8,7 @@
 
 .lic-back {
     color: #1f2937;
-    font-size: 0.75rem;
+    font-size: 0.85rem;
     font-weight: 600;
     text-decoration: none;
 }
@@ -20,11 +20,11 @@
 /* ===== Header Card ===== */
 .lic-detail-header {
     display: grid;
-    grid-template-columns: 180px minmax(0, 1fr);
+    grid-template-columns: 1.8fr 1fr 1fr 1.15fr;
     align-items: stretch;
-    min-height: 125px;
+    min-height: 165px;
     margin-bottom: 1rem;
-    padding: 1rem 1.25rem;
+    padding: 1rem 0.75rem;
     background: #fff;
     border: 1px solid #e5e7eb;
     border-radius: 0.35rem;
@@ -33,29 +33,41 @@
 
 .lic-detail-logo {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     align-items: center;
-    justify-content: center;
-    gap: 0.15rem;
-    padding-right: 1rem;
+    justify-content: flex-start;
+    gap: 1.5rem;
+    padding-right: 1.25rem;
     border-right: 1px solid #e5e7eb;
 }
 
+.lic-detail-logo-image {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+    padding-right: 1.5rem;
+    border-right: 1px solid #d1d5db;
+}
+
 .lic-detail-logo-img {
-    width: 86px;
-    height: 58px;
+    width: 145px;
+    height: 100px;
     object-fit: contain;
 }
 
-.lic-detail-logo-text {
-    color: #111827;
-    font-size: 0.95rem;
-    font-weight: 700;
+.lic-detail-logo-content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    min-width: 0;
 }
 
-.lic-detail-info {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1.7fr;
+.lic-detail-logo-text {
+    max-width: 220px;
+    color: #111827;
+    font-size: 1.05rem;
+    font-weight: 700;
+    line-height: 1.35;
 }
 
 .lic-detail-info-item {
@@ -74,7 +86,7 @@
 
 .lic-detail-label {
     color: #9ca3af;
-    font-size: 0.65rem;
+    font-size: 0.75rem;
 }
 
 .lic-detail-provider {
@@ -93,7 +105,7 @@
 .lic-provider-name {
     margin: 0;
     color: #111827;
-    font-size: 0.95rem;
+    font-size: 1.05rem;
     font-weight: 700;
 }
 
@@ -102,7 +114,7 @@
     padding: 0.1rem 0.25rem;
     background: #fef3c7;
     color: #d97706;
-    font-size: 0.6rem;
+    font-size: 0.7rem;
     font-weight: 600;
 }
 
@@ -118,7 +130,7 @@
 
 .lic-detail-value-lg {
     color: #111827;
-    font-size: 0.95rem;
+    font-size: 1.05rem;
     font-weight: 700;
     white-space: nowrap;
 }
@@ -153,7 +165,7 @@
 
 .lic-info-card {
     min-width: 0;
-    padding: 0.8rem;
+    padding: 1rem;
 }
 
 .lic-info-header {
@@ -168,13 +180,13 @@
 .lic-info-header h4 {
     margin: 0;
     color: #111827;
-    font-size: 0.72rem;
+    font-size: 0.85rem;
     font-weight: 700;
 }
 
 .lic-info-status {
     color: #6b7280;
-    font-size: 0.58rem;
+    font-size: 0.7rem;
     white-space: nowrap;
 }
 
@@ -191,7 +203,7 @@
     justify-content: space-between;
     gap: 0.5rem;
     color: #6b7280;
-    font-size: 0.58rem;
+    font-size: 0.7rem;
 }
 
 .lic-info-list li span:last-child {
@@ -210,7 +222,7 @@
     border-collapse: separate;
     border-spacing: 0 0.35rem;
     color: #374151;
-    font-size: 0.65rem;
+    font-size: 0.78rem;
 }
 
 .lic-payment-table th {
@@ -263,11 +275,7 @@
 /* ===== Responsive ===== */
 @media (max-width: 900px) {
     .lic-detail-header {
-        grid-template-columns: 140px minmax(0, 1fr);
-    }
-
-    .lic-detail-info {
-        grid-template-columns: 1fr 1fr;
+        grid-template-columns: 1.5fr 1fr 1fr;
     }
 
     .lic-detail-info-item:last-child {
@@ -290,8 +298,8 @@
         border-bottom: 1px solid #e5e7eb;
     }
 
-    .lic-detail-info {
-        grid-template-columns: 1fr;
+    .lic-detail-logo-image {
+        padding-right: 1rem;
     }
 
     .lic-detail-info-item,
