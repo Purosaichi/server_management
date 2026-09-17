@@ -348,6 +348,12 @@
     gap: 0.5rem;
 }
 
+.history-header svg {
+    width: 1.25rem;
+    height: 1.25rem;
+    flex-shrink: 0;
+}
+
 .history-table {
     width: 100%;
     font-size: 0.8125rem;

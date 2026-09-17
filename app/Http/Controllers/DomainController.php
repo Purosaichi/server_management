@@ -11,7 +11,7 @@ class DomainController extends Controller
     {
         $domains = $this->domains();
 
-        return view('pages.domain.index', compact('domains'));
+        return view('pages.domain.domain', compact('domains'));
     }
 
     /**
