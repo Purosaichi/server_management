@@ -2,114 +2,169 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ServerStatus;
+use Illuminate\Support\Facades\DB;
+
 class ServerController extends Controller
 {
-    // Daftar server
+    /**
+     * Halaman daftar server
+     */
     public function index()
     {
-        $servers = $this->servers();
+        $servers = ServerStatus::orderBy('id_server')
+            ->get()
+            ->map(function ($s) {
+                return [
+                    'id' => $s->id_server,
+                    'name' => $s->nama_server,
+                    'ip_address' => $s->alamat_ip_produksi ?? '-',
+                    'status' => $s->status ?? 'Offline',
+                    'cpu' => $s->cpu_percent ? $s->cpu_percent . '%' : '-',
+                    'ram' => $s->memory_percent ? $s->memory_percent . '%' : '-',
+                    'disk' => $s->storage_percent ? $s->storage_percent . '%' : '-',
+                    'uptime' => $this->formatUptime($s->uptime_detik),
+                ];
+            })
+            ->toArray();
 
         return view('pages.server.server', compact('servers'));
     }
 
-    // Detail server
+    /**
+     * Halaman detail server
+     */
     public function show(int $id)
     {
-        // Ambil data utama
-        $server = collect($this->servers())->firstWhere('id', $id);
+        // Ambil data server dari view
+        $serverView = ServerStatus::where('id_server', $id)->first();
 
-        abort_unless($server, 404);
+        abort_unless($serverView, 404);
 
-        // Gabungkan detail
-        $server = array_merge($server, $this->serverDetails($server));
+        // Ambil data teknis dari tabel server (join aset & pic)
+        $serverDetail = DB::table('server')
+            ->leftJoin('aset', 'aset.id_aset', '=', 'server.id_aset')
+            ->leftJoin('pic', 'pic.id_pic', '=', 'server.id_pic')
+            ->where('server.id_server', $id)
+            ->select(
+                'server.*',
+                'aset.kode_aset',
+                'aset.nama_aset',
+                'aset.model_perangkat',
+                'aset.nomor_seri',
+                'aset.tanggal_pengadaan',
+                'aset.tahun_pengadaan',
+                'pic.nama_pic',
+                'pic.jabatan',
+                'pic.divisi',
+                'pic.email',
+                'pic.telepon'
+            )
+            ->first();
+
+        // Ambil riwayat maintenance server ini
+        $maintenanceHistory = DB::table('vw_maintenance')
+            ->where('target_type', 'Server')
+            ->where('nama_target', $serverView->nama_server)
+            ->orderBy('jadwal_tanggal', 'desc')
+            ->get();
+
+        // Gabungin data
+        $server = [
+            'id' => $serverView->id_server,
+            'name' => $serverView->nama_server,
+            'subtitle' => 'Server Utama Aplikasi & Database',
+            'status' => $serverView->status ?? 'Offline',
+            'ip_address' => $serverView->alamat_ip_produksi ?? '-',
+            'hostname' => $serverView->hostname ?? '-',
+            'location' => $serverView->lokasi_rack ?? '-',
+            'uptime' => $this->formatUptime($serverView->uptime_detik),
+            'uptime_since' => $serverView->pengecekan_terakhir 
+                ? \Carbon\Carbon::parse($serverView->pengecekan_terakhir)->format('d F Y, H:i')
+                : '-',
+            'os' => $serverView->sistem_operasi ?? '-',
+            'status_monitoring' => ($serverView->status === 'Online') ? 'Aktif' : 'Tidak Aktif',
+            'last_check' => $serverView->pengecekan_terakhir 
+                ? \Carbon\Carbon::parse($serverView->pengecekan_terakhir)->format('d F Y, H:i:s')
+                : '-',
+            'last_check_note' => $serverView->pengecekan_terakhir 
+                ? '(' . \Carbon\Carbon::parse($serverView->pengecekan_terakhir)->diffForHumans() . ')'
+                : '',
+
+            // Resource Utilization
+            'cpu_percent' => $serverView->cpu_percent ?? 0,
+            'cpu_detail' => $serverDetail->model_prosessor ?? '-',
+            'memory_percent' => $serverView->memory_percent ?? 0,
+            'memory_detail' => $serverDetail->kapasitas_memori_gb 
+                ? $serverDetail->kapasitas_memori_gb . ' GB' 
+                : '-',
+            'storage_percent' => $serverView->storage_percent ?? 0,
+            'storage_detail' => $serverDetail->kapasitas_penyimpanan_gb 
+                ? $serverDetail->kapasitas_penyimpanan_gb . ' GB' 
+                : '-',
+
+            // Informasi Dasar
+            'server_type' => $serverDetail->jenis_server ?? '-',
+            'server_role' => 'Application & Database Server',
+            'manufacture' => $serverDetail->model_perangkat ?? '-',
+            'model' => $serverDetail->model_perangkat ?? '-',
+            'serial_number' => $serverDetail->nomor_seri ?? '-',
+            'purchase_date' => $serverDetail->tanggal_pengadaan 
+                ? \Carbon\Carbon::parse($serverDetail->tanggal_pengadaan)->format('d F Y')
+                : '-',
+            'warranty' => '-',
+            'server_status' => $serverDetail->status_aset ?? '-',
+
+            // Spesifikasi Hardware
+            'cpu_spec' => $serverDetail->model_prosessor ?? '-',
+            'ram_spec' => $serverDetail->kapasitas_memori_gb 
+                ? $serverDetail->kapasitas_memori_gb . ' GB ' . ($serverDetail->jenis_memori ?? '')
+                : '-',
+            'storage_spec' => $serverDetail->kapasitas_penyimpanan_gb 
+                ? $serverDetail->kapasitas_penyimpanan_gb . ' GB ' . ($serverDetail->jenis_penyimpanan ?? '')
+                : '-',
+
+            // Informasi Jaringan
+            'subnet_mask' => $serverDetail->subnet_mask ?? '-',
+            'gateway' => $serverDetail->gateway ?? '-',
+            'dns_server' => $serverDetail->dns_server ?? '-',
+            'mac_address' => $serverDetail->mac_address ?? '-',
+            'speed' => '1 Gbps',
+            'network_usage_down' => '-',
+            'network_usage_up' => '-',
+
+            // Catatan Terakhir
+            'last_note' => 'Tidak ada catatan',
+            'last_note_by' => $serverDetail->nama_pic ?? '-',
+            'last_note_date' => $serverView->pengecekan_terakhir 
+                ? \Carbon\Carbon::parse($serverView->pengecekan_terakhir)->format('d F Y, H:i')
+                : '-',
+
+            // Riwayat Maintenance
+            'maintenance_history' => $maintenanceHistory->map(function ($m) {
+                return [
+                    'tanggal' => \Carbon\Carbon::parse($m->jadwal_tanggal)->format('d F Y'),
+                    'jenis' => $m->jenis_maintenance,
+                    'pic' => $m->nama_pic ?? '-',
+                    'status' => $m->status,
+                ];
+            })->toArray(),
+        ];
 
         return view('pages.server.detail', compact('server'));
     }
 
-    // Data detail server
-    private function serverDetails(array $server): array
+    /**
+     * Format uptime dari detik ke "Xd Yh Zm"
+     */
+    private function formatUptime($detik): string
     {
-        // Kosongkan data saat offline
-        $isOffline = $server['status'] === 'Offline';
+        if (!$detik) return '-';
 
-        return [
-            'ip_address' => $server['ip_address'] ?? '-',
-            'subtitle' => 'Server Utama Aplikasi & Database',
-            'hostname' => strtolower($server['name']) . '.kemendik.local',
-            'location' => 'Data Center, Rack A0' . $server['id'],
-            'uptime_since' => $isOffline ? '-' : '15 Juli 2026, 12:00',
-            'os' => $isOffline ? '-' : 'Windows Server 2025 Standard',
-            'status_monitoring' => $isOffline ? 'Tidak Aktif' : 'Aktif',
-            'last_check' => $isOffline ? '-' : '13 Agustus 2026, 09:20:15',
-            'last_check_note' => $isOffline ? '-' : '(2 Hari yang lalu)',
+        $hari = floor($detik / 86400);
+        $jam = floor(($detik % 86400) / 3600);
+        $menit = floor(($detik % 3600) / 60);
 
-            // Resource
-            'cpu_percent' => $isOffline ? 0 : (int) str_replace('%', '', $server['cpu']),
-            'cpu_detail' => $isOffline ? '-' : '2 Core (4.2 GHz)',
-            'memory_percent' => $isOffline ? 0 : (int) str_replace('%', '', $server['ram']),
-            'memory_detail' => $isOffline ? '-' : '98 GB / 128 GB',
-            'storage_percent' => $isOffline ? 0 : (int) str_replace('%', '', $server['disk']),
-            'storage_detail' => $isOffline ? '-' : '85 TB / 100 TB',
-
-            // Info dasar
-            'server_type' => 'Physical',
-            'server_role' => 'Application & Database Server',
-            'manufacture' => $isOffline ? '-' : 'Dell Inc.',
-            'model' => $isOffline ? '-' : 'PowerEdge R7625',
-            'serial_number' => $isOffline ? '-' : 'DELLR7625-8F3K' . $server['id'],
-            'purchase_date' => '15 Januari 2025',
-            'warranty' => 'Hingga 15 Januari 2028',
-            'server_status' => $server['status'],
-
-            // Hardware
-            'cpu_spec' => $isOffline ? '-' : 'AMD EPYC 9655 (96 Core/192 Thread)',
-            'ram_spec' => $isOffline ? '-' : '1024 GB DDR5 ECC RDIMM',
-            'storage_spec' => $isOffline ? '-' : '10 TB NVMe Enterprise U.2/U.3',
-
-            // Jaringan
-            'subnet_mask' => '255.255.255.0',
-            'gateway' => '192.168.1.1',
-            'dns_server' => '8.8.8.8, 1.1.1.1',
-            'mac_address' => $isOffline ? '-' : '00:1A:2B:3C:4D:5' . $server['id'],
-            'speed' => $isOffline ? '-' : '1 Gbps',
-            'network_usage_down' => $isOffline ? '-' : '125 Mbps',
-            'network_usage_up' => $isOffline ? '-' : '48 Mbps',
-
-            // Catatan terakhir
-            'last_note' => $isOffline ? 'Server sedang offline' : 'Disk sudah mulai penuh',
-            'last_note_by' => 'Fathier Assyarief',
-            'last_note_date' => $isOffline ? '-' : '12 Agustus 2026, 12:12',
-
-            // Riwayat maintenance
-            'maintenance_history' => $isOffline ? [] : [
-                [
-                    'tanggal' => '12 Agustus 2026, 12:12',
-                    'jenis' => 'Update & Patch',
-                    'pic' => 'Fathier Assyarief',
-                    'status' => 'Completed'
-                ],
-            ],
-        ];
-    }
-
-    // Data utama server
-    private function servers(): array
-    {
-        return [
-            ['id' => 1, 'name' => 'SVR-001', 'ip_address' => '103.231.3.01', 'status' => 'Online', 'cpu' => '60%', 'ram' => '70%', 'disk' => '90%', 'uptime' => '20d 12h'],
-            ['id' => 2, 'name' => 'SVR-002', 'ip_address' => '103.231.3.02', 'status' => 'Online', 'cpu' => '45%', 'ram' => '65%', 'disk' => '85%', 'uptime' => '15d 8h'],
-            ['id' => 3, 'name' => 'SVR-003', 'ip_address' => '103.231.3.03', 'status' => 'Online', 'cpu' => '80%', 'ram' => '90%', 'disk' => '70%', 'uptime' => '5d 3h'],
-            ['id' => 4, 'name' => 'SVR-004', 'ip_address' => '103.231.3.04', 'status' => 'Offline', 'cpu' => '-', 'ram' => '-', 'disk' => '-', 'uptime' => '-'],
-            ['id' => 5, 'name' => 'SVR-005', 'ip_address' => '103.231.3.05', 'status' => 'Offline', 'cpu' => '60%', 'ram' => '75%', 'disk' => '80%', 'uptime' => '30d 2h'],
-            ['id' => 6, 'name' => 'SVR-006', 'ip_address' => '103.231.3.06', 'status' => 'Online', 'cpu' => '55%', 'ram' => '60%', 'disk' => '75%', 'uptime' => '10d 5h'],
-            ['id' => 7, 'name' => 'SVR-007', 'ip_address' => '103.231.3.07', 'status' => 'Online', 'cpu' => '40%', 'ram' => '50%', 'disk' => '60%', 'uptime' => '25d 18h'],
-            ['id' => 8, 'name' => 'SVR-008', 'ip_address' => '103.231.3.08', 'status' => 'Online', 'cpu' => '-', 'ram' => '-', 'disk' => '-', 'uptime' => '-'],
-            ['id' => 9, 'name' => 'SVR-009', 'ip_address' => '103.231.3.09', 'status' => 'Online', 'cpu' => '70%', 'ram' => '80%', 'disk' => '85%', 'uptime' => '8d 4h'],
-            ['id' => 10, 'name' => 'SVR-010', 'ip_address' => '103.231.3.10', 'status' => 'Online', 'cpu' => '30%', 'ram' => '40%', 'disk' => '50%', 'uptime' => '40d 10h'],
-            ['id' => 11, 'name' => 'SVR-011', 'ip_address' => '103.231.3.11', 'status' => 'Offline', 'cpu' => '-', 'ram' => '-', 'disk' => '-', 'uptime' => '-'],
-            ['id' => 12, 'name' => 'SVR-012', 'ip_address' => '103.231.3.12', 'status' => 'Online', 'cpu' => '65%', 'ram' => '70%', 'disk' => '88%', 'uptime' => '12d 6h'],
-            ['id' => 13, 'name' => 'SVR-013', 'ip_address' => '103.231.3.13', 'status' => 'Online', 'cpu' => '45%', 'ram' => '55%', 'disk' => '65%', 'uptime' => '18d 14h'],
-            ['id' => 14, 'name' => 'SVR-014', 'ip_address' => '103.231.3.14', 'status' => 'Online', 'cpu' => '35%', 'ram' => '45%', 'disk' => '55%', 'uptime' => '22d 20h'],
-        ];
+        return "{$hari}d {$jam}h {$menit}m";
     }
 }

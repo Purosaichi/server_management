@@ -31,9 +31,8 @@ class DashboardController extends Controller
             })
             ->toArray();
 
-        // ===== APLIKASI TERBARU (5 data) =====
+        // ===== APLIKASI TERBARU =====
         $applications = AplikasiDetail::orderBy('id_aplikasi')
-            ->limit(5)
             ->get()
             ->map(function ($a) {
                 return [
@@ -42,8 +41,8 @@ class DashboardController extends Controller
                     'server' => $a->nama_server ?? '-',
                     'status' => $a->status_aplikasi,
                     'domain' => $a->nama_domain ?? '-',
-                    'licenses' => '-',  // nanti diisi dari relasi lisensi
-                    'maintenance' => '-',
+                    'licenses' => $a->licenses ?? '-',
+                    'maintenance' => $a->next_maintenance ?? '-',
                 ];
             })
             ->toArray();
