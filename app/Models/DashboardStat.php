@@ -2,9 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Models;
+use Illuminate\Database\Eloquent\Model;
 
-class DashboardStat extends Models
+class DashboardStat extends Model
 {
     protected $table = 'vw_dashboard_stats';
     protected $primarykey = null;
