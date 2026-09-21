@@ -3,167 +3,120 @@
 namespace App\Http\Controllers;
 
 use App\Models\ServerStatus;
-use Illuminate\Support\Facades\DB;
 
 class ServerController extends Controller
 {
-    /**
-     * Halaman daftar server
-     */
     public function index()
     {
-        $servers = ServerStatus::orderBy('id_server')
-            ->get()
-            ->map(function ($s) {
-                return [
-                    'id' => $s->id_server,
-                    'name' => $s->nama_server,
-                    'ip_address' => $s->alamat_ip_produksi ?? '-',
-                    'status' => $s->status ?? 'Offline',
-                    'cpu' => $s->cpu_percent ? $s->cpu_percent . '%' : '-',
-                    'ram' => $s->memory_percent ? $s->memory_percent . '%' : '-',
-                    'disk' => $s->storage_percent ? $s->storage_percent . '%' : '-',
-                    'uptime' => $this->formatUptime($s->uptime_detik),
-                ];
-            })
-            ->toArray();
+        $servers = $this->servers();
 
         return view('pages.server.server', compact('servers'));
     }
 
-    /**
-     * Halaman detail server
-     */
     public function show(int $id)
     {
-        // Ambil data server dari view
-        $serverView = ServerStatus::where('id_server', $id)->first();
+        $server = collect($this->servers())->firstWhere('id', $id);
 
-        abort_unless($serverView, 404);
+        abort_unless($server, 404);
 
-        // Ambil data teknis dari tabel server (join aset & pic)
-        $serverDetail = DB::table('server')
-            ->leftJoin('aset', 'aset.id_aset', '=', 'server.id_aset')
-            ->leftJoin('pic', 'pic.id_pic', '=', 'server.id_pic')
-            ->where('server.id_server', $id)
-            ->select(
-                'server.*',
-                'aset.kode_aset',
-                'aset.nama_aset',
-                'aset.model_perangkat',
-                'aset.nomor_seri',
-                'aset.tanggal_pengadaan',
-                'aset.tahun_pengadaan',
-                'pic.nama_pic',
-                'pic.jabatan',
-                'pic.divisi',
-                'pic.email',
-                'pic.telepon'
-            )
-            ->first();
-
-        // Ambil riwayat maintenance server ini
-        $maintenanceHistory = DB::table('vw_maintenance')
-            ->where('target_type', 'Server')
-            ->where('nama_target', $serverView->nama_server)
-            ->orderBy('jadwal_tanggal', 'desc')
-            ->get();
-
-        // Gabungin data
-        $server = [
-            'id' => $serverView->id_server,
-            'name' => $serverView->nama_server,
-            'subtitle' => 'Server Utama Aplikasi & Database',
-            'status' => $serverView->status ?? 'Offline',
-            'ip_address' => $serverView->alamat_ip_produksi ?? '-',
-            'hostname' => $serverView->hostname ?? '-',
-            'location' => $serverView->lokasi_rack ?? '-',
-            'uptime' => $this->formatUptime($serverView->uptime_detik),
-            'uptime_since' => $serverView->pengecekan_terakhir 
-                ? \Carbon\Carbon::parse($serverView->pengecekan_terakhir)->format('d F Y, H:i')
-                : '-',
-            'os' => $serverView->sistem_operasi ?? '-',
-            'status_monitoring' => ($serverView->status === 'Online') ? 'Aktif' : 'Tidak Aktif',
-            'last_check' => $serverView->pengecekan_terakhir 
-                ? \Carbon\Carbon::parse($serverView->pengecekan_terakhir)->format('d F Y, H:i:s')
-                : '-',
-            'last_check_note' => $serverView->pengecekan_terakhir 
-                ? '(' . \Carbon\Carbon::parse($serverView->pengecekan_terakhir)->diffForHumans() . ')'
-                : '',
-
-            // Resource Utilization
-            'cpu_percent' => $serverView->cpu_percent ?? 0,
-            'cpu_detail' => $serverDetail->model_prosessor ?? '-',
-            'memory_percent' => $serverView->memory_percent ?? 0,
-            'memory_detail' => $serverDetail->kapasitas_memori_gb 
-                ? $serverDetail->kapasitas_memori_gb . ' GB' 
-                : '-',
-            'storage_percent' => $serverView->storage_percent ?? 0,
-            'storage_detail' => $serverDetail->kapasitas_penyimpanan_gb 
-                ? $serverDetail->kapasitas_penyimpanan_gb . ' GB' 
-                : '-',
-
-            // Informasi Dasar
-            'server_type' => $serverDetail->jenis_server ?? '-',
-            'server_role' => 'Application & Database Server',
-            'manufacture' => $serverDetail->model_perangkat ?? '-',
-            'model' => $serverDetail->model_perangkat ?? '-',
-            'serial_number' => $serverDetail->nomor_seri ?? '-',
-            'purchase_date' => $serverDetail->tanggal_pengadaan 
-                ? \Carbon\Carbon::parse($serverDetail->tanggal_pengadaan)->format('d F Y')
-                : '-',
-            'warranty' => '-',
-            'server_status' => $serverDetail->status_aset ?? '-',
-
-            // Spesifikasi Hardware
-            'cpu_spec' => $serverDetail->model_prosessor ?? '-',
-            'ram_spec' => $serverDetail->kapasitas_memori_gb 
-                ? $serverDetail->kapasitas_memori_gb . ' GB ' . ($serverDetail->jenis_memori ?? '')
-                : '-',
-            'storage_spec' => $serverDetail->kapasitas_penyimpanan_gb 
-                ? $serverDetail->kapasitas_penyimpanan_gb . ' GB ' . ($serverDetail->jenis_penyimpanan ?? '')
-                : '-',
-
-            // Informasi Jaringan
-            'subnet_mask' => $serverDetail->subnet_mask ?? '-',
-            'gateway' => $serverDetail->gateway ?? '-',
-            'dns_server' => $serverDetail->dns_server ?? '-',
-            'mac_address' => $serverDetail->mac_address ?? '-',
-            'speed' => '1 Gbps',
-            'network_usage_down' => '-',
-            'network_usage_up' => '-',
-
-            // Catatan Terakhir
-            'last_note' => 'Tidak ada catatan',
-            'last_note_by' => $serverDetail->nama_pic ?? '-',
-            'last_note_date' => $serverView->pengecekan_terakhir 
-                ? \Carbon\Carbon::parse($serverView->pengecekan_terakhir)->format('d F Y, H:i')
-                : '-',
-
-            // Riwayat Maintenance
-            'maintenance_history' => $maintenanceHistory->map(function ($m) {
-                return [
-                    'tanggal' => \Carbon\Carbon::parse($m->jadwal_tanggal)->format('d F Y'),
-                    'jenis' => $m->jenis_maintenance,
-                    'pic' => $m->nama_pic ?? '-',
-                    'status' => $m->status,
-                ];
-            })->toArray(),
-        ];
+        $server = array_merge($server, $this->serverDetails($server));
 
         return view('pages.server.detail', compact('server'));
     }
 
-    /**
-     * Format uptime dari detik ke "Xd Yh Zm"
-     */
+    private function serverDetails(array $server): array
+    {
+        $isOffline = $server['status'] === 'Offline';
+
+        return [
+            'ip_address' => $server['ip_address'] ?? '-',
+            'subtitle' => 'Server Utama Aplikasi & Database',
+            'hostname' => strtolower($server['name']) . '.kemendik.local',
+            'location' => 'Data Center, Rack A0' . $server['id'],
+            'uptime_since' => $isOffline ? '-' : '15 Juli 2026, 12:00',
+            'os' => $isOffline ? '-' : 'Windows Server 2025 Standard',
+            'status_monitoring' => $isOffline ? 'Tidak Aktif' : 'Aktif',
+            'last_check' => $isOffline ? '-' : '13 Agustus 2026, 09:20:15',
+            'last_check_note' => $isOffline ? '-' : '(2 Hari yang lalu)',
+
+            'cpu_percent' => $isOffline ? 0 : (int) str_replace('%', '', $server['cpu']),
+            'cpu_detail' => $isOffline ? '-' : '2 Core (4.2 GHz)',
+            'memory_percent' => $isOffline ? 0 : (int) str_replace('%', '', $server['ram']),
+            'memory_detail' => $isOffline ? '-' : '98 GB / 128 GB',
+            'storage_percent' => $isOffline ? 0 : (int) str_replace('%', '', $server['disk']),
+            'storage_detail' => $isOffline ? '-' : '85 TB / 100 TB',
+
+            'server_type' => 'Physical',
+            'server_role' => 'Application & Database Server',
+            'manufacture' => $isOffline ? '-' : 'Dell Inc.',
+            'model' => $isOffline ? '-' : 'PowerEdge R7625',
+            'serial_number' => $isOffline ? '-' : 'DELLR7625-8F3K' . $server['id'],
+            'purchase_date' => '15 Januari 2025',
+            'warranty' => 'Hingga 15 Januari 2028',
+            'server_status' => $server['status'],
+
+            'cpu_spec' => $isOffline ? '-' : 'AMD EPYC 9655 (96 Core/192 Thread)',
+            'ram_spec' => $isOffline ? '-' : '1024 GB DDR5 ECC RDIMM',
+            'storage_spec' => $isOffline ? '-' : '10 TB NVMe Enterprise U.2/U.3',
+
+            'subnet_mask' => '255.255.255.0',
+            'gateway' => '192.168.1.1',
+            'dns_server' => '8.8.8.8, 1.1.1.1',
+            'mac_address' => $isOffline ? '-' : '00:1A:2B:3C:4D:5' . $server['id'],
+            'speed' => $isOffline ? '-' : '1 Gbps',
+            'network_usage_down' => $isOffline ? '-' : '125 Mbps',
+            'network_usage_up' => $isOffline ? '-' : '48 Mbps',
+
+            'last_note' => $isOffline ? 'Server sedang offline' : 'Disk sudah mulai penuh',
+            'last_note_by' => 'Fathier Assyarief',
+            'last_note_date' => $isOffline ? '-' : '12 Agustus 2026, 12:12',
+
+            'maintenance_history' => $isOffline ? [] : [
+                [
+                    'tanggal' => '12 Agustus 2026, 12:12',
+                    'jenis' => 'Update & Patch',
+                    'pic' => 'Fathier Assyarief',
+                    'status' => 'Completed'
+                ],
+            ],
+        ];
+    }
+
+    private function servers(): array
+    {
+        return ServerStatus::query()
+            ->orderBy('id_server')
+            ->get()
+            ->map(function ($server) {
+                $status = $server->status ?? 'Offline';
+                $cpu = $server->cpu_percent ? (string) $server->cpu_percent . '%' : '-';
+                $ram = $server->memory_percent ? (string) $server->memory_percent . '%' : '-';
+                $disk = $server->storage_percent ? (string) $server->storage_percent . '%' : '-';
+                $uptime = $this->formatUptime($server->uptime_detik ?? null);
+
+                return [
+                    'id' => (int) $server->id_server,
+                    'name' => $server->nama_server ?? '-',
+                    'ip_address' => $server->alamat_ip_produksi ?? '-',
+                    'status' => $status,
+                    'cpu' => $cpu,
+                    'ram' => $ram,
+                    'disk' => $disk,
+                    'uptime' => $uptime,
+                ];
+            })
+            ->toArray();
+    }
+
     private function formatUptime($detik): string
     {
-        if (!$detik) return '-';
+        if (!$detik) {
+            return '-';
+        }
 
-        $hari = floor($detik / 86400);
-        $jam = floor(($detik % 86400) / 3600);
-        $menit = floor(($detik % 3600) / 60);
+        $hari = (int) floor($detik / 86400);
+        $jam = (int) floor(($detik % 86400) / 3600);
+        $menit = (int) floor(($detik % 3600) / 60);
 
         return "{$hari}d {$jam}h {$menit}m";
     }

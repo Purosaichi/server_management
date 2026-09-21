@@ -32,17 +32,25 @@ class DashboardController extends Controller
             ->toArray();
 
         // ===== APLIKASI TERBARU =====
+        $maintenance = \DB::table('vw_maintenance')
+            ->where('target_type', 'Application')
+            ->orderBy('jadwal_tanggal')
+            ->get()
+            ->groupBy('nama_target');
+
         $applications = AplikasiDetail::orderBy('id_aplikasi')
             ->get()
-            ->map(function ($a) {
+            ->map(function ($a) use ($maintenance) {
+                $next = $maintenance->get($a->nama_aplikasi, collect())->first();
+
                 return [
                     'id' => $a->id_aplikasi,
                     'name' => $a->nama_aplikasi,
                     'server' => $a->nama_server ?? '-',
                     'status' => $a->status_aplikasi,
                     'domain' => $a->nama_domain ?? '-',
-                    'licenses' => $a->licenses ?? '-',
-                    'maintenance' => $a->next_maintenance ?? '-',
+                    'licenses' => $a->database_digunakan ?? '-',
+                    'maintenance' => $next->jadwal_tanggal ?? '-',
                 ];
             })
             ->toArray();

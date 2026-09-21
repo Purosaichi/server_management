@@ -2,113 +2,146 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\AplikasiDetail;
+use Illuminate\Support\Facades\DB;
+
 class ApplicationController extends Controller
 {
-    // Daftar aplikasi
+    /**
+     * Halaman daftar aplikasi
+     */
     public function index()
     {
-        $applications = $this->applications();
+        $applications = AplikasiDetail::orderBy('id_aplikasi')
+            ->get()
+            ->map(function ($a) {
+                return [
+                    'id' => $a->id_aplikasi,
+                    'name' => $a->nama_aplikasi,
+                    'server_name' => $a->nama_server ?? '-',  // ← ganti dari 'server'
+                    'status' => $a->status_aplikasi,
+                    'domain' => $a->nama_domain ?? '-',
+                    'licenses' => $a->licenses ?? '-',
+                    'next_maintenance' => $a->next_maintenance ?? '-',
+                ];
+            })
+            ->toArray();
 
         return view('pages.application.application', compact('applications'));
     }
 
-    // Detail aplikasi
+    /**
+     * Halaman detail aplikasi
+     */
     public function show(int $id)
     {
-        // Ambil data utama
-        $app = collect($this->applications())->firstWhere('id', $id);
+        // Ambil data dari view
+        $app = AplikasiDetail::where('id_aplikasi', $id)->first();
 
         abort_unless($app, 404);
 
-        // Gabungkan detail
-        $application = array_merge($app, $this->applicationDetails($app));
+        // Ambil data teknis dari tabel aplikasi
+        $appDetail = DB::table('aplikasi')
+            ->where('id_aplikasi', $id)
+            ->first();
 
-        return view('pages.application.detail', compact('application'));
-    }
+        // Ambil maintenance terakhir & berikutnya
+        $lastMaintenance = DB::table('vw_maintenance')
+            ->where('target_type', 'Application')
+            ->where('nama_target', $app->nama_aplikasi)
+            ->where('status', 'Completed')
+            ->orderBy('jadwal_tanggal', 'desc')
+            ->first();
 
-    // Data detail aplikasi
-    private function applicationDetails(array $app): array
-    {
-        $isDown = $app['status'] === 'Down';
+        $nextMaintenance = DB::table('vw_maintenance')
+            ->where('target_type', 'Application')
+            ->where('nama_target', $app->nama_aplikasi)
+            ->whereIn('status', ['Scheduled', 'In Progress'])
+            ->orderBy('jadwal_tanggal', 'asc')
+            ->first();
 
-        return [
-            'description' => $isDown ? 'Aplikasi sedang tidak tersedia' : 'Aplikasi untuk mengelola sumber daya guru untuk keperluan pendidikan',
-            'code' => strtoupper(substr(str_replace([' ', '-'], '', $app['name']), 0, 4)),
-            'category' => $isDown ? '-' : 'Internal',
-            'sla' => $isDown ? '-' : '99.5%',
-            'version' => $isDown ? '-' : '2.14',
-            'uptime' => $isDown ? '0%' : '100%',
+        // Ambil riwayat maintenance
+        $maintenanceHistory = DB::table('vw_maintenance')
+            ->where('target_type', 'Application')
+            ->where('nama_target', $app->nama_aplikasi)
+            ->orderBy('jadwal_tanggal', 'desc')
+            ->limit(10)
+            ->get();
+
+        // Format data buat view
+        $application = [
+            'id' => $app->id_aplikasi,
+            'name' => $app->nama_aplikasi,
+            'status' => $app->status_aplikasi,
+            'description' => $app->deskripsi ?? 'Aplikasi untuk mengelola sumber daya guru untuk keperluan pendidikan',
+            'code' => $app->kode_aplikasi,
+            'category' => $app->kategori ?? '-',
+            'sla' => $app->sla_percent ? $app->sla_percent . '%' : '-',
+            'version' => $app->versi ?? '-',
+            'uptime' => $app->uptime_percent ? $app->uptime_percent . '%' : '0%',
             'uptime_period' => '30 Hari Terakhir',
-            'since' => $isDown ? '-' : '15 Januari 2023',
-            'since_duration' => $isDown ? '-' : '(3 Tahun 7 Bulan)',
+            'since' => $app->tanggal_mulai_operasi 
+                ? \Carbon\Carbon::parse($app->tanggal_mulai_operasi)->format('d F Y')
+                : '-',
+            'since_duration' => $app->tanggal_mulai_operasi 
+                ? '(' . \Carbon\Carbon::parse($app->tanggal_mulai_operasi)->diffForHumans(null, true) . ')'
+                : '',
 
-            // Server
-            'server' => $app['server_name'],
-            'ip_address' => $isDown ? '-' : '127.000.0.10',
-            'os' => $isDown ? '-' : 'Windows Server 2022',
-            'database' => $isDown ? '-' : 'MySQL 8.0',
+            // Server & Infrastruktur
+            'server' => $app->nama_server ?? '-',
+            'ip_address' => $app->alamat_ip_produksi ?? '-',
+            'os' => $app->sistem_operasi ?? '-',
+            'database' => $app->database_digunakan ?? '-',
 
             // Domain
-            'domain' => $app['domain'] ?? '-',
-            'ssl_certificate' => $isDown ? 'INVALID' : 'VALID',
-            'ssl_expired' => $isDown ? '-' : '12 Desember 2026',
-            'domain_status' => $isDown ? 'Tidak Aktif' : 'Aktif',
+            'domain' => $app->nama_domain ?? '-',
+            'ssl_certificate' => $app->status_ssl ?? 'Tidak Ada',
+            'ssl_expired' => $app->ssl_kadaluarsa 
+                ? \Carbon\Carbon::parse($app->ssl_kadaluarsa)->format('d F Y')
+                : '-',
+            'domain_status' => $app->status_domain ?? 'Tidak Aktif',
 
-            // Lisensi
-            'license_name' => $app['licenses'] ?? '-',
-            'license_provider' => $isDown ? '-' : 'Microsoft',
-            'license_count' => $isDown ? '-' : '2 License',
-            'license_expired' => $isDown ? '-' : '20 Sep 2026',
-            'license_expired_note' => $isDown ? '-' : '(38 Hari Lagi)',
-            'license_status' => $isDown ? 'Expired' : 'Akan Expired',
+            // Licenses
+            'license_name' => $app->licenses ?? '-',
+            'license_provider' => '-',
+            'license_count' => '-',
+            'license_expired' => '-',
+            'license_expired_note' => '',
+            'license_status' => '-',
 
-            // PIC
-            'pic_name' => 'Fathier Assyarief',
-            'pic_jabatan' => 'Data Analyst',
-            'pic_email' => 'Fathier.assyarief@gmail.com',
-            'pic_telepon' => '+62 813 8306 5203',
-            'pic_divisi' => 'IT Infrastructure',
+            // Pengurus / PIC
+            'pic_name' => $app->nama_pic ?? '-',
+            'pic_jabatan' => $app->pic_jabatan ?? '-',
+            'pic_email' => $app->pic_email ?? '-',
+            'pic_telepon' => $app->pic_telepon ?? '-',
+            'pic_divisi' => '-',
 
-            // Maintenance terakhir
-            'last_maintenance' => $isDown ? null : [
-                'tanggal' => '20 Agustus 2026',
-                'jenis' => 'Update & Patch',
-                'pic' => 'Chairul Leclerc',
-                'status' => 'Completed',
-            ],
+            // Maintenance Terakhir
+            'last_maintenance' => $lastMaintenance ? [
+                'tanggal' => \Carbon\Carbon::parse($lastMaintenance->jadwal_tanggal)->format('d F Y'),
+                'jenis' => $lastMaintenance->jenis_maintenance,
+                'pic' => $lastMaintenance->nama_pic ?? '-',
+                'status' => $lastMaintenance->status,
+            ] : null,
 
-            // Maintenance berikutnya
-            'next_maintenance' => $isDown ? null : [
-                'tanggal' => '12 September 2026',
-                'jenis' => 'Upgrade RAM',
-                'pic' => 'Lauren Makies',
-                'status' => 'Scheduled',
-            ],
+            // Maintenance Berikutnya
+            'next_maintenance' => $nextMaintenance ? [
+                'tanggal' => \Carbon\Carbon::parse($nextMaintenance->jadwal_tanggal)->format('d F Y'),
+                'jenis' => $nextMaintenance->jenis_maintenance,
+                'pic' => $nextMaintenance->nama_pic ?? '-',
+                'status' => $nextMaintenance->status,
+            ] : null,
 
-            // Riwayat maintenance
-            'maintenance_history' => $isDown ? [] : [
-                ['tanggal' => '20 Agustus 2026', 'jenis' => 'Update & Patch', 'status' => 'Completed'],
-                ['tanggal' => '12 Juli 2026', 'jenis' => 'Upgrade SSD', 'status' => 'Completed'],
-                ['tanggal' => '17 Juni 2026', 'jenis' => 'Fix Bug', 'status' => 'Completed'],
-                ['tanggal' => '4 Juni 2026', 'jenis' => 'Fix Data Leaks', 'status' => 'Completed'],
-                ['tanggal' => '12 September 2026', 'jenis' => 'Upgrade RAM', 'status' => 'Scheduled'],
-                ['tanggal' => '20 Juni 2026', 'jenis' => 'Cleaning Storage', 'status' => 'Canceled'],
-            ],
+            // Riwayat Maintenance
+            'maintenance_history' => $maintenanceHistory->map(function ($m) {
+                return [
+                    'tanggal' => \Carbon\Carbon::parse($m->jadwal_tanggal)->format('d F Y'),
+                    'jenis' => $m->jenis_maintenance,
+                    'status' => $m->status,
+                ];
+            })->toArray(),
         ];
-    }
 
-    // Data utama aplikasi
-    private function applications(): array
-    {
-        return [
-            ['id' => 1, 'name' => 'GTK - Guru', 'server_name' => 'SVR-001', 'status' => 'Aktif', 'domain' => 'webGTK.com', 'licenses' => 'Microsoft SQL Server', 'next_maintenance' => '20 Agustus 2026'],
-            ['id' => 2, 'name' => 'GTK - Pendidikan', 'server_name' => 'SVR-001', 'status' => 'Aktif', 'domain' => 'webGTK.com', 'licenses' => 'Django', 'next_maintenance' => '20 Agustus 2026'],
-            ['id' => 3, 'name' => 'GTK - TKA', 'server_name' => 'SVR-001', 'status' => 'Down', 'domain' => 'webGTK.com', 'licenses' => 'Microsoft SQL Server', 'next_maintenance' => '20 Agustus 2026'],
-            ['id' => 4, 'name' => 'GTK - PPPK', 'server_name' => 'SVR-002', 'status' => 'Aktif', 'domain' => 'webGTK.com', 'licenses' => 'Microsoft 365', 'next_maintenance' => '20 September 2026'],
-            ['id' => 5, 'name' => 'GTK - Mutasi', 'server_name' => 'SVR-005', 'status' => 'Aktif', 'domain' => 'webGTK.com', 'licenses' => 'Oracle', 'next_maintenance' => '15 September 2026'],
-            ['id' => 6, 'name' => 'GTK - SIMPKB', 'server_name' => 'SVR-001', 'status' => 'Aktif', 'domain' => 'webGTK.com', 'licenses' => 'VMware', 'next_maintenance' => '20 Agustus 2026'],
-            ['id' => 7, 'name' => 'GTK - Ujian', 'server_name' => 'SVR-003', 'status' => 'Aktif', 'domain' => 'webGTK.com', 'licenses' => 'Adobe', 'next_maintenance' => '10 Oktober 2026'],
-            ['id' => 8, 'name' => 'GTK - Sertifikasi', 'server_name' => 'SVR-004', 'status' => 'Down', 'domain' => 'webGTK.com', 'licenses' => 'Microsoft SQL Server', 'next_maintenance' => '20 Agustus 2026'],
-        ];
+        return view('pages.application.detail', compact('application'));
     }
 }

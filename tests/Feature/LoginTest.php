@@ -55,6 +55,14 @@ class LoginTest extends TestCase
             ->assertSee('Total Server');
     }
 
+    public function test_application_page_renders_with_application_data(): void
+    {
+        $this->withSession(['user_id' => 1, 'user_name' => 'Administrator'])
+            ->get('/application')
+            ->assertOk()
+            ->assertSee('GTK - Guru');
+    }
+
     public function test_login_rejects_wrong_password(): void
     {
         $this->createPengguna();
