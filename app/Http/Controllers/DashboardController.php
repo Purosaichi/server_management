@@ -2,38 +2,74 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\DashboardStat;
+use App\Models\ServerStatus;
+use App\Models\AplikasiDetail;
+use App\Models\ReminderKadaluarsa;
+
 class DashboardController extends Controller
 {
     public function index()
     {
-        $stats = [
-             'total_server' => 24,
-            'server_online' => 22,
-            'server_offline' => 2,
-            'total_aplikasi' => 20,
-            'app_aktif' => 18,
-            'app_down' => 2,
-            'jadwal_maintenance' => 5,
-            'akan_expired' => 2,
-        ];
+         $stats = DashboardStat::first();
 
-        $servers = [
-            ['name' => 'SV-R - 001', 'ip' => '103.231.3.01', 'status' => 'Online', 'cpu' => '50%', 'ram' => '70%', 'disk' => '90%', 'uptime' => '20d 12h'],
-            ['name' => 'SV-R - 002', 'ip' => '103.231.3.02', 'status' => 'Online', 'cpu' => '50%', 'ram' => '70%', 'disk' => '90%', 'uptime' => '12d 22h'],
-            ['name' => 'SV-R - 003', 'ip' => '103.231.3.03', 'status' => 'Online', 'cpu' => '50%', 'ram' => '70%', 'disk' => '90%', 'uptime' => '9d 11h'],
-            ['name' => 'SV-R - 004', 'ip' => '103.231.3.04', 'status' => 'Online', 'cpu' => '50%', 'ram' => '70%', 'disk' => '90%', 'uptime' => '32d 1h'],
-            ['name' => 'SV-R - 005', 'ip' => '103.231.3.05', 'status' => 'Offline', 'cpu' => '---', 'ram' => '---', 'disk' => '---', 'uptime' => '---'],
-            ['name' => 'SV-R - 006', 'ip' => '103.231.3.06', 'status' => 'Online', 'cpu' => '50%', 'ram' => '70%', 'disk' => '90%', 'uptime' => '9d 11h'],
-        ];
+        // ===== SERVER TERBARU (6 data) =====
+        $servers = ServerStatus::orderBy('id_server')
+            ->limit(6)
+            ->get()
+            ->map(function ($s) {
+                return [
+                    'id' => $s->id_server,
+                    'name' => $s->nama_server,
+                    'ip_address' => $s->alamat_ip_produksi ?? '-',
+                    'status' => $s->status ?? 'Offline',
+                    'cpu' => $s->cpu_percent ? $s->cpu_percent . '%' : '-',
+                    'ram' => $s->memory_percent ? $s->memory_percent . '%' : '-',
+                    'disk' => $s->storage_percent ? $s->storage_percent . '%' : '-',
+                    'uptime' => $this->formatUptime($s->uptime_detik),
+                ];
+            })
+            ->toArray();
 
-        $applications = [
-            ['name' => 'GTK - Guru', 'server' => 'SV-R - 001', 'status' => 'Aktif', 'domain' => 'webGTK.com', 'licenses' => 'Microsoft SQL Server', 'maintenance' => '20 Agustus 2026'],
-            ['name' => 'GTK - Pendidikan', 'server' => 'SV-R - 002', 'status' => 'Aktif', 'domain' => 'webGTK.com', 'licenses' => 'Django', 'maintenance' => '20 Agustus 2026'],
-            ['name' => 'GTK - TKA', 'server' => 'SV-R - 003', 'status' => 'Aktif', 'domain' => 'webGTK.com', 'licenses' => 'Microsoft SQL Server', 'maintenance' => '20 Agustus 2026'],
-            ['name' => 'GTK - PPPK', 'server' => 'SV-R - 004', 'status' => 'Aktif', 'domain' => 'webGTK.com', 'licenses' => 'Microsoft 365', 'maintenance' => '20 Agustus 2026'],
-            ['name' => 'GTK - Kemendikdasmen', 'server' => 'SV-R - 005', 'status' => 'Aktif', 'domain' => 'webGTK.com', 'licenses' => 'Oracle', 'maintenance' => '20 Agustus 2026'],
-        ];
+        // ===== APLIKASI TERBARU (5 data) =====
+        $applications = AplikasiDetail::orderBy('id_aplikasi')
+            ->limit(5)
+            ->get()
+            ->map(function ($a) {
+                return [
+                    'id' => $a->id_aplikasi,
+                    'name' => $a->nama_aplikasi,
+                    'server' => $a->nama_server ?? '-',
+                    'status' => $a->status_aplikasi,
+                    'domain' => $a->nama_domain ?? '-',
+                    'licenses' => '-',  // nanti diisi dari relasi lisensi
+                    'maintenance' => '-',
+                ];
+            })
+            ->toArray();
 
-        return view('pages.home.dashboard', compact('stats', 'servers', 'applications'));
+        // ===== REMINDER KADALUARSA (yang < 60 hari) =====
+        $reminders = ReminderKadaluarsa::where('sisa_hari', '<=', 60)
+            ->orderBy('sisa_hari')
+            ->limit(5)
+            ->get();
+
+        return view('pages.home.dashboard', compact(
+            'stats',
+            'servers',
+            'applications',
+            'reminders'
+        ));
+    }
+
+    private function formatUptime($detik): string
+    {
+        if (!$detik) return '-';
+
+        $hari = floor($detik / 86400);
+        $jam = floor(($detik % 86400) / 3600);
+        $menit = floor(($detik % 3600) / 60);
+
+        return "{$hari}d {$jam}h {$menit}m";
     }
 }

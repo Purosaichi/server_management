@@ -49,7 +49,7 @@ class LicenseController extends Controller
                 'expired' => '20 Sep 2026',
                 'expired_note' => '(38 Hari Lagi)',
                 'expired_type' => 'warning',
-                'logo' => 'microsoft.png',
+                'logo' => 'SWL_server.png',
             ],
             [
                 'id' => 2,

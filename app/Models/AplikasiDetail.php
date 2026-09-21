@@ -4,9 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class ApliaksiDetail extends Model
+class AplikasiDetail extends Model
 {
-    protected $table = 'vw_aplikasi_detil';
-    protected $primarykey = 'id_aplikasi';
+    protected $table = 'vw_aplikasi_detail';
+    protected $primaryKey = 'id_aplikasi';
     public $timestamps = false;
 }

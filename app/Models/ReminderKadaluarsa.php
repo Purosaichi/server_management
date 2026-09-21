@@ -6,8 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class ReminderKadaluarsa extends Model
 {
-    protected $table = 'vw_reminder-kadaluarsa';
-    protected $primarykey = null;
+    protected $table = 'vw_reminder_kadaluarsa';
+    protected $primaryKey = null;
     public $timestamps = false;
     public $incrementing = false;
 }

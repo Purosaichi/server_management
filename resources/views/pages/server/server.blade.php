@@ -15,7 +15,7 @@
 <div class="srv-table-container">
     <div class="srv-table-header">
         <h3 class="srv-table-title">Daftar Server</h3>
-        <span class="srv-table-count">Total: {{ count($servers) }} server</span>
+        <span class="srv-table-count">Total Server: {{ count($servers) }} server</span>
     </div>
     <div class="srv-table-wrapper">
         <table>

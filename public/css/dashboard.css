@@ -20,7 +20,7 @@
 }
 
 
-.stat-card {
+.stat-card-new{
     background: white;
     border-radius: 0.75rem;
     padding: 1.25rem 1.5rem;
@@ -29,38 +29,38 @@
     margin-top: 1rem;
 }
 
-.stat-card .stat-label {
+.stat-card-new.stat-label {
     font-size: 0.875rem;
     font-weight: 500;
     color: #6b7280;
     margin-bottom: 0.25rem;
 }
 
-.stat-card .stat-value {
+.stat-card-new .stat-value {
     font-size: 1.875rem;
     font-weight: 700;
     color: #1f2937;
 }
 
-.stat-card .stat-detail {
+.stat-card-new .stat-detail {
     font-size: 0.75rem;
     color: #6b7280;
     margin-top: 0.25rem;
 }
 
-.stat-card .stat-detail .green {
+.stat-card-new .stat-detail .green {
     color: #16a34a;
 }
 
-.stat-card .stat-detail .red {
+.stat-card-new .stat-detail .red {
     color: #dc2626;
 }
 
-.stat-card .stat-detail .yellow {
+.stat-card-new .stat-detail .yellow {
     color: #d97706;
 }
 
-.stat-card .stat-detail .blue {
+.stat-card-new .stat-detail .blue {
     color: #2563eb;
 }
 
