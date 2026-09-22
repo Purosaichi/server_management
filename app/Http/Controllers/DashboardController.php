@@ -13,9 +13,9 @@ class DashboardController extends Controller
     {
          $stats = DashboardStat::first();
 
-        // ===== SERVER TERBARU (6 data) =====
+        //card server
         $servers = ServerStatus::orderBy('id_server')
-            ->limit(6)
+            ->limit(3)
             ->get()
             ->map(function ($s) {
                 return [
@@ -31,7 +31,7 @@ class DashboardController extends Controller
             })
             ->toArray();
 
-        // ===== APLIKASI TERBARU =====
+        //card app
         $maintenance = \DB::table('vw_maintenance')
             ->where('target_type', 'Application')
             ->orderBy('jadwal_tanggal')
@@ -39,6 +39,7 @@ class DashboardController extends Controller
             ->groupBy('nama_target');
 
         $applications = AplikasiDetail::orderBy('id_aplikasi')
+            ->limit(3)
             ->get()
             ->map(function ($a) use ($maintenance) {
                 $next = $maintenance->get($a->nama_aplikasi, collect())->first();
@@ -58,7 +59,7 @@ class DashboardController extends Controller
         // ===== REMINDER KADALUARSA (yang < 60 hari) =====
         $reminders = ReminderKadaluarsa::where('sisa_hari', '<=', 60)
             ->orderBy('sisa_hari')
-            ->limit(5)
+            ->limit(3)
             ->get();
 
         return view('pages.home.dashboard', compact(
