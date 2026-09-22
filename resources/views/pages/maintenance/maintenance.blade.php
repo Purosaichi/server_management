@@ -33,7 +33,7 @@
         <div class="mt-stat-content">
             <p class="mt-stat-label">Completed</p>
             <p class="mt-stat-value green">{{ $stats['completed'] }}</p>
-            <p class="mt-stat-sub">{{ round(($stats['completed'] / $stats['total']) * 100) }}% dari total</p>
+            <p class="mt-stat-sub">{{ $stats['total'] > 0 ? round(($stats['completed'] / $stats['total']) * 100) : 0 }}% dari total</p>
         </div>
     </div>
     <div class="mt-stat-card">
