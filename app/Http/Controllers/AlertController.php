@@ -2,272 +2,47 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\DB;
+
 class AlertController extends Controller
 {
     public function index()
     {
+        // ===== STATISTIK DARI VIEW =====
+        $statsRaw = DB::table('vw_dashboard_stats')->first();
+
         $stats = [
-            'total' => 20,
-            'critical' => 5,
-            'warning' => 10,
-            'info' => 5,
+            'total'    => $statsRaw->alert_aktif ?? 0,
+            'critical' => $statsRaw->alert_critical ?? 0,
+            'warning'  => DB::table('alert')->where('level', 'Warning')->where('status', 'Aktif')->count(),
+            'info'     => DB::table('alert')->where('level', 'Info')->where('status', 'Aktif')->count(),
         ];
 
-        $serverAlerts = [
-            [
-                'waktu' => '20 Agu 2026',
-                'jam' => '10:00 - 11:00',
-                'level' => 'Critical',
-                'target' => 'SVR-001',
-                'target_sub' => 'Application Server',
-                'type' => 'Server',
-                'deskripsi' => 'CPU usage di atas 90%',
-                'keterangan' => 'Current: 92%',
-                'status' => 'Aktif',
-                'durasi' => '1 Jam',
-                'pic' => 'Slowrance Stroll'
-            ],
-            [
-                'waktu' => '15 Nov 2026',
-                'jam' => '13:00-15:00',
-                'level' => 'Info',
-                'target' => 'SVR-020',
-                'target_sub' => 'Database Server',
-                'type' => 'Server',
-                'deskripsi' => 'Memory usage mencapai 95%',
-                'keterangan' => 'Current: 94%',
-                'status' => 'Aktif',
-                'durasi' => '2 Jam',
-                'pic' => 'Slowrance Stroll'
-            ],
-            [
-                'waktu' => '15 Nov 2026',
-                'jam' => '13:00-15:00',
-                'level' => 'Info',
-                'target' => 'SVR-020',
-                'target_sub' => 'Database Server',
-                'type' => 'Server',
-                'deskripsi' => 'Memory usage mencapai 95%',
-                'keterangan' => 'Current: 94%',
-                'status' => 'Aktif',
-                'durasi' => '2 Jam',
-                'pic' => 'Slowrance Stroll'
-            ],
-            [
-                'waktu' => '10 Nov 2026',
-                'jam' => '13:00-15:00',
-                'level' => 'Warning',
-                'target' => 'SVR-012',
-                'target_sub' => 'Database Server',
-                'type' => 'Server',
-                'deskripsi' => 'Storage Penuh',
-                'keterangan' => 'Space tersisa tinggal 200 GB',
-                'status' => 'Aktif',
-                'durasi' => '2 Jam',
-                'pic' => 'Slowrance Stroll'
-            ],
-            [
-                'waktu' => '15 Nov 2026',
-                'jam' => '13:00-15:00',
-                'level' => 'Info',
-                'target' => 'SVR-020',
-                'target_sub' => 'Database Server',
-                'type' => 'Server',
-                'deskripsi' => 'Memory usage mencapai 95%',
-                'keterangan' => 'Current: 94%',
-                'status' => 'Aktif',
-                'durasi' => '2 Jam',
-                'pic' => 'Slowrance Stroll'
-            ],
-            [
-                'waktu' => '18 Nov 2026',
-                'jam' => '13:00-15:00',
-                'level' => 'Info',
-                'target' => 'SVR-004',
-                'target_sub' => 'Database Server',
-                'type' => 'Server',
-                'deskripsi' => 'Disk usage mencapai 98%',
-                'keterangan' => 'Current: 90%',
-                'status' => 'Aktif',
-                'durasi' => '2 Jam',
-                'pic' => 'Slowrance Stroll'
-            ],
-            [
-                'waktu' => '30 Nov 2026',
-                'jam' => '15:00-19:56',
-                'level' => 'Critical',
-                'target' => 'SVR-005',
-                'target_sub' => 'Database Server',
-                'type' => 'Server',
-                'deskripsi' => 'RAM mencapai 99%',
-                'keterangan' => 'Current 98%',
-                'status' => 'Aktif',
-                'durasi' => '5 jam',
-                'pic' => 'No name'
-            ],
-        ];
+        // ===== AMBIL DATA ALERT DARI VIEW =====
+        $allAlerts = DB::table('vw_alert')
+            ->orderBy('waktu_mulai', 'desc')
+            ->get()
+            ->map(function ($row) {
+                return [
+                    'waktu'      => \Carbon\Carbon::parse($row->waktu_mulai)->format('d M Y'),
+                    'jam'        => \Carbon\Carbon::parse($row->waktu_mulai)->format('H:i') . 
+                                    ($row->waktu_selesai ? ' - ' . \Carbon\Carbon::parse($row->waktu_selesai)->format('H:i') : ''),
+                    'level'      => $row->level,
+                    'target'     => $row->nama_target ?? '-',
+                    'target_sub' => $row->target_type,
+                    'type'       => $row->target_type,
+                    'deskripsi'  => $row->deskripsi,
+                    'keterangan' => $row->keterangan ?? '',
+                    'status'     => $row->status,
+                    'durasi'     => $row->durasi_menit ? $row->durasi_menit . ' Menit' : '-',
+                    'pic'        => $row->nama_pic ?? '-',
+                ];
+            });
 
-        $applicationAlerts = [
-            [
-                'waktu' => '20 Agu 2026',
-                'jam' => '10:00 - 11:00',
-                'level' => 'Critical',
-                'target' => 'App-001',
-                'target_sub' => 'App Kemendikdasmen',
-                'type' => 'Application',
-                'deskripsi' => 'CPU usage di atas 90%',
-                'keterangan' => 'Current: 92%',
-                'status' => 'Aktif',
-                'durasi' => '1 Jam',
-                'pic' => 'Slowrance Stroll'
-            ],
-            [
-                'waktu' => '15 Nov 2026',
-                'jam' => '13:00-15:00',
-                'level' => 'Info',
-                'target' => 'App-002',
-                'target_sub' => 'App Kemendikdasmen',
-                'type' => 'Application',
-                'deskripsi' => 'Memory usage mencapai 95%',
-                'keterangan' => 'Current: 94%',
-                'status' => 'Aktif',
-                'durasi' => '2 Jam',
-                'pic' => 'Slowrance Stroll'
-            ],
-            [
-                'waktu' => '15 Nov 2026',
-                'jam' => '13:00-15:00',
-                'level' => 'Info',
-                'target' => 'App-003',
-                'target_sub' => 'App Kemendikdasmen',
-                'type' => 'Application',
-                'deskripsi' => 'Memory usage mencapai 95%',
-                'keterangan' => 'Current: 94%',
-                'status' => 'Aktif',
-                'durasi' => '2 Jam',
-                'pic' => 'Slowrance Stroll'
-            ],
-            [
-                'waktu' => '10 Nov 2026',
-                'jam' => '13:00-15:00',
-                'level' => 'Warning',
-                'target' => 'App-004',
-                'target_sub' => 'App Kemendikdasmen',
-                'type' => 'Application',
-                'deskripsi' => 'Storage Penuh',
-                'keterangan' => 'Space tersisa tinggal 200 GB',
-                'status' => 'Aktif',
-                'durasi' => '2 Jam',
-                'pic' => 'Slowrance Stroll'
-            ],
-            [
-                'waktu' => '15 Nov 2026',
-                'jam' => '13:00-15:00',
-                'level' => 'Info',
-                'target' => 'App-005',
-                'target_sub' => 'App Kemendikdasmen',
-                'type' => 'Application',
-                'deskripsi' => 'Memory usage mencapai 95%',
-                'keterangan' => 'Current: 94%',
-                'status' => 'Aktif',
-                'durasi' => '2 Jam',
-                'pic' => 'Slowrance Stroll'
-            ],
-            [
-                'waktu' => '18 Nov 2026',
-                'jam' => '13:00-15:00',
-                'level' => 'Info',
-                'target' => 'App-006',
-                'target_sub' => 'App Kemendikdasmen',
-                'type' => 'Application',
-                'deskripsi' => 'Disk usage mencapai 98%',
-                'keterangan' => 'Current: 90%',
-                'status' => 'Aktif',
-                'durasi' => '2 Jam',
-                'pic' => 'Slowrance Stroll'
-            ],
-        ];
-
-        $domainAlerts = [
-            [
-                'waktu' => '20 Agu 2026',
-                'jam' => '10:00 - 11:00',
-                'level' => 'Critical',
-                'target' => 'WebGTK-001',
-                'target_sub' => 'Domain Web',
-                'type' => 'Domain',
-                'deskripsi' => 'CPU usage di atas 90%',
-                'keterangan' => 'Current: 92%',
-                'status' => 'Aktif',
-                'durasi' => '1 Jam',
-                'pic' => 'Slowrance Stroll'
-            ],
-            [
-                'waktu' => '15 Nov 2026',
-                'jam' => '13:00-15:00',
-                'level' => 'Info',
-                'target' => 'WebGTK-002',
-                'target_sub' => 'Domain Web',
-                'type' => 'Domain',
-                'deskripsi' => 'Memory usage mencapai 95%',
-                'keterangan' => 'Current: 94%',
-                'status' => 'Aktif',
-                'durasi' => '2 Jam',
-                'pic' => 'Slowrance Stroll'
-            ],
-            [
-                'waktu' => '15 Nov 2026',
-                'jam' => '13:00-15:00',
-                'level' => 'Info',
-                'target' => 'WebGTK-003',
-                'target_sub' => 'Domain Web',
-                'type' => 'Domain',
-                'deskripsi' => 'Memory usage mencapai 95%',
-                'keterangan' => 'Current: 94%',
-                'status' => 'Aktif',
-                'durasi' => '2 Jam',
-                'pic' => 'Slowrance Stroll'
-            ],
-            [
-                'waktu' => '10 Nov 2026',
-                'jam' => '13:00-15:00', 
-                'level' => 'Warning',
-                'target' => 'WebGTK-004',
-                'target_sub' => 'Domain Web',
-                'type' => 'Domain',
-                'deskripsi' => 'Storage Penuh',
-                'keterangan' => 'Space tersisa tinggal 200 GB',
-                'status' => 'Aktif',
-                'durasi' => '2 Jam',
-                'pic' => 'Slowrance Stroll'
-            ],
-            [
-                'waktu' => '15 Nov 2026',
-                'jam' => '13:00-15:00',
-                'level' => 'Info',
-                'target' => 'WebGTK-005',
-                'target_sub' => 'Domain Web',
-                'type' => 'Domain',
-                'deskripsi' => 'Memory usage mencapai 95%',
-                'keterangan' => 'Current: 94%',
-                'status' => 'Aktif',
-                'durasi' => '2 Jam',
-                'pic' => 'Slowrance Stroll'
-            ],
-            [
-                'waktu' => '18 Nov 2026',
-                'jam' => '13:00-15:00',
-                'level' => 'Info',
-                'target' => 'WebGTK-006',
-                'target_sub' => 'Domain Web',
-                'type' => 'Domain',
-                'deskripsi' => 'Disk usage mencapai 98%',
-                'keterangan' => 'Current: 90%',
-                'status' => 'Aktif',
-                'durasi' => '2 Jam',
-                'pic' => 'Slowrance Stroll'
-            ],
-        ];
+        // ===== PISAHKAN PER KATEGORI =====
+        $serverAlerts      = $allAlerts->where('type', 'Server')->values()->toArray();
+        $applicationAlerts = $allAlerts->where('type', 'Application')->values()->toArray();
+        $domainAlerts      = $allAlerts->where('type', 'Domain')->values()->toArray();
 
         return view('pages.alerts.alerts', compact(
             'stats',
