@@ -1,5 +1,9 @@
 <?php
 
+// ============================================================
+// FEATURE: SERVER
+// ============================================================
+
 namespace App\Http\Controllers;
 
 use App\Models\ServerStatus;

@@ -1,5 +1,9 @@
 <?php
 
+// ============================================================
+// FEATURE: DASHBOARD
+// ============================================================
+
 namespace App\Http\Controllers;
 
 use App\Models\DashboardStat;

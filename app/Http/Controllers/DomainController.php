@@ -1,5 +1,9 @@
 <?php
 
+// ============================================================
+// FEATURE: DOMAIN
+// ============================================================
+
 namespace App\Http\Controllers;
 
 use App\Models\DomainActivity;
