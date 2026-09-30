@@ -46,6 +46,6 @@ class NetworkDeviceController extends Controller
     {
         $switch = SwitchDevice::find($id);
         abort_unless($switch, 404);
-        return iew('pages.network-device.switch-detail', compact('switch'));
+        return view('pages.network-device.switch-detail', compact('switch'));
     }
 }
