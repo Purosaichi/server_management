@@ -24,5 +24,28 @@ class NetworkDeviceController extends Controller
         ]);
     }
 
-    
+    public function switch()
+    {
+        $switches = switchDevice::orderBy('id_switch')->get();
+
+        return view('pages.network-device.index', [
+            'activeTab' => 'switch',
+            'routers' => collect(),
+            'switches' => $switches,
+        ]);
+    }
+
+    public function routerDetail(int $id)
+    {
+        $router = Router::find($id);
+        abort_unless($router, 404);
+        return view('pages,network-device.router-detail', compact('router'));
+    }
+
+    public function switchDetail(int $id)
+    {
+        $switch = SwitchDevice::find($id);
+        abort_unless($switch, 404);
+        return iew('pages.network-device.switch-detail', compact('switch'));
+    }
 }
