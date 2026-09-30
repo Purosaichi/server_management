@@ -7,10 +7,10 @@ use Illuminate\Database\Eloquent\model;
 
 class SwitchDevice extends Model
 {
-    protected $table= 'switch';
-    protected $primarykey = 'id_switch';
+    protected $table = 'switch';
+    protected $primaryKey = 'id_switch';
     public $timestamps = false;
-    public $iscreamenting = true;
+    public $incrementing = true;
     protected $fillable = [
         'jenis_switch',
         'lapisan_jaringan',

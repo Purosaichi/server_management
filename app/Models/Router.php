@@ -2,14 +2,14 @@
 
 namespace App\Models;
 
-use Illuminate \Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Model;
 
 class Router extends Model
 {
     protected $table = 'router';
-    protected $primarykey = 'id_router';
-    public $timestamps= false;
-    public $iscrementing = true;
+    protected $primaryKey = 'id_router';
+    public $timestamps = false;
+    public $incrementing = true;
 
     protected $fillable = [
         'jenis_router',

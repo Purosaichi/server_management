@@ -62,6 +62,10 @@
                         <i class="fas fa-bell w-5"></i>
                         <span class="ml-2">Alerts</span>
                     </a>
+                    <a href="{{ route('network-device.router') }}" class="flex items-center px-4 py-5 rounded-lg text-sm font-medium {{ request()->routeIs('network-device.*') ? 'sidebar-active' : 'sidebar-link text-gray-500' }}">
+                        <i class="fas fa-network-wired w-5"></i>
+                        <span class="ml-2">Network Device</span>
+                    </a>
                 </div>
             </nav>
             <div class="px-4 py-4 border-t border-gray-100">

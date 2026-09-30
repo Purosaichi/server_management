@@ -1,0 +1,246 @@
+/* ===== public/css/network-device.css ===== */
+
+/* ===== Header ===== */
+.header {
+    background: linear-gradient(to right, #0a4bff, #7398ff, #0a4bff);
+    padding: 1rem 1.5rem;
+    height: 4rem;
+    display: flex;
+    border-bottom: 1px solid #e5e7eb;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #ffffff;
+    border-radius: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+/* ===== Tab Navigasi ===== */
+.nd-tabs {
+    display: flex;
+    gap: 2rem;
+    border-bottom: 1px solid #e5e7eb;
+    margin-bottom: 1.5rem;
+    padding-left: 1rem;
+}
+
+.nd-tab {
+    padding: 0.75rem 0;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #9ca3af;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s;
+    text-decoration: none;
+}
+
+.nd-tab.active {
+    color: #2563eb;
+    border-bottom-color: #2563eb;
+}
+
+.nd-tab:hover {
+    color: #2563eb;
+}
+
+/* ===== Container Tabel ===== */
+.nd-table-container {
+    background: white;
+    border-radius: 0.75rem;
+    border: 1px solid #f3f4f6;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+    margin-bottom: 2rem;
+}
+
+.nd-table-header {
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid #f3f4f6;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.nd-table-title {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: #1f2937;
+}
+
+.nd-table-count {
+    font-size: 0.875rem;
+    color: #6b7280;
+}
+
+.nd-table-wrapper {
+    overflow-x: auto;
+}
+
+.nd-table-wrapper table {
+    width: 100%;
+    font-size: 0.875rem;
+    border-collapse: collapse;
+}
+
+.nd-table-wrapper thead {
+    background-color: #f9fafb;
+}
+
+.nd-table-wrapper thead th {
+    padding: 0.75rem 1rem;
+    text-align: left;
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: #6b7280;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+.nd-table-wrapper tbody tr {
+    border-bottom: 1px solid #f3f4f6;
+    transition: background-color 0.15s;
+}
+
+.nd-table-wrapper tbody tr:hover {
+    background-color: #f9fafb;
+}
+
+.nd-table-wrapper tbody td {
+    padding: 0.875rem 1rem;
+    color: #4b5563;
+    white-space: nowrap;
+}
+
+.nd-name {
+    font-weight: 500;
+    color: #111827;
+}
+
+/* ===== Badge Jenis ===== */
+.nd-badge {
+    padding: 0.25rem 0.625rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+    border-radius: 0.25rem;
+    display: inline-block;
+}
+
+.nd-badge-blue {
+    background-color: #dbeafe;
+    color: #1d4ed8;
+}
+
+.nd-badge-green {
+    background-color: #d1fae5;
+    color: #065f46;
+}
+
+.nd-badge-orange {
+    background-color: #ffedd5;
+    color: #9a3412;
+}
+
+/* ===== Status Badge ===== */
+.nd-status {
+    padding: 0.25rem 0.625rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+    border-radius: 0.25rem;
+    display: inline-block;
+}
+
+.nd-status-active {
+    background-color: #d1fae5;
+    color: #065f46;
+}
+
+.nd-status-inactive {
+    background-color: #fee2e2;
+    color: #991b1b;
+}
+
+/* ===== Tombol Detail ===== */
+.nd-btn-detail {
+    color: #2563eb;
+    font-weight: 500;
+    text-decoration: none;
+    font-size: 0.8125rem;
+}
+
+.nd-btn-detail:hover {
+    text-decoration: underline;
+}
+
+.nd-text-center {
+    text-align: center;
+}
+
+/* ===== Tombol Back ===== */
+.nd-back-wrapper {
+    margin-bottom: 1rem;
+}
+
+.nd-back-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.5rem;
+    color: #374151;
+    font-size: 0.875rem;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.2s;
+}
+
+.nd-back-btn:hover {
+    background-color: #f9fafb;
+    border-color: #d1d5db;
+}
+
+/* ===== Detail Card ===== */
+.nd-detail-card {
+    background: white;
+    border-radius: 0.75rem;
+    border: 1px solid #f3f4f6;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    padding: 1.5rem;
+}
+
+.nd-detail-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #111827;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #f3f4f6;
+}
+
+.nd-detail-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(220px, 1fr));
+    gap: 1rem 2rem;
+}
+
+.nd-detail-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    padding: 0.5rem 0;
+}
+
+.nd-detail-label {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #6b7280;
+    text-transform: none;
+}
+
+.nd-detail-value {
+    font-size: 1rem;
+    font-weight: 500;
+    color: #111827;
+    line-height: 1.5;
+}

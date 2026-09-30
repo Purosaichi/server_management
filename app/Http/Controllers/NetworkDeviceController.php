@@ -39,7 +39,7 @@ class NetworkDeviceController extends Controller
     {
         $router = Router::find($id);
         abort_unless($router, 404);
-        return view('pages,network-device.router-detail', compact('router'));
+        return view('pages.network-device.router-detail', compact('router'));
     }
 
     public function switchDetail(int $id)

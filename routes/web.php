@@ -9,6 +9,7 @@ use App\Http\Controllers\MaintenanceController;
 use App\Http\Controllers\AlertController;
 use App\Http\Controllers\DomainController;
 use App\Http\Controllers\LicenseController;
+use App\Http\Controllers\NetworkDeviceController;
 
 Route::redirect('/', '/login');
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
@@ -32,4 +33,11 @@ Route::middleware(['auth.session'])->group(function () {
 
     Route::get('/maintenance', [MaintenanceController::class, 'index'])->name('maintenance.maintenance');
     Route::get('/alerts', [AlertController::class, 'index'])->name('alerts.alerts');
+
+    Route::prefix('network-device')->name('network-device.')->group(function () {
+        Route::get('/router', [NetworkDeviceController::class, 'router'])->name('router');
+        Route::get('/switch', [NetworkDeviceController::class, 'switch'])->name('switch');
+        Route::get('/router/{id}', [NetworkDeviceController::class, 'routerDetail'])->name('router-detail');
+        Route::get('/switch/{id}', [NetworkDeviceController::class, 'switchDetail'])->name('switch-detail');
+    });
 });
