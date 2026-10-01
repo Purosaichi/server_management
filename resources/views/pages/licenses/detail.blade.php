@@ -4,7 +4,7 @@
 @section('page-title', 'Detail Lisensi')
 
 @section('content')
-{{-- Pake licenses-detail.css (bukan licenses.css) --}}
+
 <link rel="stylesheet" href="{{ asset('css/licenses-detail.css') }}">
 
 {{-- Tombol Back --}}
@@ -17,7 +17,7 @@
     </a>
 </div>
 
-{{-- ============ HEADER CARD ============ --}}
+{{-- HEADER CARD --}}
 <div class="lic-detail-header">
     <div class="lic-detail-logo">
         <div class="lic-detail-logo-image">
@@ -120,7 +120,7 @@
 
 </div>
 
-{{-- ============ TABEL RIWAYAT PEMBAYARAN ============ --}}
+{{-- TABEL RIWAYAT PEMBAYARAN --}}
 <div class="lic-payment-card">
     <table class="lic-payment-table">
         <thead>
