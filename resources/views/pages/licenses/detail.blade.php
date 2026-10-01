@@ -62,7 +62,7 @@
     </div>
 </div>
 
-{{-- ============ 3 CARD INFO ============ --}}
+{{-- CARD INFO --}}
 <div class="lic-info-grid">
 
     {{-- Billing Information --}}
