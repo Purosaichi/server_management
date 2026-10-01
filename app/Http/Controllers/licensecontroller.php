@@ -27,7 +27,7 @@ class LicenseController extends Controller
                                     : '-',
                 'expired_note' => $this->getExpiredNote($sisaHari),
                 'expired_type' => $this->getExpiredType($sisaHari),
-                'logo'         => $lic->logo,
+                'logo'         => $this->resolveLogo($lic->logo),
             ];
         });
 
@@ -54,7 +54,7 @@ class LicenseController extends Controller
                                 : '-',
             'expired_note' => $this->getExpiredNote($sisaHari),
             'expired_type' => $this->getExpiredType($sisaHari),
-            'logo'         => $lic->logo,
+            'logo'         => $this->resolveLogo($lic->logo),
 
             // Data detail
             'start_date'     => $lic->tanggal_mulai
@@ -83,6 +83,20 @@ class LicenseController extends Controller
         if ($status === 'Aman') return 'safe';
         if ($status === 'Akan Expired') return 'warning';
         return 'expired';
+    }
+
+    private function resolveLogo($logo)
+    {
+        $logoAliases = [
+            'jetbrains.png' => 'IntelliJ_IDEA.png',
+            'intuit.png' => 'quickbooks.png',
+            'autodesk.png' => 'Auto_cad.png',
+            'ubuntu.png' => 'ubuntu_pro.png',
+            'elastic.png' => 'elastic_stack.png',
+            'vmware.png' => 'VMware.png',
+        ];
+
+        return $logoAliases[$logo] ?? $logo;
     }
 
     private function getExpiredNote($sisaHari)

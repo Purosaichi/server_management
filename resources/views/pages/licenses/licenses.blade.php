@@ -55,7 +55,7 @@
                         </div>
                     </td>
                     <td>
-                        <a href="{{ route('licenses.detail', ['id' => $loop->index + 1]) }}" class="lic-btn-detail">
+                        <a href="{{ route('licenses.detail', ['id' => $lic['id']]) }}" class="lic-btn-detail">
                           Selengkapnya →
                         </a>
                     </td>
