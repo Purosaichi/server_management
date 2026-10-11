@@ -121,4 +121,81 @@ class ServerController extends Controller
 
         return "{$hari}d {$jam}h {$menit}m";
     }
+
+    /**
+     * Halaman form tambah server
+     */
+    public function create()
+    {
+        return view('pages.server.create');
+    }
+
+    /**
+     * Proses simpan server baru
+     */
+    public function store(Request $request)
+    {
+        // Validasi input
+        $request->validate([
+            'nama_server' => 'required|string|max:50|unique:server,nama_server',
+            'hostname' => 'nullable|string|max:100',
+            'alamat_ip_manajemen' => 'nullable|string|max:45',
+            'alamat_ip_produksi' => 'nullable|string|max:45',
+            'sistem_operasi' => 'nullable|string|max:100',
+            'jenis_server' => 'nullable|in:Physical,Virtual',
+            'jumlah_prosessor' => 'nullable|integer',
+            'model_prosessor' => 'nullable|string|max:100',
+            'kapasitas_memori_gb' => 'nullable|integer',
+            'jenis_memori' => 'nullable|string|max:30',
+            'kapasitas_penyimpanan_gb' => 'nullable|integer',
+            'jenis_penyimpanan' => 'nullable|string|max:30',
+            'lokasi_rack' => 'nullable|string|max:100',
+            'status_aset' => 'required|in:Aktif,Tidak Aktif,Dihapus',
+        ]);
+
+        try {
+            DB::beginTransaction();
+
+            // 1. Insert ke tabel ASET dulu (karena server butuh id_aset)
+            $idAset = DB::table('aset')->insertGetId([
+                'kode_aset' => 'AST-' . date('Y') . '-' . str_pad(rand(1, 999), 3, '0', STR_PAD_LEFT),
+                'nama_aset' => $request->nama_server,
+                'status_aset' => $request->status_aset,
+                'kondisi_aset' => 'Baik',
+                'status_kepemilikan' => 'Milik Sendiri',
+                'tanggal_pengadaan' => now()->format('Y-m-d'),
+                'tahun_pengadaan' => date('Y'),
+                'keterangan' => 'Server baru ditambahkan via web',
+            ]);
+
+            // 2. Insert ke tabel SERVER
+            DB::table('server')->insert([
+                'id_aset' => $idAset,
+                'nama_server' => $request->nama_server,
+                'hostname' => $request->hostname,
+                'alamat_ip_manajemen' => $request->alamat_ip_manajemen,
+                'alamat_ip_produksi' => $request->alamat_ip_produksi,
+                'sistem_operasi' => $request->sistem_operasi,
+                'jenis_server' => $request->jenis_server,
+                'jumlah_prosessor' => $request->jumlah_prosessor,
+                'model_prosessor' => $request->model_prosessor,
+                'kapasitas_memori_gb' => $request->kapasitas_memori_gb,
+                'jenis_memori' => $request->jenis_memori,
+                'kapasitas_penyimpanan_gb' => $request->kapasitas_penyimpanan_gb,
+                'jenis_penyimpanan' => $request->jenis_penyimpanan,
+                'lokasi_rack' => $request->lokasi_rack,
+            ]);
+
+            DB::commit();
+
+            return redirect()->route('server.index')
+                ->with('success', 'Server berhasil ditambahkan!');
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back()
+                ->with('error', 'Gagal menambahkan server: ' . $e->getMessage())
+                ->withInput();
+        }
+    }
 }
