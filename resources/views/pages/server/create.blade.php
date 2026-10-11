@@ -138,6 +138,36 @@
             </div>
         </div>
 
+        {{-- ===== STATUS MONITORING ===== --}}
+        <h3 class="srv-form-section">Status Monitoring</h3>
+        <div class="srv-form-grid">
+            <div class="srv-form-group">
+                <label for="status_monitoring">Status <span style="color: red;">*</span></label>
+                <select name="status_monitoring" id="status_monitoring" required>
+                    <option value="Online" {{ old('status_monitoring') == 'Online' ? 'selected' : '' }}>Online</option>
+                    <option value="Offline" {{ old('status_monitoring') == 'Offline' ? 'selected' : '' }}>Offline</option>
+                </select>
+            </div>
+
+            <div class="srv-form-group">
+                <label for="cpu_percent">CPU (%)</label>
+                <input type="number" name="cpu_percent" id="cpu_percent" 
+                       value="{{ old('cpu_percent', 0) }}" min="0" max="100">
+            </div>
+
+            <div class="srv-form-group">
+                <label for="memory_percent">Memory (%)</label>
+                <input type="number" name="memory_percent" id="memory_percent" 
+                       value="{{ old('memory_percent', 0) }}" min="0" max="100">
+            </div>
+
+            <div class="srv-form-group">
+                <label for="storage_percent">Storage (%)</label>
+                <input type="number" name="storage_percent" id="storage_percent" 
+                       value="{{ old('storage_percent', 0) }}" min="0" max="100">
+            </div>
+        </div>
+
         {{-- ===== TOMBOL AKSI ===== --}}
         <div class="srv-form-actions">
             <a href="{{ route('server.index') }}" class="srv-btn-cancel">Batal</a>

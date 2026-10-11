@@ -1,3 +1,4 @@
+/* ===== Header ===== */
 .header {
     background: linear-gradient(to right, #0a4bff, #7398ff, #0a4bff);
     padding: 1rem 1.5rem;
@@ -12,6 +13,7 @@
     border-radius: 0.5rem;
 }
 
+/* ===== Container Tabel ===== */
 .srv-table-container {
     background: white;
     border-radius: 0.75rem;
@@ -122,4 +124,179 @@
     text-align: center;
     font-size: 0.875rem;
     color: #000000;
+}
+
+/* ===== Tombol Tambah ===== */
+.srv-btn-add {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    background-color: #2563eb;
+    color: white;
+    font-size: 0.875rem;
+    font-weight: 500;
+    border-radius: 0.5rem;
+    text-decoration: none;
+    transition: background-color 0.2s;
+}
+
+.srv-btn-add:hover {
+    background-color: #1d4ed8;
+}
+
+/* ===== Alert ===== */
+.srv-alert {
+    padding: 0.75rem 1rem;
+    border-radius: 0.5rem;
+    margin-bottom: 1rem;
+    font-size: 0.875rem;
+}
+
+.srv-alert-success {
+    background-color: #d1fae5;
+    color: #065f46;
+    border: 1px solid #a7f3d0;
+}
+
+.srv-alert-error {
+    background-color: #fee2e2;
+    color: #991b1b;
+    border: 1px solid #fecaca;
+}
+
+/* ===== Tombol Back ===== */
+.srv-back-wrapper {
+    margin-bottom: 1rem;
+}
+
+.srv-back-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.5rem;
+    color: #374151;
+    font-size: 0.875rem;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.2s;
+}
+
+.srv-back-btn:hover {
+    background-color: #f9fafb;
+    border-color: #d1d5db;
+}
+
+/* ===== Form Container ===== */
+.srv-form-container {
+    background: white;
+    border-radius: 0.75rem;
+    border: 1px solid #f3f4f6;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.srv-form-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #111827;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #f3f4f6;
+}
+
+.srv-form-section {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #1f2937;
+    margin-top: 1.5rem;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid #f3f4f6;
+}
+
+.srv-form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+}
+
+.srv-form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.375rem;
+}
+
+.srv-form-group label {
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: #374151;
+}
+
+.srv-form-group input,
+.srv-form-group select {
+    padding: 0.5rem 0.75rem;
+    border: 1px solid #d1d5db;
+    border-radius: 0.5rem;
+    font-size: 0.875rem;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.srv-form-group input:focus,
+.srv-form-group select:focus {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.1);
+}
+
+.srv-form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.75rem;
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #f3f4f6;
+}
+
+.srv-btn-cancel {
+    padding: 0.5rem 1.25rem;
+    background: white;
+    border: 1px solid #d1d5db;
+    border-radius: 0.5rem;
+    color: #374151;
+    font-size: 0.875rem;
+    font-weight: 500;
+    text-decoration: none;
+    transition: background-color 0.2s;
+}
+
+.srv-btn-cancel:hover {
+    background-color: #f9fafb;
+}
+
+.srv-btn-submit {
+    padding: 0.5rem 1.25rem;
+    background-color: #2563eb;
+    border: none;
+    border-radius: 0.5rem;
+    color: white;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.srv-btn-submit:hover {
+    background-color: #1d4ed8;
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 768px) {
+    .srv-form-grid {
+        grid-template-columns: 1fr;
+    }
 }

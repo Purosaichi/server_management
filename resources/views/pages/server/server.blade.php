@@ -12,7 +12,7 @@
     <h2 class="title-header">Server</h2>
 </div>
 
-{{-- Notifikasi sukses/error --}}
+{{-- Notifikasi --}}
 @if(session('success'))
 <div class="srv-alert srv-alert-success">
     {{ session('success') }}
@@ -30,9 +30,7 @@
         <h3 class="srv-table-title">Daftar Server</h3>
         <div style="display: flex; align-items: center; gap: 1rem;">
             <span class="srv-table-count">Total Server: {{ count($servers) }} server</span>
-            <a href="{{ route('server.create') }}" class="srv-btn-add">
-                + Tambah Server
-            </a>
+            <a href="{{ route('server.create') }}" class="srv-btn-add">+ Tambah Server</a>
         </div>
     </div>
     <div class="srv-table-wrapper">
@@ -81,6 +79,7 @@
         </table>
     </div>
 </div>
+
 <footer class="footer">
     <p>&copy; 2026 Direktorat Jenderal Guru, Tenaga Kependidikan dan Pendidikan Guru - Kemendikdasmen</p>
 </footer>

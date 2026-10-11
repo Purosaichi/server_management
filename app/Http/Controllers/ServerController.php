@@ -1,12 +1,16 @@
 <?php
 
-
 namespace App\Http\Controllers;
 
 use App\Models\ServerStatus;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ServerController extends Controller
 {
+    /**
+     * Halaman daftar server
+     */
     public function index()
     {
         $servers = $this->servers();
@@ -14,6 +18,9 @@ class ServerController extends Controller
         return view('pages.server.server', compact('servers'));
     }
 
+    /**
+     * Halaman detail server
+     */
     public function show(int $id)
     {
         $server = collect($this->servers())->firstWhere('id', $id);
@@ -25,6 +32,101 @@ class ServerController extends Controller
         return view('pages.server.detail', compact('server'));
     }
 
+    /**
+     * Halaman form tambah server
+     */
+    public function create()
+    {
+        return view('pages.server.create');
+    }
+
+    /**
+     * Proses simpan server baru
+     */
+    public function store(Request $request)
+    {
+        // Validasi input
+        $request->validate([
+            'nama_server' => 'required|string|max:50|unique:server,nama_server',
+            'hostname' => 'nullable|string|max:100',
+            'alamat_ip_manajemen' => 'nullable|string|max:45',
+            'alamat_ip_produksi' => 'nullable|string|max:45',
+            'sistem_operasi' => 'nullable|string|max:100',
+            'jenis_server' => 'nullable|in:Physical,Virtual',
+            'jumlah_prosessor' => 'nullable|integer',
+            'model_prosessor' => 'nullable|string|max:100',
+            'kapasitas_memori_gb' => 'nullable|integer',
+            'jenis_memori' => 'nullable|string|max:30',
+            'kapasitas_penyimpanan_gb' => 'nullable|integer',
+            'jenis_penyimpanan' => 'nullable|string|max:30',
+            'lokasi_rack' => 'nullable|string|max:100',
+            'status_aset' => 'required|in:Aktif,Tidak Aktif,Dihapus',
+            'status_monitoring' => 'required|in:Online,Offline',
+            'cpu_percent' => 'nullable|integer|min:0|max:100',
+            'memory_percent' => 'nullable|integer|min:0|max:100',
+            'storage_percent' => 'nullable|integer|min:0|max:100',
+        ]);
+
+        try {
+            DB::beginTransaction();
+
+            // 1. Insert ke tabel ASET
+            $idAset = DB::table('aset')->insertGetId([
+                'kode_aset' => 'AST-' . date('Y') . '-' . str_pad(rand(1, 999), 3, '0', STR_PAD_LEFT),
+                'nama_aset' => $request->nama_server,
+                'status_aset' => $request->status_aset,
+                'kondisi_aset' => 'Baik',
+                'status_kepemilikan' => 'Milik Sendiri',
+                'tanggal_pengadaan' => now()->format('Y-m-d'),
+                'tahun_pengadaan' => date('Y'),
+                'keterangan' => 'Server baru ditambahkan via web',
+            ]);
+
+            // 2. Insert ke tabel SERVER
+            $idServer = DB::table('server')->insertGetId([
+                'id_aset' => $idAset,
+                'nama_server' => $request->nama_server,
+                'hostname' => $request->hostname,
+                'alamat_ip_manajemen' => $request->alamat_ip_manajemen,
+                'alamat_ip_produksi' => $request->alamat_ip_produksi,
+                'sistem_operasi' => $request->sistem_operasi,
+                'jenis_server' => $request->jenis_server,
+                'jumlah_prosessor' => $request->jumlah_prosessor,
+                'model_prosessor' => $request->model_prosessor,
+                'kapasitas_memori_gb' => $request->kapasitas_memori_gb,
+                'jenis_memori' => $request->jenis_memori,
+                'kapasitas_penyimpanan_gb' => $request->kapasitas_penyimpanan_gb,
+                'jenis_penyimpanan' => $request->jenis_penyimpanan,
+                'lokasi_rack' => $request->lokasi_rack,
+            ]);
+
+            // 3. Insert ke SERVER_MONITORING (biar status muncul di view)
+            DB::table('server_monitoring')->insert([
+                'id_server' => $idServer,
+                'status' => $request->status_monitoring,
+                'cpu_percent' => $request->cpu_percent ?? 0,
+                'memory_percent' => $request->memory_percent ?? 0,
+                'storage_percent' => $request->storage_percent ?? 0,
+                'uptime_detik' => $request->status_monitoring === 'Online' ? 3600 : 0,
+                'dicatat_pada' => now(),
+            ]);
+
+            DB::commit();
+
+            return redirect()->route('server.index')
+                ->with('success', 'Server berhasil ditambahkan!');
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back()
+                ->with('error', 'Gagal menambahkan server: ' . $e->getMessage())
+                ->withInput();
+        }
+    }
+
+    /**
+     * Data detail server (buat halaman detail)
+     */
     private function serverDetails(array $server): array
     {
         $isOffline = $server['status'] === 'Offline';
@@ -83,6 +185,9 @@ class ServerController extends Controller
         ];
     }
 
+    /**
+     * Ambil data server dari view vw_server_status
+     */
     private function servers(): array
     {
         return ServerStatus::query()
@@ -109,6 +214,9 @@ class ServerController extends Controller
             ->toArray();
     }
 
+    /**
+     * Format uptime dari detik ke "Xd Yh Zm"
+     */
     private function formatUptime($detik): string
     {
         if (!$detik) {
@@ -120,82 +228,5 @@ class ServerController extends Controller
         $menit = (int) floor(($detik % 3600) / 60);
 
         return "{$hari}d {$jam}h {$menit}m";
-    }
-
-    /**
-     * Halaman form tambah server
-     */
-    public function create()
-    {
-        return view('pages.server.create');
-    }
-
-    /**
-     * Proses simpan server baru
-     */
-    public function store(Request $request)
-    {
-        // Validasi input
-        $request->validate([
-            'nama_server' => 'required|string|max:50|unique:server,nama_server',
-            'hostname' => 'nullable|string|max:100',
-            'alamat_ip_manajemen' => 'nullable|string|max:45',
-            'alamat_ip_produksi' => 'nullable|string|max:45',
-            'sistem_operasi' => 'nullable|string|max:100',
-            'jenis_server' => 'nullable|in:Physical,Virtual',
-            'jumlah_prosessor' => 'nullable|integer',
-            'model_prosessor' => 'nullable|string|max:100',
-            'kapasitas_memori_gb' => 'nullable|integer',
-            'jenis_memori' => 'nullable|string|max:30',
-            'kapasitas_penyimpanan_gb' => 'nullable|integer',
-            'jenis_penyimpanan' => 'nullable|string|max:30',
-            'lokasi_rack' => 'nullable|string|max:100',
-            'status_aset' => 'required|in:Aktif,Tidak Aktif,Dihapus',
-        ]);
-
-        try {
-            DB::beginTransaction();
-
-            // 1. Insert ke tabel ASET dulu (karena server butuh id_aset)
-            $idAset = DB::table('aset')->insertGetId([
-                'kode_aset' => 'AST-' . date('Y') . '-' . str_pad(rand(1, 999), 3, '0', STR_PAD_LEFT),
-                'nama_aset' => $request->nama_server,
-                'status_aset' => $request->status_aset,
-                'kondisi_aset' => 'Baik',
-                'status_kepemilikan' => 'Milik Sendiri',
-                'tanggal_pengadaan' => now()->format('Y-m-d'),
-                'tahun_pengadaan' => date('Y'),
-                'keterangan' => 'Server baru ditambahkan via web',
-            ]);
-
-            // 2. Insert ke tabel SERVER
-            DB::table('server')->insert([
-                'id_aset' => $idAset,
-                'nama_server' => $request->nama_server,
-                'hostname' => $request->hostname,
-                'alamat_ip_manajemen' => $request->alamat_ip_manajemen,
-                'alamat_ip_produksi' => $request->alamat_ip_produksi,
-                'sistem_operasi' => $request->sistem_operasi,
-                'jenis_server' => $request->jenis_server,
-                'jumlah_prosessor' => $request->jumlah_prosessor,
-                'model_prosessor' => $request->model_prosessor,
-                'kapasitas_memori_gb' => $request->kapasitas_memori_gb,
-                'jenis_memori' => $request->jenis_memori,
-                'kapasitas_penyimpanan_gb' => $request->kapasitas_penyimpanan_gb,
-                'jenis_penyimpanan' => $request->jenis_penyimpanan,
-                'lokasi_rack' => $request->lokasi_rack,
-            ]);
-
-            DB::commit();
-
-            return redirect()->route('server.index')
-                ->with('success', 'Server berhasil ditambahkan!');
-
-        } catch (\Exception $e) {
-            DB::rollBack();
-            return redirect()->back()
-                ->with('error', 'Gagal menambahkan server: ' . $e->getMessage())
-                ->withInput();
-        }
     }
 }

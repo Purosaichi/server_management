@@ -20,6 +20,8 @@ Route::middleware(['auth.session'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     Route::get('/server', [ServerController::class, 'index'])->name('server.index');
+    Route::get('/server/create', [ServerController::class, 'create'])->name('server.create');
+    Route::post('/server', [ServerController::class, 'store'])->name('server.store');
     Route::get('/server/{id}', [ServerController::class, 'show'])->name('server.detail');
 
     Route::get('/application', [ApplicationController::class, 'index'])->name('application.index');
