@@ -45,7 +45,6 @@ class ServerController extends Controller
      */
     public function store(Request $request)
     {
-        // Validasi input
         $request->validate([
             'nama_server' => 'required|string|max:50|unique:server,nama_server',
             'hostname' => 'nullable|string|max:100',
@@ -70,7 +69,6 @@ class ServerController extends Controller
         try {
             DB::beginTransaction();
 
-            // 1. Insert ke tabel ASET
             $idAset = DB::table('aset')->insertGetId([
                 'kode_aset' => 'AST-' . date('Y') . '-' . str_pad(rand(1, 999), 3, '0', STR_PAD_LEFT),
                 'nama_aset' => $request->nama_server,
@@ -82,7 +80,6 @@ class ServerController extends Controller
                 'keterangan' => 'Server baru ditambahkan via web',
             ]);
 
-            // 2. Insert ke tabel SERVER
             $idServer = DB::table('server')->insertGetId([
                 'id_aset' => $idAset,
                 'nama_server' => $request->nama_server,
@@ -100,7 +97,6 @@ class ServerController extends Controller
                 'lokasi_rack' => $request->lokasi_rack,
             ]);
 
-            // 3. Insert ke SERVER_MONITORING (biar status muncul di view)
             DB::table('server_monitoring')->insert([
                 'id_server' => $idServer,
                 'status' => $request->status_monitoring,
@@ -121,6 +117,162 @@ class ServerController extends Controller
             return redirect()->back()
                 ->with('error', 'Gagal menambahkan server: ' . $e->getMessage())
                 ->withInput();
+        }
+    }
+
+    /**
+     * Halaman form edit server
+     */
+    public function edit(int $id)
+    {
+        // Ambil data server dari view + tabel server
+        $serverView = ServerStatus::where('id_server', $id)->first();
+
+        abort_unless($serverView, 404);
+
+        // Ambil data teknis dari tabel server + aset
+        $serverDetail = DB::table('server')
+            ->leftJoin('aset', 'aset.id_aset', '=', 'server.id_aset')
+            ->where('server.id_server', $id)
+            ->select(
+                'server.*',
+                'aset.nama_aset',
+                'aset.status_aset'
+            )
+            ->first();
+
+        // Ambil data monitoring terbaru
+        $monitoring = DB::table('server_monitoring')
+            ->where('id_server', $id)
+            ->orderBy('dicatat_pada', 'desc')
+            ->first();
+
+        // Gabungin data buat view
+        $server = (object) [
+            'id_server' => $serverDetail->id_server,
+            'nama_server' => $serverDetail->nama_server,
+            'hostname' => $serverDetail->hostname,
+            'alamat_ip_manajemen' => $serverDetail->alamat_ip_manajemen,
+            'alamat_ip_produksi' => $serverDetail->alamat_ip_produksi,
+            'sistem_operasi' => $serverDetail->sistem_operasi,
+            'jenis_server' => $serverDetail->jenis_server,
+            'jumlah_prosessor' => $serverDetail->jumlah_prosessor,
+            'model_prosessor' => $serverDetail->model_prosessor,
+            'kapasitas_memori_gb' => $serverDetail->kapasitas_memori_gb,
+            'jenis_memori' => $serverDetail->jenis_memori,
+            'kapasitas_penyimpanan_gb' => $serverDetail->kapasitas_penyimpanan_gb,
+            'jenis_penyimpanan' => $serverDetail->jenis_penyimpanan,
+            'lokasi_rack' => $serverDetail->lokasi_rack,
+            'status_aset' => $serverDetail->status_aset,
+            'status_monitoring' => $monitoring->status ?? 'Offline',
+            'cpu_percent' => $monitoring->cpu_percent ?? 0,
+            'memory_percent' => $monitoring->memory_percent ?? 0,
+            'storage_percent' => $monitoring->storage_percent ?? 0,
+        ];
+
+        return view('pages.server.edit', compact('server'));
+    }
+
+    /**
+     * Proses update server
+     */
+    public function update(Request $request, int $id)
+    {
+        $request->validate([
+            'nama_server' => 'required|string|max:50|unique:server,nama_server,' . $id . ',id_server',
+            'hostname' => 'nullable|string|max:100',
+            'alamat_ip_manajemen' => 'nullable|string|max:45',
+            'alamat_ip_produksi' => 'nullable|string|max:45',
+            'sistem_operasi' => 'nullable|string|max:100',
+            'jenis_server' => 'nullable|in:Physical,Virtual',
+            'jumlah_prosessor' => 'nullable|integer',
+            'model_prosessor' => 'nullable|string|max:100',
+            'kapasitas_memori_gb' => 'nullable|integer',
+            'jenis_memori' => 'nullable|string|max:30',
+            'kapasitas_penyimpanan_gb' => 'nullable|integer',
+            'jenis_penyimpanan' => 'nullable|string|max:30',
+            'lokasi_rack' => 'nullable|string|max:100',
+            'status_aset' => 'required|in:Aktif,Tidak Aktif,Dihapus',
+            'status_monitoring' => 'required|in:Online,Offline',
+            'cpu_percent' => 'nullable|integer|min:0|max:100',
+            'memory_percent' => 'nullable|integer|min:0|max:100',
+            'storage_percent' => 'nullable|integer|min:0|max:100',
+        ]);
+
+        try {
+            DB::beginTransaction();
+
+            // Ambil id_aset
+            $server = DB::table('server')->where('id_server', $id)->first();
+            abort_unless($server, 404);
+
+            // Update tabel aset
+            DB::table('aset')
+                ->where('id_aset', $server->id_aset)
+                ->update([
+                    'nama_aset' => $request->nama_server,
+                    'status_aset' => $request->status_aset,
+                ]);
+
+            // Update tabel server
+            DB::table('server')
+                ->where('id_server', $id)
+                ->update([
+                    'nama_server' => $request->nama_server,
+                    'hostname' => $request->hostname,
+                    'alamat_ip_manajemen' => $request->alamat_ip_manajemen,
+                    'alamat_ip_produksi' => $request->alamat_ip_produksi,
+                    'sistem_operasi' => $request->sistem_operasi,
+                    'jenis_server' => $request->jenis_server,
+                    'jumlah_prosessor' => $request->jumlah_prosessor,
+                    'model_prosessor' => $request->model_prosessor,
+                    'kapasitas_memori_gb' => $request->kapasitas_memori_gb,
+                    'jenis_memori' => $request->jenis_memori,
+                    'kapasitas_penyimpanan_gb' => $request->kapasitas_penyimpanan_gb,
+                    'jenis_penyimpanan' => $request->jenis_penyimpanan,
+                    'lokasi_rack' => $request->lokasi_rack,
+                ]);
+
+            // Insert monitoring baru (biar status up-to-date)
+            DB::table('server_monitoring')->insert([
+                'id_server' => $id,
+                'status' => $request->status_monitoring,
+                'cpu_percent' => $request->cpu_percent ?? 0,
+                'memory_percent' => $request->memory_percent ?? 0,
+                'storage_percent' => $request->storage_percent ?? 0,
+                'uptime_detik' => $request->status_monitoring === 'Online' ? 3600 : 0,
+                'dicatat_pada' => now(),
+            ]);
+
+            DB::commit();
+
+            return redirect()->route('server.index')
+                ->with('success', 'Server berhasil diupdate!');
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back()
+                ->with('error', 'Gagal mengupdate server: ' . $e->getMessage())
+                ->withInput();
+        }
+    }
+
+    /**
+     * Soft delete server (set deleted_at)
+     */
+    public function destroy(int $id)
+    {
+        try {
+            DB::table('server')
+                ->where('id_server', $id)
+                ->update(['deleted_at' => now()]);
+
+            return redirect()->route('server.index')
+                ->with('success', 'Server berhasil dihapus!');
+
+        } catch (\Exception $e) {
+            return redirect()->back()
+                ->with('error', 'Gagal menghapus server: ' . $e->getMessage());
         }
     }
 

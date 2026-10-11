@@ -49,7 +49,9 @@
             </thead>
             <tbody>
                 @forelse($servers as $server)
-                <tr>
+                <tr ondblclick="window.location='{{ route('server.detail', $server['id']) }}'" 
+                    style="cursor: pointer;" 
+                    title="Double click untuk lihat detail">
                     <td><span class="srv-name">{{ $server['name'] }}</span></td>
                     <td>{{ $server['ip_address'] }}</td>
                     <td>
@@ -63,9 +65,13 @@
                     <td>{{ $server['disk'] }}</td>
                     <td>{{ $server['uptime'] }}</td>
                     <td class="srv-text-center">
-                        <a href="{{ route('server.detail', $server['id']) }}" class="srv-btn-detail">
-                            Selengkapnya →
+                        <a href="{{ route('server.edit', $server['id']) }}" class="srv-btn-edit">
+                            Edit
                         </a>
+                        <button type="button" class="srv-btn-delete" 
+                                onclick="showDeleteModal({{ $server['id'] }}, '{{ $server['name'] }}')">
+                            Hapus
+                        </button>
                     </td>
                 </tr>
                 @empty
@@ -80,7 +86,59 @@
     </div>
 </div>
 
+{{-- ===== MODAL KONFIRMASI HAPUS ===== --}}
+<div id="deleteModal" class="srv-modal-overlay" style="display: none;">
+    <div class="srv-modal">
+        <div class="srv-modal-icon">⚠️</div>
+        <h3 class="srv-modal-title">Konfirmasi Hapus</h3>
+        <p class="srv-modal-text">
+            Apakah Anda yakin ingin menghapus server <strong id="deleteServerName"></strong>?
+        </p>
+        <p class="srv-modal-warning">
+            Data akan dihapus dari tampilan, tapi tetap tersimpan di database.
+        </p>
+        <div class="srv-modal-actions">
+            <button type="button" class="srv-btn-cancel" onclick="closeDeleteModal()">
+                Batal
+            </button>
+            <form id="deleteForm" method="POST" style="display: inline;">
+                @csrf
+                @method('DELETE')
+                <button type="submit" class="srv-btn-delete-confirm">
+                    Ya, Hapus
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+
 <footer class="footer">
     <p>&copy; 2026 Direktorat Jenderal Guru, Tenaga Kependidikan dan Pendidikan Guru - Kemendikdasmen</p>
 </footer>
+
+<script>
+    function showDeleteModal(id, name) {
+        document.getElementById('deleteServerName').textContent = name;
+        document.getElementById('deleteForm').action = '/server/' + id;
+        document.getElementById('deleteModal').style.display = 'flex';
+    }
+
+    function closeDeleteModal() {
+        document.getElementById('deleteModal').style.display = 'none';
+    }
+
+    // Tutup modal kalo klik di luar
+    document.getElementById('deleteModal').addEventListener('click', function(e) {
+        if (e.target === this) {
+            closeDeleteModal();
+        }
+    });
+
+    // Tutup modal kalo tekan ESC
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            closeDeleteModal();
+        }
+    });
+</script>
 @endsection

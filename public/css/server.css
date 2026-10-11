@@ -300,3 +300,126 @@
         grid-template-columns: 1fr;
     }
 }
+
+/* ===== Tombol Edit ===== */
+.srv-btn-edit {
+    display: inline-block;
+    padding: 0.375rem 0.75rem;
+    background-color: #dbeafe;
+    color: #1d4ed8;
+    border-radius: 0.375rem;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    text-decoration: none;
+    transition: background-color 0.2s;
+    margin-right: 0.375rem;
+}
+
+.srv-btn-edit:hover {
+    background-color: #bfdbfe;
+}
+
+/* ===== Tombol Hapus ===== */
+.srv-btn-delete {
+    display: inline-block;
+    padding: 0.375rem 0.75rem;
+    background-color: #fee2e2;
+    color: #991b1b;
+    border: none;
+    border-radius: 0.375rem;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.srv-btn-delete:hover {
+    background-color: #fecaca;
+}
+
+/* ===== Modal Overlay ===== */
+.srv-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+}
+
+/* ===== Modal Box ===== */
+.srv-modal {
+    background: white;
+    border-radius: 0.75rem;
+    padding: 2rem;
+    max-width: 420px;
+    width: 90%;
+    text-align: center;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+    animation: modalFadeIn 0.2s ease-out;
+}
+
+@keyframes modalFadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.srv-modal-icon {
+    font-size: 3rem;
+    margin-bottom: 0.5rem;
+}
+
+.srv-modal-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #111827;
+    margin-bottom: 0.75rem;
+}
+
+.srv-modal-text {
+    font-size: 0.9375rem;
+    color: #4b5563;
+    margin-bottom: 0.5rem;
+    line-height: 1.5;
+}
+
+.srv-modal-warning {
+    font-size: 0.8125rem;
+    color: #d97706;
+    background-color: #fef3c7;
+    padding: 0.5rem 0.75rem;
+    border-radius: 0.375rem;
+    margin-bottom: 1.5rem;
+}
+
+.srv-modal-actions {
+    display: flex;
+    justify-content: center;
+    gap: 0.75rem;
+}
+
+.srv-btn-delete-confirm {
+    padding: 0.5rem 1.25rem;
+    background-color: #dc2626;
+    color: white;
+    border: none;
+    border-radius: 0.5rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.srv-btn-delete-confirm:hover {
+    background-color: #b91c1c;
+}
