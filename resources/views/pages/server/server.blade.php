@@ -94,9 +94,6 @@
         <p class="srv-modal-text">
             Apakah Anda yakin ingin menghapus server <strong id="deleteServerName"></strong>?
         </p>
-        <p class="srv-modal-warning">
-            Data akan dihapus dari tampilan, tapi tetap tersimpan di database.
-        </p>
         <div class="srv-modal-actions">
             <button type="button" class="srv-btn-cancel" onclick="closeDeleteModal()">
                 Batal
