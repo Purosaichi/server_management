@@ -113,7 +113,7 @@
             <div class="info-row">
                 <span class="info-label">SSL Certificate</span>
                 <span class="info-value">
-                    <span class="badge {{ $application['ssl_certificate'] == 'VALID' ? 'badge-success' : 'badge-danger' }}">
+                    <span class="badge {{ $application['ssl_certificate'] == 'Valid' ? 'badge-success' : 'badge-danger' }}">
                         {{ $application['ssl_certificate'] }}
                     </span>
                 </span>
@@ -152,7 +152,13 @@
             <div class="info-row">
                 <span class="info-label">Status</span>
                 <span class="info-value">
-                    <span class="badge badge-warning">{{ $application['license_status'] }}</span>
+                    <span class="badge 
+                        {{ $application['license_status'] == 'Aman' ? 'badge-success' : '' }}
+                        {{ $application['license_status'] == 'Akan Expired' ? 'badge-warning' : '' }}
+                        {{ $application['license_status'] == 'Expired' ? 'badge-danger' : '' }}
+                    ">
+                        {{ $application['license_status'] }}
+                    </span>
                 </span>
             </div>
         </div>
@@ -181,13 +187,23 @@
     </div>
     
     {{-- Maintenance --}}
-    <div class="card">
+    <div class="card" style="position: relative;">
         <h3 class="card-title">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/>
             </svg>
             Maintenance
         </h3>
+        
+        {{-- TOMBOL TAMBAH MAINTENANCE --}}
+        <button type="button" class="add-maintenance-btn" 
+                onclick="openMaintenanceModal()" 
+                title="Tambah Jadwal Maintenance">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/>
+            </svg>
+        </button>
+        
         <div style="display: flex; flex-direction: column; gap: 0.75rem;">
             
             {{-- Maintenance Terakhir --}}
@@ -206,10 +222,18 @@
             </div>
             @endif
             
-            {{-- Maintenance Berikutnya --}}
+            {{-- Maintenance Berikutnya (BISA DIKLIK 2X BUAT EDIT) --}}
             @if($application['next_maintenance'])
-            <div class="maintenance-box">
-                <div class="maintenance-box-title">Maintenance Berikutnya</div>
+            <div class="maintenance-box maintenance-box-clickable" 
+                 ondblclick="editMaintenance({{ $application['next_maintenance']['id'] }}, 
+                             '{{ $application['next_maintenance']['jenis'] }}',
+                             '{{ $application['next_maintenance']['tanggal'] }}',
+                             '{{ $application['next_maintenance']['status'] }}')"
+                 title="Double click untuk edit">
+                <div class="maintenance-box-title">
+                    Maintenance Berikutnya
+                    <span class="edit-hint">✏️ Double click untuk edit</span>
+                </div>
                 <div class="info-list">
                     <div class="info-row"><span class="info-label">Tanggal</span><span class="info-value">{{ $application['next_maintenance']['tanggal'] }}</span></div>
                     <div class="info-row"><span class="info-label">Jenis</span><span class="info-value">{{ $application['next_maintenance']['jenis'] }}</span></div>
@@ -219,6 +243,10 @@
                         <span class="info-value"><span class="badge badge-info">{{ $application['next_maintenance']['status'] }}</span></span>
                     </div>
                 </div>
+            </div>
+            @else
+            <div class="maintenance-box-empty">
+                Belum ada jadwal maintenance berikutnya.
             </div>
             @endif
         </div>
@@ -237,6 +265,7 @@
                         <span class="badge 
                             {{ $history['status'] == 'Completed' ? 'badge-success' : '' }}
                             {{ $history['status'] == 'Scheduled' ? 'badge-info' : '' }}
+                            {{ $history['status'] == 'In Progress' ? 'badge-warning' : '' }}
                             {{ $history['status'] == 'Canceled' ? 'badge-gray' : '' }}
                         ">
                             {{ $history['status'] }}
@@ -252,14 +281,139 @@
                 @endforelse
             </tbody>
         </table>
+    </div>
+</div>
+
+{{-- ===== MODAL TAMBAH/EDIT MAINTENANCE ===== --}}
+<div id="maintenanceModal" class="modal-overlay" style="display: none;">
+    <div class="modal-box">
+        <h3 class="modal-title" id="maintenanceModalTitle">Tambah Jadwal Maintenance</h3>
         
-        @if(count($application['maintenance_history']) > 0)
-        <a href="#" class="link-all">Lihat Semua Riwayat</a>
-        @endif
+        <form id="maintenanceForm" method="POST" action="{{ route('maintenance.store') }}">
+            @csrf
+            <input type="hidden" name="id_aplikasi" value="{{ $application['id'] }}">
+            <input type="hidden" name="id_maintenance" id="editMaintenanceId" value="">
+            <input type="hidden" name="target_type" value="Application">
+            
+            <div class="modal-form-group">
+                <label for="jenis_maintenance">Jenis Maintenance <span style="color: red;">*</span></label>
+                <input type="text" name="jenis_maintenance" id="jenis_maintenance" 
+                       placeholder="Contoh: Update & Patch" required>
+            </div>
+            
+            <div class="modal-form-group">
+                <label for="jadwal_tanggal">Tanggal <span style="color: red;">*</span></label>
+                <input type="date" name="jadwal_tanggal" id="jadwal_tanggal" required>
+            </div>
+            
+            <div class="modal-form-row">
+                <div class="modal-form-group">
+                    <label for="jam_mulai">Jam Mulai</label>
+                    <input type="time" name="jam_mulai" id="jam_mulai">
+                </div>
+                <div class="modal-form-group">
+                    <label for="jam_selesai">Jam Selesai</label>
+                    <input type="time" name="jam_selesai" id="jam_selesai">
+                </div>
+            </div>
+            
+            <div class="modal-form-group">
+                <label for="status">Status <span style="color: red;">*</span></label>
+                <select name="status" id="status" required>
+                    <option value="Scheduled">Scheduled</option>
+                    <option value="In Progress">In Progress</option>
+                    <option value="Completed">Completed</option>
+                    <option value="Canceled">Canceled</option>
+                </select>
+            </div>
+            
+            <div class="modal-form-group">
+                <label for="catatan">Catatan</label>
+                <textarea name="catatan" id="catatan" rows="2" 
+                          placeholder="Catatan tambahan..."></textarea>
+            </div>
+            
+            <div class="modal-actions">
+                <button type="button" class="modal-btn-cancel" onclick="closeMaintenanceModal()">
+                    Batal
+                </button>
+                <button type="submit" class="modal-btn-submit" id="maintenanceSubmitBtn">
+                    Simpan
+                </button>
+            </div>
+        </form>
     </div>
 </div>
 
 <footer class="footer">
     <p>&copy; 2026 Direktorat Jenderal Guru, Tenaga Kependidikan dan Pendidikan Guru - Kemendikdasmen</p>
 </footer>
+
+<script>
+    // ===== MODAL MAINTENANCE =====
+    function openMaintenanceModal() {
+        document.getElementById('maintenanceModalTitle').textContent = 'Tambah Jadwal Maintenance';
+        document.getElementById('maintenanceSubmitBtn').textContent = 'Simpan';
+        document.getElementById('editMaintenanceId').value = '';
+        document.getElementById('jenis_maintenance').value = '';
+        document.getElementById('jadwal_tanggal').value = '';
+        document.getElementById('jam_mulai').value = '';
+        document.getElementById('jam_selesai').value = '';
+        document.getElementById('status').value = 'Scheduled';
+        document.getElementById('catatan').value = '';
+        
+        // Ubah action ke store
+        document.getElementById('maintenanceForm').action = '{{ route('maintenance.store') }}';
+        
+        // Hapus method PUT kalo ada
+        const methodInput = document.querySelector('#maintenanceForm input[name="_method"]');
+        if (methodInput) methodInput.remove();
+        
+        document.getElementById('maintenanceModal').style.display = 'flex';
+    }
+    
+    function editMaintenance(id, jenis, tanggal, status) {
+        document.getElementById('maintenanceModalTitle').textContent = 'Edit Jadwal Maintenance';
+        document.getElementById('maintenanceSubmitBtn').textContent = 'Update';
+        document.getElementById('editMaintenanceId').value = id;
+        document.getElementById('jenis_maintenance').value = jenis;
+        document.getElementById('status').value = status;
+        
+        // Format tanggal (dari 'd F Y' ke 'Y-m-d')
+        const dateObj = new Date(tanggal);
+        const year = dateObj.getFullYear();
+        const month = String(dateObj.getMonth() + 1).padStart(2, '0');
+        const day = String(dateObj.getDate()).padStart(2, '0');
+        document.getElementById('jadwal_tanggal').value = `${year}-${month}-${day}`;
+        
+        // Ubah action ke update
+        document.getElementById('maintenanceForm').action = '/maintenance/' + id;
+        
+        // Tambah method PUT kalo belum ada
+        let methodInput = document.querySelector('#maintenanceForm input[name="_method"]');
+        if (!methodInput) {
+            methodInput = document.createElement('input');
+            methodInput.type = 'hidden';
+            methodInput.name = '_method';
+            methodInput.value = 'PUT';
+            document.getElementById('maintenanceForm').appendChild(methodInput);
+        }
+        
+        document.getElementById('maintenanceModal').style.display = 'flex';
+    }
+    
+    function closeMaintenanceModal() {
+        document.getElementById('maintenanceModal').style.display = 'none';
+    }
+    
+    // Tutup modal kalo klik di luar
+    document.getElementById('maintenanceModal').addEventListener('click', function(e) {
+        if (e.target === this) closeMaintenanceModal();
+    });
+    
+    // Tutup modal kalo tekan ESC
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') closeMaintenanceModal();
+    });
+</script>
 @endsection
