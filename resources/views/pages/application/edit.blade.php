@@ -85,15 +85,16 @@
 
             <div class="app-form-group">
                 <label for="id_lisensi">Licenses</label>
-                <select name="id_lisensi[]" id="id_lisensi" multiple size="4">
+                <select name="id_lisensi" id="id_lisensi">
+                    <option value="">-- Pilih Lisensi --</option>
                     @foreach($licenses as $license)
                         <option value="{{ $license->id_lisensi }}"
-                            {{ in_array($license->id_lisensi, (array) old('id_lisensi', $selectedLicenseIds)) ? 'selected' : '' }}>
+                            {{ old('id_lisensi', $selectedLicenseId) == $license->id_lisensi ? 'selected' : '' }}>
                             {{ $license->nama_lisensi }}{{ $license->provider ? ' - ' . $license->provider : '' }}
                         </option>
                     @endforeach
                 </select>
-                <small>Lisensi terhubung ke aset server dan digunakan bersama oleh aplikasi pada server yang sama.</small>
+                <small>Lisensi terhubung ke aset server dan dapat digunakan bersama oleh aplikasi pada server yang sama.</small>
             </div>
 
             <div class="app-form-group">

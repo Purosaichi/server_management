@@ -191,22 +191,22 @@ class ApplicationController extends Controller
                 Rule::exists('server', 'id_server')->whereNull('deleted_at'),
             ],
             'nama_domain' => 'nullable|string|max:150|unique:domain,nama_domain',
-            'id_lisensi' => 'nullable|array',
-            'id_lisensi.*' => [
+            'id_lisensi' => [
+                'nullable',
                 'integer',
                 Rule::exists('lisensi', 'id_lisensi')->whereNull('deleted_at'),
             ],
         ]);
 
-        $licenseIds = array_values(array_unique(array_map('intval', (array) $request->input('id_lisensi', []))));
-        if ($licenseIds && ! DB::table('server')->where('id_server', $request->id_server)->whereNotNull('id_aset')->exists()) {
+        $licenseId = $request->filled('id_lisensi') ? (int) $request->input('id_lisensi') : null;
+        if ($licenseId !== null && ! DB::table('server')->where('id_server', $request->id_server)->whereNotNull('id_aset')->exists()) {
             return back()->withErrors([
                 'id_lisensi' => 'Pilih server yang memiliki aset untuk menghubungkan lisensi.',
             ])->withInput();
         }
 
         try {
-            DB::transaction(function () use ($request, $licenseIds) {
+            DB::transaction(function () use ($request, $licenseId) {
                 $applicationId = DB::table('aplikasi')->insertGetId([
                     'kode_aplikasi' => $request->kode_aplikasi,
                     'nama_aplikasi' => $request->nama_aplikasi,
@@ -223,7 +223,7 @@ class ApplicationController extends Controller
                 ], 'id_aplikasi');
 
                 $this->saveApplicationDomain($applicationId, null, $request->input('nama_domain'));
-                $this->syncServerLicenses($request->id_server, $licenseIds, false);
+                $this->assignServerLicense($request->id_server, $licenseId);
             });
 
             return redirect()->route('application.index')
@@ -267,9 +267,12 @@ class ApplicationController extends Controller
         $currentAssetId = $app->id_server
             ? DB::table('server')->where('id_server', $app->id_server)->value('id_aset')
             : null;
-        $selectedLicenseIds = $currentAssetId
-            ? DB::table('lisensi_aset')->where('id_aset', $currentAssetId)->pluck('id_lisensi')->all()
-            : [];
+        $selectedLicenseId = $currentAssetId
+            ? DB::table('lisensi_aset')
+                ->where('id_aset', $currentAssetId)
+                ->orderByDesc('id_lisensi_aset')
+                ->value('id_lisensi')
+            : null;
 
         return view('pages.application.edit', compact(
             'app',
@@ -277,7 +280,7 @@ class ApplicationController extends Controller
             'licenses',
             'currentDomainId',
             'currentDomainName',
-            'selectedLicenseIds'
+            'selectedLicenseId'
         ));
     }
 
@@ -312,23 +315,21 @@ class ApplicationController extends Controller
                 'max:150',
                 Rule::unique('domain', 'nama_domain')->ignore($currentDomainId, 'id_domain'),
             ],
-            'id_lisensi' => 'nullable|array',
-            'id_lisensi.*' => [
+            'id_lisensi' => [
+                'nullable',
                 'integer',
                 Rule::exists('lisensi', 'id_lisensi')->whereNull('deleted_at'),
             ],
         ]);
 
-        $licenseIds = array_values(array_unique(array_map('intval', (array) $request->input('id_lisensi', []))));
-        if ($licenseIds && ! DB::table('server')->where('id_server', $request->id_server)->whereNotNull('id_aset')->exists()) {
+        $licenseId = $request->filled('id_lisensi') ? (int) $request->input('id_lisensi') : null;
+        if ($licenseId !== null && ! DB::table('server')->where('id_server', $request->id_server)->whereNotNull('id_aset')->exists()) {
             return back()->withErrors([
                 'id_lisensi' => 'Pilih server yang memiliki aset untuk menghubungkan lisensi.',
             ])->withInput();
         }
-        $originalServerId = DB::table('aplikasi')->where('id_aplikasi', $id)->value('id_server');
-
         try {
-            DB::transaction(function () use ($request, $id, $licenseIds, $originalServerId, $currentDomainId) {
+            DB::transaction(function () use ($request, $id, $licenseId, $currentDomainId) {
                 DB::table('aplikasi')
                     ->where('id_aplikasi', $id)
                     ->update([
@@ -347,8 +348,7 @@ class ApplicationController extends Controller
                     ]);
 
                 $this->saveApplicationDomain($id, $currentDomainId, $request->input('nama_domain'));
-                $replaceServerLicenses = (int) $originalServerId === (int) $request->id_server;
-                $this->syncServerLicenses($request->id_server, $licenseIds, $replaceServerLicenses);
+                $this->assignServerLicense($request->id_server, $licenseId);
             });
 
             return redirect()->route('application.index')
@@ -406,9 +406,9 @@ class ApplicationController extends Controller
         ]);
     }
 
-    private function syncServerLicenses(?int $serverId, array $licenseIds, bool $replace): void
+    private function assignServerLicense(?int $serverId, ?int $licenseId): void
     {
-        if ($serverId === null) {
+        if ($serverId === null || $licenseId === null) {
             return;
         }
 
@@ -417,20 +417,12 @@ class ApplicationController extends Controller
             return;
         }
 
-        $existingLicenseIds = DB::table('lisensi_aset')
+        $alreadyAssigned = DB::table('lisensi_aset')
             ->where('id_aset', $assetId)
-            ->pluck('id_lisensi')
-            ->map(fn ($id) => (int) $id)
-            ->all();
+            ->where('id_lisensi', $licenseId)
+            ->exists();
 
-        if ($replace) {
-            DB::table('lisensi_aset')
-                ->where('id_aset', $assetId)
-                ->whereNotIn('id_lisensi', $licenseIds)
-                ->delete();
-        }
-
-        foreach (array_diff($licenseIds, $existingLicenseIds) as $licenseId) {
+        if (! $alreadyAssigned) {
             DB::table('lisensi_aset')->insert([
                 'id_lisensi' => $licenseId,
                 'id_aset' => $assetId,
