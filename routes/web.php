@@ -28,6 +28,11 @@ Route::middleware(['auth.session'])->group(function () {
     Route::get('/server/{id}', [ServerController::class, 'show'])->name('server.detail');
 
     Route::get('/application', [ApplicationController::class, 'index'])->name('application.index');
+    Route::get('/application/create', [ApplicationController::class, 'create'])->name('application.create');
+    Route::post('/application', [ApplicationController::class, 'store'])->name('application.store');
+    Route::get('/application/{id}/edit', [ApplicationController::class, 'edit'])->name('application.edit');
+    Route::put('/application/{id}', [ApplicationController::class, 'update'])->name('application.update');
+    Route::delete('/application/{id}', [ApplicationController::class, 'destroy'])->name('application.destroy');
     Route::get('/application/{id}', [ApplicationController::class, 'show'])->name('application.detail');
 
     Route::get('/domain', [DomainController::class, 'index'])->name('domain.domain');

@@ -80,11 +80,13 @@ class ApplicationController extends Controller
                 ? '(' . \Carbon\Carbon::parse($app->tanggal_mulai_operasi)->diffForHumans(null, true) . ')'
                 : '',
 
+            // Server & Infrastruktur
             'server' => $app->nama_server ?? '-',
             'ip_address' => $app->alamat_ip_produksi ?? '-',
             'os' => $app->sistem_operasi ?? '-',
             'database' => $app->database_digunakan ?? '-',
 
+            // Domain
             'domain' => $app->nama_domain ?? '-',
             'ssl_certificate' => $app->status_ssl ?? 'Tidak Ada',
             'ssl_expired' => $app->ssl_kadaluarsa 
@@ -92,35 +94,47 @@ class ApplicationController extends Controller
                 : '-',
             'domain_status' => $app->status_domain ?? 'Tidak Aktif',
 
-            'license_name' => $app->licenses ?? '-',
-            'license_provider' => '-',
-            'license_count' => '-',
-            'license_expired' => '-',
-            'license_expired_note' => '',
-            'license_status' => '-',
+            // Licenses (LENGKAP)
+            'license_name' => $app->license_name ?? '-',
+            'license_provider' => $app->license_provider ?? '-',
+            'license_count' => $app->license_count ? $app->license_count . ' License' : '-',
+            'license_expired' => $app->license_expired 
+                ? \Carbon\Carbon::parse($app->license_expired)->format('d M Y')
+                : '-',
+            'license_expired_note' => $app->license_expired 
+                ? '(' . \Carbon\Carbon::now()->diffInDays(\Carbon\Carbon::parse($app->license_expired), false) . ' Hari Lagi)'
+                : '',
+            'license_status' => $app->license_status ?? '-',
 
+            // Pengurus / PIC
             'pic_name' => $app->nama_pic ?? '-',
             'pic_jabatan' => $app->pic_jabatan ?? '-',
             'pic_email' => $app->pic_email ?? '-',
             'pic_telepon' => $app->pic_telepon ?? '-',
-            'pic_divisi' => '-',
+            'pic_divisi' => $app->pic_divisi ?? '-',   // ← SEKARANG ADA
 
+            // Maintenance Terakhir
             'last_maintenance' => $lastMaintenance ? [
+                'id' => $lastMaintenance->id_maintenance,
                 'tanggal' => \Carbon\Carbon::parse($lastMaintenance->jadwal_tanggal)->format('d F Y'),
                 'jenis' => $lastMaintenance->jenis_maintenance,
                 'pic' => $lastMaintenance->nama_pic ?? '-',
                 'status' => $lastMaintenance->status,
             ] : null,
 
+            // Maintenance Berikutnya
             'next_maintenance' => $nextMaintenance ? [
+                'id' => $nextMaintenance->id_maintenance,
                 'tanggal' => \Carbon\Carbon::parse($nextMaintenance->jadwal_tanggal)->format('d F Y'),
                 'jenis' => $nextMaintenance->jenis_maintenance,
                 'pic' => $nextMaintenance->nama_pic ?? '-',
                 'status' => $nextMaintenance->status,
             ] : null,
 
+            // Riwayat Maintenance
             'maintenance_history' => $maintenanceHistory->map(function ($m) {
                 return [
+                    'id' => $m->id_maintenance,
                     'tanggal' => \Carbon\Carbon::parse($m->jadwal_tanggal)->format('d F Y'),
                     'jenis' => $m->jenis_maintenance,
                     'status' => $m->status,
