@@ -80,15 +80,23 @@
             </div>
 
             <div class="app-form-group">
-                <label for="id_pic">PIC</label>
-                <select name="id_pic" id="id_pic">
-                    <option value="">-- Pilih PIC --</option>
-                    @foreach($pics as $id => $nama)
-                        <option value="{{ $id }}" {{ old('id_pic') == $id ? 'selected' : '' }}>
-                            {{ $nama }}
+                <label for="nama_domain">Domain</label>
+                <input type="text" name="nama_domain" id="nama_domain"
+                       value="{{ old('nama_domain') }}"
+                       placeholder="Contoh: aplikasi.example.com">
+            </div>
+
+            <div class="app-form-group">
+                <label for="id_lisensi">Licenses</label>
+                <select name="id_lisensi[]" id="id_lisensi" multiple size="4">
+                    @foreach($licenses as $license)
+                        <option value="{{ $license->id_lisensi }}"
+                            {{ in_array($license->id_lisensi, (array) old('id_lisensi', [])) ? 'selected' : '' }}>
+                            {{ $license->nama_lisensi }}{{ $license->provider ? ' - ' . $license->provider : '' }}
                         </option>
                     @endforeach
                 </select>
+                <small>Lisensi terhubung ke aset server dan digunakan bersama oleh aplikasi pada server yang sama.</small>
             </div>
 
             <div class="app-form-group">

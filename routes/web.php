@@ -42,6 +42,8 @@ Route::middleware(['auth.session'])->group(function () {
     Route::get('/licenses/{id}', [LicenseController::class, 'show'])->name('licenses.detail');
 
     Route::get('/maintenance', [MaintenanceController::class, 'index'])->name('maintenance.maintenance');
+    Route::post('/maintenance', [MaintenanceController::class, 'store'])->name('maintenance.store');
+    Route::put('/maintenance/{id}', [MaintenanceController::class, 'update'])->name('maintenance.update');
     Route::get('/alerts', [AlertController::class, 'index'])->name('alerts.alerts');
 
     Route::prefix('network-device')->name('network-device.')->group(function () {

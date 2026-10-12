@@ -83,6 +83,7 @@ class MaintenanceController extends Controller
         $request->validate([
             'id_aplikasi'       => 'required|integer|exists:aplikasi,id_aplikasi',
             'jenis_maintenance' => 'required|string|max:100',
+            'id_pic'            => 'nullable|integer|exists:pic,id_pic',
             'jadwal_tanggal'    => 'required|date',
             'jam_mulai'         => 'nullable',
             'jam_selesai'       => 'nullable',
@@ -105,6 +106,7 @@ class MaintenanceController extends Controller
                 'target_type'       => 'Application',
                 'id_aplikasi'       => $request->id_aplikasi,
                 'jenis_maintenance' => $request->jenis_maintenance,
+                'id_pic'            => $request->id_pic,
                 'jadwal_tanggal'    => $request->jadwal_tanggal,
                 'jam_mulai'         => $request->jam_mulai ?: null,
                 'jam_selesai'       => $request->jam_selesai ?: null,
@@ -129,6 +131,7 @@ class MaintenanceController extends Controller
     {
         $request->validate([
             'jenis_maintenance' => 'required|string|max:100',
+            'id_pic'            => 'nullable|integer|exists:pic,id_pic',
             'jadwal_tanggal'    => 'required|date',
             'jam_mulai'         => 'nullable',
             'jam_selesai'       => 'nullable',
@@ -141,6 +144,7 @@ class MaintenanceController extends Controller
                 ->where('id_maintenance', $id)
                 ->update([
                     'jenis_maintenance' => $request->jenis_maintenance,
+                    'id_pic'            => $request->id_pic,
                     'jadwal_tanggal'    => $request->jadwal_tanggal,
                     'jam_mulai'         => $request->jam_mulai ?: null,
                     'jam_selesai'       => $request->jam_selesai ?: null,

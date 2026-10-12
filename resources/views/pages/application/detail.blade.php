@@ -222,17 +222,28 @@
             </div>
             @endif
             
-            {{-- Maintenance Berikutnya (BISA DIKLIK 2X BUAT EDIT) --}}
+            {{-- Maintenance Berikutnya (BISA DIKLIK 2X BUAT EDIT HANYA YANG Scheduled / In Progress) --}}
+            @php
+                $nextMaintenanceEditable = isset($application['next_maintenance']['status']) && in_array($application['next_maintenance']['status'], ['Scheduled', 'In Progress'], true);
+            @endphp
             @if($application['next_maintenance'])
-            <div class="maintenance-box maintenance-box-clickable" 
-                 ondblclick="editMaintenance({{ $application['next_maintenance']['id'] }}, 
-                             '{{ $application['next_maintenance']['jenis'] }}',
-                             '{{ $application['next_maintenance']['tanggal'] }}',
-                             '{{ $application['next_maintenance']['status'] }}')"
-                 title="Double click untuk edit">
+            <div class="maintenance-box {{ $nextMaintenanceEditable ? 'maintenance-box-clickable' : 'maintenance-box-disabled' }}"
+                 @if($nextMaintenanceEditable)
+                 ondblclick="editMaintenance(this)"
+                 data-maintenance-id="{{ $application['next_maintenance']['id'] }}"
+                 data-maintenance-type="{{ $application['next_maintenance']['jenis'] }}"
+                 data-maintenance-date="{{ $application['next_maintenance']['tanggal_input'] }}"
+                 data-maintenance-status="{{ $application['next_maintenance']['status'] }}"
+                 data-maintenance-pic="{{ $application['next_maintenance']['id_pic'] ?? '' }}"
+                 title="Double click untuk edit"
+                 @else
+                 title="Maintenance yang sudah Completed atau Canceled tidak bisa diedit"
+                 @endif>
                 <div class="maintenance-box-title">
                     Maintenance Berikutnya
+                    @if($nextMaintenanceEditable)
                     <span class="edit-hint">✏️ Double click untuk edit</span>
+                    @endif
                 </div>
                 <div class="info-list">
                     <div class="info-row"><span class="info-label">Tanggal</span><span class="info-value">{{ $application['next_maintenance']['tanggal'] }}</span></div>
@@ -300,6 +311,16 @@
                 <input type="text" name="jenis_maintenance" id="jenis_maintenance" 
                        placeholder="Contoh: Update & Patch" required>
             </div>
+
+            <div class="modal-form-group">
+                <label for="id_pic">PIC</label>
+                <select name="id_pic" id="id_pic">
+                    <option value="">-- Pilih PIC --</option>
+                    @foreach($application['pics'] as $picId => $picName)
+                        <option value="{{ $picId }}">{{ $picName }}</option>
+                    @endforeach
+                </select>
+            </div>
             
             <div class="modal-form-group">
                 <label for="jadwal_tanggal">Tanggal <span style="color: red;">*</span></label>
@@ -356,6 +377,7 @@
         document.getElementById('maintenanceSubmitBtn').textContent = 'Simpan';
         document.getElementById('editMaintenanceId').value = '';
         document.getElementById('jenis_maintenance').value = '';
+        document.getElementById('id_pic').value = '';
         document.getElementById('jadwal_tanggal').value = '';
         document.getElementById('jam_mulai').value = '';
         document.getElementById('jam_selesai').value = '';
@@ -372,22 +394,18 @@
         document.getElementById('maintenanceModal').style.display = 'flex';
     }
     
-    function editMaintenance(id, jenis, tanggal, status) {
+    function editMaintenance(card) {
+        const { maintenanceId, maintenanceType, maintenanceDate, maintenanceStatus, maintenancePic } = card.dataset;
         document.getElementById('maintenanceModalTitle').textContent = 'Edit Jadwal Maintenance';
         document.getElementById('maintenanceSubmitBtn').textContent = 'Update';
-        document.getElementById('editMaintenanceId').value = id;
-        document.getElementById('jenis_maintenance').value = jenis;
-        document.getElementById('status').value = status;
-        
-        // Format tanggal (dari 'd F Y' ke 'Y-m-d')
-        const dateObj = new Date(tanggal);
-        const year = dateObj.getFullYear();
-        const month = String(dateObj.getMonth() + 1).padStart(2, '0');
-        const day = String(dateObj.getDate()).padStart(2, '0');
-        document.getElementById('jadwal_tanggal').value = `${year}-${month}-${day}`;
+        document.getElementById('editMaintenanceId').value = maintenanceId;
+        document.getElementById('jenis_maintenance').value = maintenanceType;
+        document.getElementById('id_pic').value = maintenancePic || '';
+        document.getElementById('status').value = maintenanceStatus;
+        document.getElementById('jadwal_tanggal').value = maintenanceDate;
         
         // Ubah action ke update
-        document.getElementById('maintenanceForm').action = '/maintenance/' + id;
+        document.getElementById('maintenanceForm').action = '/maintenance/' + maintenanceId;
         
         // Tambah method PUT kalo belum ada
         let methodInput = document.querySelector('#maintenanceForm input[name="_method"]');

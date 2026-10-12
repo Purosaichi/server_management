@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\AplikasiDetail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\Rule;
 
 class ApplicationController extends Controller
 {
@@ -22,7 +23,7 @@ class ApplicationController extends Controller
                     'server_name' => $a->nama_server ?? '-',
                     'status' => $a->status_aplikasi,
                     'domain' => $a->nama_domain ?? '-',
-                    'licenses' => $a->licenses ?? '-',
+                    'licenses' => $a->license_name ?: '-',
                     'next_maintenance' => $a->next_maintenance ?? '-',
                 ];
             })
@@ -119,6 +120,7 @@ class ApplicationController extends Controller
                 'tanggal' => \Carbon\Carbon::parse($lastMaintenance->jadwal_tanggal)->format('d F Y'),
                 'jenis' => $lastMaintenance->jenis_maintenance,
                 'pic' => $lastMaintenance->nama_pic ?? '-',
+                'id_pic' => $lastMaintenance->id_pic ?? null,
                 'status' => $lastMaintenance->status,
             ] : null,
 
@@ -126,10 +128,14 @@ class ApplicationController extends Controller
             'next_maintenance' => $nextMaintenance ? [
                 'id' => $nextMaintenance->id_maintenance,
                 'tanggal' => \Carbon\Carbon::parse($nextMaintenance->jadwal_tanggal)->format('d F Y'),
+                'tanggal_input' => \Carbon\Carbon::parse($nextMaintenance->jadwal_tanggal)->format('Y-m-d'),
                 'jenis' => $nextMaintenance->jenis_maintenance,
                 'pic' => $nextMaintenance->nama_pic ?? '-',
+                'id_pic' => $nextMaintenance->id_pic ?? null,
                 'status' => $nextMaintenance->status,
             ] : null,
+
+            'pics' => DB::table('pic')->orderBy('nama_pic')->pluck('nama_pic', 'id_pic'),
 
             // Riwayat Maintenance
             'maintenance_history' => $maintenanceHistory->map(function ($m) {
@@ -150,18 +156,17 @@ class ApplicationController extends Controller
      */
     public function create()
     {
-        // Ambil data server buat dropdown
         $servers = DB::table('server')
             ->whereNull('deleted_at')
             ->orderBy('nama_server')
             ->pluck('nama_server', 'id_server');
 
-        // Ambil data PIC buat dropdown
-        $pics = DB::table('pic')
-            ->orderBy('nama_pic')
-            ->pluck('nama_pic', 'id_pic');
+        $licenses = DB::table('lisensi')
+            ->whereNull('deleted_at')
+            ->orderBy('nama_lisensi')
+            ->get(['id_lisensi', 'nama_lisensi', 'provider']);
 
-        return view('pages.application.create', compact('servers', 'pics'));
+        return view('pages.application.create', compact('servers', 'licenses'));
     }
 
     /**
@@ -172,7 +177,6 @@ class ApplicationController extends Controller
         $request->validate([
             'kode_aplikasi' => 'required|string|max:20|unique:aplikasi,kode_aplikasi',
             'nama_aplikasi' => 'required|string|max:150',
-            'id_server' => 'nullable|integer|exists:server,id_server',
             'deskripsi' => 'nullable|string',
             'kategori' => 'nullable|string|max:50',
             'versi' => 'nullable|string|max:20',
@@ -181,25 +185,46 @@ class ApplicationController extends Controller
             'uptime_percent' => 'nullable|numeric|min:0|max:100',
             'database_digunakan' => 'nullable|string|max:50',
             'tanggal_mulai_operasi' => 'nullable|date',
-            'id_pic' => 'nullable|integer|exists:pic,id_pic',
+            'id_server' => [
+                'nullable',
+                'integer',
+                Rule::exists('server', 'id_server')->whereNull('deleted_at'),
+            ],
+            'nama_domain' => 'nullable|string|max:150|unique:domain,nama_domain',
+            'id_lisensi' => 'nullable|array',
+            'id_lisensi.*' => [
+                'integer',
+                Rule::exists('lisensi', 'id_lisensi')->whereNull('deleted_at'),
+            ],
         ]);
 
+        $licenseIds = array_values(array_unique(array_map('intval', (array) $request->input('id_lisensi', []))));
+        if ($licenseIds && ! DB::table('server')->where('id_server', $request->id_server)->whereNotNull('id_aset')->exists()) {
+            return back()->withErrors([
+                'id_lisensi' => 'Pilih server yang memiliki aset untuk menghubungkan lisensi.',
+            ])->withInput();
+        }
+
         try {
-            DB::table('aplikasi')->insert([
-                'kode_aplikasi' => $request->kode_aplikasi,
-                'nama_aplikasi' => $request->nama_aplikasi,
-                'id_server' => $request->id_server,
-                'deskripsi' => $request->deskripsi,
-                'kategori' => $request->kategori,
-                'versi' => $request->versi,
-                'status' => $request->status,
-                'sla_percent' => $request->sla_percent,
-                'uptime_percent' => $request->uptime_percent,
-                'database_digunakan' => $request->database_digunakan,
-                'tanggal_mulai_operasi' => $request->tanggal_mulai_operasi,
-                'id_pic' => $request->id_pic,
-                'dibuat_pada' => now(),
-            ]);
+            DB::transaction(function () use ($request, $licenseIds) {
+                $applicationId = DB::table('aplikasi')->insertGetId([
+                    'kode_aplikasi' => $request->kode_aplikasi,
+                    'nama_aplikasi' => $request->nama_aplikasi,
+                    'id_server' => $request->id_server,
+                    'deskripsi' => $request->deskripsi,
+                    'kategori' => $request->kategori,
+                    'versi' => $request->versi,
+                    'status' => $request->status,
+                    'sla_percent' => $request->sla_percent,
+                    'uptime_percent' => $request->uptime_percent,
+                    'database_digunakan' => $request->database_digunakan,
+                    'tanggal_mulai_operasi' => $request->tanggal_mulai_operasi,
+                    'dibuat_pada' => now(),
+                ], 'id_aplikasi');
+
+                $this->saveApplicationDomain($applicationId, null, $request->input('nama_domain'));
+                $this->syncServerLicenses($request->id_server, $licenseIds, false);
+            });
 
             return redirect()->route('application.index')
                 ->with('success', 'Aplikasi berhasil ditambahkan!');
@@ -223,18 +248,37 @@ class ApplicationController extends Controller
 
         abort_unless($app, 404);
 
-        // Ambil data server buat dropdown
         $servers = DB::table('server')
             ->whereNull('deleted_at')
             ->orderBy('nama_server')
             ->pluck('nama_server', 'id_server');
 
-        // Ambil data PIC buat dropdown
-        $pics = DB::table('pic')
-            ->orderBy('nama_pic')
-            ->pluck('nama_pic', 'id_pic');
+        $licenses = DB::table('lisensi')
+            ->whereNull('deleted_at')
+            ->orderBy('nama_lisensi')
+            ->get(['id_lisensi', 'nama_lisensi', 'provider']);
 
-        return view('pages.application.edit', compact('app', 'servers', 'pics'));
+        $currentDomainId = DB::table('domain')
+            ->where('id_aplikasi', $id)
+            ->value('id_domain');
+        $currentDomainName = $currentDomainId
+            ? DB::table('domain')->where('id_domain', $currentDomainId)->value('nama_domain')
+            : null;
+        $currentAssetId = $app->id_server
+            ? DB::table('server')->where('id_server', $app->id_server)->value('id_aset')
+            : null;
+        $selectedLicenseIds = $currentAssetId
+            ? DB::table('lisensi_aset')->where('id_aset', $currentAssetId)->pluck('id_lisensi')->all()
+            : [];
+
+        return view('pages.application.edit', compact(
+            'app',
+            'servers',
+            'licenses',
+            'currentDomainId',
+            'currentDomainName',
+            'selectedLicenseIds'
+        ));
     }
 
     /**
@@ -242,10 +286,13 @@ class ApplicationController extends Controller
      */
     public function update(Request $request, int $id)
     {
+        $currentDomainId = DB::table('domain')
+            ->where('id_aplikasi', $id)
+            ->value('id_domain');
+
         $request->validate([
             'kode_aplikasi' => 'required|string|max:20|unique:aplikasi,kode_aplikasi,' . $id . ',id_aplikasi',
             'nama_aplikasi' => 'required|string|max:150',
-            'id_server' => 'nullable|integer|exists:server,id_server',
             'deskripsi' => 'nullable|string',
             'kategori' => 'nullable|string|max:50',
             'versi' => 'nullable|string|max:20',
@@ -254,27 +301,55 @@ class ApplicationController extends Controller
             'uptime_percent' => 'nullable|numeric|min:0|max:100',
             'database_digunakan' => 'nullable|string|max:50',
             'tanggal_mulai_operasi' => 'nullable|date',
-            'id_pic' => 'nullable|integer|exists:pic,id_pic',
+            'id_server' => [
+                'nullable',
+                'integer',
+                Rule::exists('server', 'id_server')->whereNull('deleted_at'),
+            ],
+            'nama_domain' => [
+                'nullable',
+                'string',
+                'max:150',
+                Rule::unique('domain', 'nama_domain')->ignore($currentDomainId, 'id_domain'),
+            ],
+            'id_lisensi' => 'nullable|array',
+            'id_lisensi.*' => [
+                'integer',
+                Rule::exists('lisensi', 'id_lisensi')->whereNull('deleted_at'),
+            ],
         ]);
 
+        $licenseIds = array_values(array_unique(array_map('intval', (array) $request->input('id_lisensi', []))));
+        if ($licenseIds && ! DB::table('server')->where('id_server', $request->id_server)->whereNotNull('id_aset')->exists()) {
+            return back()->withErrors([
+                'id_lisensi' => 'Pilih server yang memiliki aset untuk menghubungkan lisensi.',
+            ])->withInput();
+        }
+        $originalServerId = DB::table('aplikasi')->where('id_aplikasi', $id)->value('id_server');
+
         try {
-            DB::table('aplikasi')
-                ->where('id_aplikasi', $id)
-                ->update([
-                    'kode_aplikasi' => $request->kode_aplikasi,
-                    'nama_aplikasi' => $request->nama_aplikasi,
-                    'id_server' => $request->id_server,
-                    'deskripsi' => $request->deskripsi,
-                    'kategori' => $request->kategori,
-                    'versi' => $request->versi,
-                    'status' => $request->status,
-                    'sla_percent' => $request->sla_percent,
-                    'uptime_percent' => $request->uptime_percent,
-                    'database_digunakan' => $request->database_digunakan,
-                    'tanggal_mulai_operasi' => $request->tanggal_mulai_operasi,
-                    'id_pic' => $request->id_pic,
-                    'diperbarui_pada' => now(),
-                ]);
+            DB::transaction(function () use ($request, $id, $licenseIds, $originalServerId, $currentDomainId) {
+                DB::table('aplikasi')
+                    ->where('id_aplikasi', $id)
+                    ->update([
+                        'kode_aplikasi' => $request->kode_aplikasi,
+                        'nama_aplikasi' => $request->nama_aplikasi,
+                        'id_server' => $request->id_server,
+                        'deskripsi' => $request->deskripsi,
+                        'kategori' => $request->kategori,
+                        'versi' => $request->versi,
+                        'status' => $request->status,
+                        'sla_percent' => $request->sla_percent,
+                        'uptime_percent' => $request->uptime_percent,
+                        'database_digunakan' => $request->database_digunakan,
+                        'tanggal_mulai_operasi' => $request->tanggal_mulai_operasi,
+                        'diperbarui_pada' => now(),
+                    ]);
+
+                $this->saveApplicationDomain($id, $currentDomainId, $request->input('nama_domain'));
+                $replaceServerLicenses = (int) $originalServerId === (int) $request->id_server;
+                $this->syncServerLicenses($request->id_server, $licenseIds, $replaceServerLicenses);
+            });
 
             return redirect()->route('application.index')
                 ->with('success', 'Aplikasi berhasil diupdate!');
@@ -302,6 +377,65 @@ class ApplicationController extends Controller
         } catch (\Exception $e) {
             return redirect()->back()
                 ->with('error', 'Gagal menghapus aplikasi: ' . $e->getMessage());
+        }
+    }
+
+    private function saveApplicationDomain(int $applicationId, ?int $domainId, ?string $domainName): void
+    {
+        if ($domainName === null || trim($domainName) === '') {
+            if ($domainId !== null) {
+                DB::table('domain')
+                    ->where('id_domain', $domainId)
+                    ->where('id_aplikasi', $applicationId)
+                    ->update(['id_aplikasi' => null]);
+            }
+
+            return;
+        }
+
+        if ($domainId !== null) {
+            DB::table('domain')
+                ->where('id_domain', $domainId)
+                ->update(['nama_domain' => trim($domainName)]);
+            return;
+        }
+
+        DB::table('domain')->insert([
+            'nama_domain' => trim($domainName),
+            'id_aplikasi' => $applicationId,
+        ]);
+    }
+
+    private function syncServerLicenses(?int $serverId, array $licenseIds, bool $replace): void
+    {
+        if ($serverId === null) {
+            return;
+        }
+
+        $assetId = DB::table('server')->where('id_server', $serverId)->value('id_aset');
+        if ($assetId === null) {
+            return;
+        }
+
+        $existingLicenseIds = DB::table('lisensi_aset')
+            ->where('id_aset', $assetId)
+            ->pluck('id_lisensi')
+            ->map(fn ($id) => (int) $id)
+            ->all();
+
+        if ($replace) {
+            DB::table('lisensi_aset')
+                ->where('id_aset', $assetId)
+                ->whereNotIn('id_lisensi', $licenseIds)
+                ->delete();
+        }
+
+        foreach (array_diff($licenseIds, $existingLicenseIds) as $licenseId) {
+            DB::table('lisensi_aset')->insert([
+                'id_lisensi' => $licenseId,
+                'id_aset' => $assetId,
+                'tanggal_pemasangan' => now()->toDateString(),
+            ]);
         }
     }
 }
