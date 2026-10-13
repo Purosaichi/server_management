@@ -169,31 +169,39 @@
 <div class="content-grid-3">
     
     {{-- Pengurus / PIC --}}
-    <div class="card">
+    <div class="card" style="position: relative;">
         <h3 class="card-title">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <svg ViewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/>
                 <circle cx="12" cy="7" r="4"/>
             </svg>
             Pengurus / PIC
         </h3>
+
+        {{-- -tombol edit pic --}}
+        <button type="button" class="edit-pic-btn"
+                onclick="openPucMOdal()"
+                title="edit / Ganti PIC">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
+                </svg>
+        </button>
+
+        
         <div class="info-list">
-            <div class="info-row"><span class="info-label">Nama</span><span class="info-value">{{ $application['pic_name'] }}</span></div>
-            <div class="info-row"><span class="info-label">Jabatan</span><span class="info-value">{{ $application['pic_jabatan'] }}</span></div>
-            <div class="info-row"><span class="info-label">Email</span><span class="info-value">{{ $application['pic_email'] }}</span></div>
-            <div class="info-row"><span class="info-label">No. Telepon</span><span class="info-value">{{ $application['pic_telepon'] }}</span></div>
-            <div class="info-row"><span class="info-label">Divisi</span><span class="info-value">{{ $application['pic_divisi'] }}</span></div>
+            @if($application['pic_name'] && $application['pic_name'] !== '-')
+                <div class="info-row"><span class="info-label">Nama</span><span class="info-value">{{ $application['pic_name'] }}</span></div>
+                <div class="info-row"><span class="info-label">Jabatan</span><span class="info-value">{{ $application['pic_jabatan'] }}</span></div>
+                <div class="info-row"><span class="info-label">Email</span><span class="info-value">{{ $application['pic_email'] }}</span></div>
+                <div class="info-row"><span class="info-label">No. Telepon</span><span class="info-value">{{ $application['pic_telepon'] }}</span></div>
+                <div class="info-row"><span class="info-label">Divisi</span><span class="info-value">{{ $application['pic_divisi'] }}</span></div>
+            @else
+                <div class="pic-empty">
+                    Belum ada PIC. Klik tombol <strong>✏️</strong> di pojok kanan untuk menambahkan.
+                </div>
+            @endif
         </div>
     </div>
-    
-    {{-- Maintenance --}}
-    <div class="card" style="position: relative;">
-        <h3 class="card-title">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/>
-            </svg>
-            Maintenance
-        </h3>
         
         {{-- TOMBOL TAMBAH MAINTENANCE --}}
         <button type="button" class="add-maintenance-btn" 
