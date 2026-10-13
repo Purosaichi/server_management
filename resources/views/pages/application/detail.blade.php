@@ -202,6 +202,96 @@
             @endif
         </div>
     </div>
+
+    {{-- ===== MODAL EDIT / TAMBAH PIC ===== --}}
+        <div id="picModal" class="modal-overlay" style="display: none;">
+            <div class="modal-box">
+                <h3 class="modal-title" id="picModalTitle">Edit PIC Aplikasi</h3>
+                
+                {{-- Tab: Pilih PIC Existing / Tambah PIC Baru --}}
+                <div class="pic-tabs">
+                    <button type="button" class="pic-tab active" id="tabExisting" onclick="switchPicTab('existing')">
+                        Pilih PIC
+                    </button>
+                    <button type="button" class="pic-tab" id="tabNew" onclick="switchPicTab('new')">
+                        + PIC Baru
+                    </button>
+                </div>
+                
+                {{-- ===== FORM 1: PILIH PIC EXISTING ===== --}}
+                <form id="picFormExisting" method="POST" action="{{ route('application.update-pic', $application['id']) }}">
+                    @csrf
+                    @method('PUT')
+                    
+                    <div class="modal-form-group">
+                        <label for="id_pic">Pilih PIC <span style="color: red;">*</span></label>
+                        <select name="id_pic" id="id_pic" required>
+                            <option value="">-- Pilih PIC --</option>
+                            @foreach($application['pics'] as $picId => $picName)
+                                <option value="{{ $picId }}" 
+                                    {{ ($application['pic_name'] ?? '') === $picName ? 'selected' : '' }}>
+                                    {{ $picName }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                    
+                    <div class="modal-actions">
+                        <button type="button" class="modal-btn-cancel" onclick="closePicModal()">
+                            Batal
+                        </button>
+                        <button type="submit" class="modal-btn-submit">
+                            Simpan
+                        </button>
+                    </div>
+                </form>
+                
+                {{-- ===== FORM 2: TAMBAH PIC BARU ===== --}}
+                <form id="picFormNew" method="POST" action="{{ route('application.store-pic') }}" style="display: none;">
+                    @csrf
+                    <input type="hidden" name="id_aplikasi" value="{{ $application['id'] }}">
+                    
+                    <div class="modal-form-group">
+                        <label for="nama_pic">Nama Lengkap <span style="color: red;">*</span></label>
+                        <input type="text" name="nama_pic" id="nama_pic" 
+                            placeholder="Contoh: Budi Santoso" required>
+                    </div>
+                    
+                    <div class="modal-form-group">
+                        <label for="jabatan">Jabatan</label>
+                        <input type="text" name="jabatan" id="jabatan" 
+                            placeholder="Contoh: System Engineer">
+                    </div>
+                    
+                    <div class="modal-form-group">
+                        <label for="divisi">Divisi</label>
+                        <input type="text" name="divisi" id="divisi" 
+                            placeholder="Contoh: IT Infrastructure">
+                    </div>
+                    
+                    <div class="modal-form-group">
+                        <label for="email">Email</label>
+                        <input type="email" name="email" id="email" 
+                            placeholder="Contoh: budi@kemendik.go.id">
+                    </div>
+                    
+                    <div class="modal-form-group">
+                        <label for="telepon">No. Telepon</label>
+                        <input type="text" name="telepon" id="telepon" 
+                            placeholder="Contoh: +62 812 0000 0003">
+                    </div>
+                    
+                    <div class="modal-actions">
+                        <button type="button" class="modal-btn-cancel" onclick="closePicModal()">
+                            Batal
+                        </button>
+                        <button type="submit" class="modal-btn-submit">
+                            Tambah PIC
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
         
         {{-- TOMBOL TAMBAH MAINTENANCE --}}
         <button type="button" class="add-maintenance-btn" 
