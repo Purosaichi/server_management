@@ -368,6 +368,7 @@
     font-size: 0.75rem;
     font-weight: 600;
     cursor: pointer;
+    margin-bottom: 1rem;
 }
 
 .add-maintenance-btn:hover {

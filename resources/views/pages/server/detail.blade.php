@@ -198,7 +198,6 @@
                         </tbody>
                     </table>
                 </div>
-                <p class="maintenance-edit-hint">Double click jadwal berstatus Scheduled atau In Progress untuk mengedit.</p>
             </div>
         </div>
         
