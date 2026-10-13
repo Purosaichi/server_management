@@ -112,7 +112,7 @@ class ApplicationController extends Controller
             'pic_jabatan' => $app->pic_jabatan ?? '-',
             'pic_email' => $app->pic_email ?? '-',
             'pic_telepon' => $app->pic_telepon ?? '-',
-            'pic_divisi' => $app->pic_divisi ?? '-',   // ← SEKARANG ADA
+            'pic_divisi' => $app->pic_divisi ?? '-', 
 
             // Maintenance Terakhir
             'last_maintenance' => $lastMaintenance ? [
@@ -430,4 +430,73 @@ class ApplicationController extends Controller
             ]);
         }
     }
+
+    /**
+ * Update PIC aplikasi (dari modal di card Pengurus/PIC)
+ */
+public function updatePic(Request $request, int $id)
+{
+    $request->validate([
+        'id_pic' => 'nullable|integer|exists:pic,id_pic',
+    ]);
+
+    try {
+        DB::table('aplikasi')
+            ->where('id_aplikasi', $id)
+            ->update([
+                'id_pic' => $request->id_pic,
+                'diperbarui_pada' => now(),
+            ]);
+
+        return redirect()->back()->with('success', 'PIC aplikasi berhasil diupdate!');
+
+    } catch (\Exception $e) {
+        return redirect()->back()
+            ->with('error', 'Gagal mengupdate PIC: ' . $e->getMessage())
+            ->withInput();
+    }
+}
+
+/**
+ * Tambah PIC baru ke master PIC
+ */
+public function storePic(Request $request)
+{
+    $request->validate([
+        'nama_pic' => 'required|string|max:100',
+        'jabatan' => 'nullable|string|max:100',
+        'divisi' => 'nullable|string|max:100',
+        'email' => 'nullable|email|max:100',
+        'telepon' => 'nullable|string|max:30',
+        'id_aplikasi' => 'required|integer|exists:aplikasi,id_aplikasi',
+    ]);
+
+    try {
+        DB::transaction(function () use ($request) {
+            // Insert PIC baru ke tabel pic
+            $idPic = DB::table('pic')->insertGetId([
+                'nama_pic' => $request->nama_pic,
+                'jabatan' => $request->jabatan,
+                'divisi' => $request->divisi,
+                'email' => $request->email,
+                'telepon' => $request->telepon,
+            ]);
+
+            // Update aplikasi pake PIC baru
+            DB::table('aplikasi')
+                ->where('id_aplikasi', $request->id_aplikasi)
+                ->update([
+                    'id_pic' => $idPic,
+                    'diperbarui_pada' => now(),
+                ]);
+        });
+
+        return redirect()->back()->with('success', 'PIC baru berhasil ditambahkan!');
+
+    } catch (\Exception $e) {
+        return redirect()->back()
+            ->with('error', 'Gagal menambahkan PIC: ' . $e->getMessage())
+            ->withInput();
+    }
+}
 }
