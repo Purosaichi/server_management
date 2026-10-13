@@ -53,7 +53,7 @@
                     <td>{{ $router->alamat_ip_manajemen ?? '-' }}</td>
                     <td class="nd-text-center">
                         <a href="{{ route('network-device.router-detail', $router->id_router) }}" class="nd-btn-detail">
-                            Detail →
+                            Selengkapnya →
                         </a>
                     </td>
                 </tr>

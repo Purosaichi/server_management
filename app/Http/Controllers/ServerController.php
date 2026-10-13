@@ -284,6 +284,7 @@ class ServerController extends Controller
     private function serverDetails(array $server): array
     {
         $isOffline = $server['status'] === 'Offline';
+
         $maintenanceHistory = DB::table('vw_maintenance')
             ->where('target_type', 'Server')
             ->where('nama_target', $server['name'])

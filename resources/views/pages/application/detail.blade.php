@@ -247,7 +247,6 @@
                 <div class="maintenance-box-title">
                     Maintenance Berikutnya
                     @if($nextMaintenanceEditable)
-                    <span class="edit-hint">✏️ Double click untuk edit</span>
                     @endif
                 </div>
                 <div class="info-list">
