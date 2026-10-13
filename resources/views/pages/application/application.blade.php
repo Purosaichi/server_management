@@ -99,9 +99,6 @@
         <p class="app-modal-text">
             Apakah Anda yakin ingin menghapus aplikasi <strong id="deleteAppName"></strong>?
         </p>
-        <p class="app-modal-warning">
-            Data akan dihapus dari tampilan, tapi tetap tersimpan di database.
-        </p>
         <div class="app-modal-actions">
             <button type="button" class="app-btn-cancel" onclick="closeDeleteModal()">
                 Batal

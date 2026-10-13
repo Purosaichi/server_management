@@ -278,8 +278,46 @@
 
 <div id="tab-application" class="tab-content">
     <div class="card">
-        <h3 class="card-title">Application</h3>
-        <p style="color: #6b7280; font-size: 0.875rem;">Belum ada aplikasi untuk server ini.</p>
+        <div class="server-applications-header">
+            <h3 class="card-title">Aplikasi yang Terhubung</h3>
+            <span class="server-applications-count">{{ $applications->count() }} aplikasi</span>
+        </div>
+        @if($applications->isNotEmpty())
+            <div class="server-applications-table-wrap">
+                <table class="server-applications-table">
+                    <thead>
+                        <tr>
+                            <th>Nama Aplikasi</th>
+                            <th>Kode</th>
+                            <th>Kategori</th>
+                            <th>Versi</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($applications as $application)
+                            <tr>
+                                <td>
+                                    <a class="server-application-link" href="{{ route('application.detail', $application->id_aplikasi) }}">
+                                        {{ $application->nama_aplikasi }}
+                                    </a>
+                                </td>
+                                <td>{{ $application->kode_aplikasi ?: '-' }}</td>
+                                <td>{{ $application->kategori ?: '-' }}</td>
+                                <td>{{ $application->versi ?: '-' }}</td>
+                                <td>
+                                    <span class="server-application-status status-{{ \Illuminate\Support\Str::slug($application->status) }}">
+                                        {{ $application->status ?: '-' }}
+                                    </span>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+        @else
+            <p class="server-applications-empty">Belum ada aplikasi yang terhubung ke server ini.</p>
+        @endif
     </div>
 </div>
 

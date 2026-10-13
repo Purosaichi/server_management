@@ -30,8 +30,20 @@ class ServerController extends Controller
 
         $server = array_merge($server, $this->serverDetails($server));
         $pics = DB::table('pic')->orderBy('nama_pic')->pluck('nama_pic', 'id_pic');
+        $applications = DB::table('aplikasi')
+            ->where('id_server', $id)
+            ->whereNull('deleted_at')
+            ->orderBy('nama_aplikasi')
+            ->get([
+                'id_aplikasi',
+                'kode_aplikasi',
+                'nama_aplikasi',
+                'kategori',
+                'versi',
+                'status',
+            ]);
 
-        return view('pages.server.detail', compact('server', 'pics'));
+        return view('pages.server.detail', compact('server', 'pics', 'applications'));
     }
 
     /**
