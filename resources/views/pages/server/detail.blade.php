@@ -138,33 +138,67 @@
             </div>
 
             <div class="card">
-                <h3 class="card-title">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <circle cx="12" cy="12" r="10"/>
-                        <path d="M12 6v6l4 2"/>
-                    </svg>
-                    Riwayat Maintenance
-                </h3>
-                <table class="history-table">
-                    <thead>
-                        <tr>
-                            <th>Tanggal</th>
-                            <th>Jenis Maintenance</th>
-                            <th>PIC</th>
-                            <th>Status</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach($server['maintenance_history'] as $history)
-                        <tr>
-                            <td>{{ $history['tanggal'] }}</td>
-                            <td>{{ $history['jenis'] }}</td>
-                            <td>{{ $history['pic'] }}</td>
-                            <td class="status-completed">{{ $history['status'] }}</td>
-                        </tr>
-                        @endforeach
-                    </tbody>
-                </table>
+                <div class="maintenance-history-header">
+                    <h3 class="card-title">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"/>
+                            <path d="M12 6v6l4 2"/>
+                        </svg>
+                        Riwayat Maintenance
+                    </h3>
+                    <button type="button" class="add-maintenance-btn" onclick="openMaintenanceModal()" title="Tambah Jadwal Maintenance">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/>
+                        </svg>
+                        Tambah
+                    </button>
+                </div>
+                <div class="maintenance-history-table-wrap">
+                    <table class="history-table">
+                        <thead>
+                            <tr>
+                                <th>Tanggal</th>
+                                <th>Jenis Maintenance</th>
+                                <th>PIC</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @forelse($server['maintenance_history'] as $history)
+                            <tr
+                                @if($history['editable'])
+                                class="maintenance-row-editable"
+                                ondblclick="editMaintenance(this)"
+                                data-maintenance-id="{{ $history['id'] }}"
+                                data-maintenance-type="{{ $history['jenis'] }}"
+                                data-maintenance-date="{{ $history['tanggal_input'] }}"
+                                data-maintenance-start="{{ $history['jam_mulai'] }}"
+                                data-maintenance-end="{{ $history['jam_selesai'] }}"
+                                data-maintenance-status="{{ $history['status'] }}"
+                                data-maintenance-pic="{{ $history['id_pic'] ?? '' }}"
+                                data-maintenance-note="{{ $history['catatan'] }}"
+                                title="Double click untuk mengedit jadwal"
+                                @endif>
+                                <td>{{ $history['tanggal'] }}</td>
+                                <td>{{ $history['jenis'] }}</td>
+                                <td>{{ $history['pic'] }}</td>
+                                <td>
+                                    <span class="maintenance-status-badge {{
+                                        $history['status'] === 'Completed' ? 'badge-success' :
+                                        ($history['status'] === 'Scheduled' ? 'badge-info' :
+                                        ($history['status'] === 'In Progress' ? 'badge-warning' : 'badge-gray'))
+                                    }}">{{ $history['status'] }}</span>
+                                </td>
+                            </tr>
+                            @empty
+                            <tr>
+                                <td colspan="4" class="maintenance-empty">Belum ada riwayat maintenance untuk server ini.</td>
+                            </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
+                <p class="maintenance-edit-hint">Double click jadwal berstatus Scheduled atau In Progress untuk mengedit.</p>
             </div>
         </div>
         
@@ -257,11 +291,115 @@
     </div>
 </div>
 
+<div id="maintenanceModal" class="server-maintenance-modal" style="display: none;">
+    <div class="server-maintenance-modal-box">
+        <h3 class="server-maintenance-modal-title" id="maintenanceModalTitle">Tambah Jadwal Maintenance</h3>
+        <form id="maintenanceForm" method="POST" action="{{ route('maintenance.store') }}">
+            @csrf
+            <input type="hidden" name="target_type" value="Server">
+            <input type="hidden" name="id_server" value="{{ $server['id'] }}">
+
+            <div class="server-maintenance-form-group">
+                <label for="maintenance_type">Jenis Maintenance <span>*</span></label>
+                <input type="text" name="jenis_maintenance" id="maintenance_type" maxlength="100" required>
+            </div>
+            <div class="server-maintenance-form-group">
+                <label for="maintenance_pic">PIC</label>
+                <select name="id_pic" id="maintenance_pic">
+                    <option value="">-- Pilih PIC --</option>
+                    @foreach($pics as $picId => $picName)
+                        <option value="{{ $picId }}">{{ $picName }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div class="server-maintenance-form-group">
+                <label for="maintenance_date">Tanggal <span>*</span></label>
+                <input type="date" name="jadwal_tanggal" id="maintenance_date" required>
+            </div>
+            <div class="server-maintenance-form-row">
+                <div class="server-maintenance-form-group">
+                    <label for="maintenance_start">Jam Mulai</label>
+                    <input type="time" name="jam_mulai" id="maintenance_start">
+                </div>
+                <div class="server-maintenance-form-group">
+                    <label for="maintenance_end">Jam Selesai</label>
+                    <input type="time" name="jam_selesai" id="maintenance_end">
+                </div>
+            </div>
+            <div class="server-maintenance-form-group">
+                <label for="maintenance_status">Status <span>*</span></label>
+                <select name="status" id="maintenance_status" required>
+                    <option value="Scheduled">Scheduled</option>
+                    <option value="In Progress">In Progress</option>
+                    <option value="Completed">Completed</option>
+                    <option value="Canceled">Canceled</option>
+                </select>
+            </div>
+            <div class="server-maintenance-form-group">
+                <label for="maintenance_note">Catatan</label>
+                <textarea name="catatan" id="maintenance_note" rows="3"></textarea>
+            </div>
+            <div class="server-maintenance-modal-actions">
+                <button type="button" class="server-maintenance-cancel" onclick="closeMaintenanceModal()">Batal</button>
+                <button type="submit" class="server-maintenance-submit" id="maintenanceSubmitBtn">Simpan</button>
+            </div>
+        </form>
+    </div>
+</div>
+
 <footer class="footer">
     <p>&copy; 2026 Direktorat Jenderal Guru, Tenaga Kependidikan dan Pendidikan Guru - Kemendikdasmen</p>
 </footer>
 
 <script>
+    function openMaintenanceModal() {
+        const form = document.getElementById('maintenanceForm');
+        form.reset();
+        form.action = @json(route('maintenance.store'));
+        document.querySelector('#maintenanceForm input[name="_method"]')?.remove();
+        document.getElementById('maintenanceModalTitle').textContent = 'Tambah Jadwal Maintenance';
+        document.getElementById('maintenanceSubmitBtn').textContent = 'Simpan';
+        document.getElementById('maintenanceModal').style.display = 'flex';
+    }
+
+    function editMaintenance(row) {
+        const data = row.dataset;
+        const form = document.getElementById('maintenanceForm');
+        form.action = @json(url('/maintenance')) + '/' + encodeURIComponent(data.maintenanceId);
+
+        let methodInput = document.querySelector('#maintenanceForm input[name="_method"]');
+        if (!methodInput) {
+            methodInput = document.createElement('input');
+            methodInput.type = 'hidden';
+            methodInput.name = '_method';
+            form.appendChild(methodInput);
+        }
+        methodInput.value = 'PUT';
+
+        document.getElementById('maintenanceModalTitle').textContent = 'Edit Jadwal Maintenance';
+        document.getElementById('maintenanceSubmitBtn').textContent = 'Update';
+        document.getElementById('maintenance_type').value = data.maintenanceType;
+        document.getElementById('maintenance_pic').value = data.maintenancePic || '';
+        document.getElementById('maintenance_date').value = data.maintenanceDate;
+        document.getElementById('maintenance_start').value = data.maintenanceStart;
+        document.getElementById('maintenance_end').value = data.maintenanceEnd;
+        document.getElementById('maintenance_status').value = data.maintenanceStatus;
+        document.getElementById('maintenance_note').value = data.maintenanceNote;
+        document.getElementById('maintenanceModal').style.display = 'flex';
+    }
+
+    function closeMaintenanceModal() {
+        document.getElementById('maintenanceModal').style.display = 'none';
+    }
+
+    document.getElementById('maintenanceModal').addEventListener('click', function(event) {
+        if (event.target === this) closeMaintenanceModal();
+    });
+
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'Escape') closeMaintenanceModal();
+    });
+
     function showTab(event, tabName) {
         event.preventDefault();
         

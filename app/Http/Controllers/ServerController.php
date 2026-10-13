@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\ServerStatus;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -28,8 +29,9 @@ class ServerController extends Controller
         abort_unless($server, 404);
 
         $server = array_merge($server, $this->serverDetails($server));
+        $pics = DB::table('pic')->orderBy('nama_pic')->pluck('nama_pic', 'id_pic');
 
-        return view('pages.server.detail', compact('server'));
+        return view('pages.server.detail', compact('server', 'pics'));
     }
 
     /**
@@ -282,6 +284,32 @@ class ServerController extends Controller
     private function serverDetails(array $server): array
     {
         $isOffline = $server['status'] === 'Offline';
+        $maintenanceHistory = DB::table('vw_maintenance')
+            ->where('target_type', 'Server')
+            ->where('nama_target', $server['name'])
+            ->orderByDesc('jadwal_tanggal')
+            ->limit(3)
+            ->get()
+            ->map(function ($maintenance) {
+                return [
+                    'id' => $maintenance->id_maintenance,
+                    'tanggal' => $maintenance->jadwal_tanggal
+                        ? Carbon::parse($maintenance->jadwal_tanggal)->translatedFormat('d F Y, H:i')
+                        : '-',
+                    'tanggal_input' => $maintenance->jadwal_tanggal
+                        ? Carbon::parse($maintenance->jadwal_tanggal)->format('Y-m-d')
+                        : '',
+                    'jam_mulai' => $maintenance->jam_mulai ? substr($maintenance->jam_mulai, 0, 5) : '',
+                    'jam_selesai' => $maintenance->jam_selesai ? substr($maintenance->jam_selesai, 0, 5) : '',
+                    'jenis' => $maintenance->jenis_maintenance ?? '-',
+                    'pic' => $maintenance->nama_pic ?? '-',
+                    'id_pic' => $maintenance->id_pic ?? null,
+                    'status' => $maintenance->status,
+                    'catatan' => $maintenance->catatan ?? '',
+                    'editable' => in_array($maintenance->status, ['Scheduled', 'In Progress'], true),
+                ];
+            })
+            ->toArray();
 
         return [
             'ip_address' => $server['ip_address'] ?? '-',
@@ -326,14 +354,7 @@ class ServerController extends Controller
             'last_note_by' => 'Fathier Assyarief',
             'last_note_date' => $isOffline ? '-' : '12 Agustus 2026, 12:12',
 
-            'maintenance_history' => $isOffline ? [] : [
-                [
-                    'tanggal' => '12 Agustus 2026, 12:12',
-                    'jenis' => 'Update & Patch',
-                    'pic' => 'Fathier Assyarief',
-                    'status' => 'Completed'
-                ],
-            ],
+            'maintenance_history' => $maintenanceHistory,
         ];
     }
 

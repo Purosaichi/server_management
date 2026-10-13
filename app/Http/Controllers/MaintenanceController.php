@@ -81,7 +81,9 @@ class MaintenanceController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'id_aplikasi'       => 'required|integer|exists:aplikasi,id_aplikasi',
+            'target_type'       => 'required|in:Application,Server',
+            'id_aplikasi'       => 'nullable|required_if:target_type,Application|integer|exists:aplikasi,id_aplikasi',
+            'id_server'         => 'nullable|required_if:target_type,Server|integer|exists:server,id_server',
             'jenis_maintenance' => 'required|string|max:100',
             'id_pic'            => 'nullable|integer|exists:pic,id_pic',
             'jadwal_tanggal'    => 'required|date',
@@ -92,19 +94,20 @@ class MaintenanceController extends Controller
         ]);
 
         try {
-            // Generate kode maintenance otomatis
+            $codePrefix = $request->target_type === 'Server' ? 'MTN-SRV-' : 'MTN-APP-';
             $lastKode = DB::table('maintenance')
-                ->where('kode_maintenance', 'like', 'MTN-APP-%')
+                ->where('kode_maintenance', 'like', $codePrefix . '%')
                 ->orderBy('id_maintenance', 'desc')
                 ->value('kode_maintenance');
 
             $lastNumber = $lastKode ? (int) substr($lastKode, -3) : 0;
-            $newKode = 'MTN-APP-' . str_pad($lastNumber + 1, 3, '0', STR_PAD_LEFT);
+            $newKode = $codePrefix . str_pad($lastNumber + 1, 3, '0', STR_PAD_LEFT);
 
             DB::table('maintenance')->insert([
                 'kode_maintenance'  => $newKode,
-                'target_type'       => 'Application',
-                'id_aplikasi'       => $request->id_aplikasi,
+                'target_type'       => $request->target_type,
+                'id_aplikasi'       => $request->target_type === 'Application' ? $request->id_aplikasi : null,
+                'id_server'         => $request->target_type === 'Server' ? $request->id_server : null,
                 'jenis_maintenance' => $request->jenis_maintenance,
                 'id_pic'            => $request->id_pic,
                 'jadwal_tanggal'    => $request->jadwal_tanggal,
