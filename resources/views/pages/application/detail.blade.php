@@ -178,16 +178,14 @@
             Pengurus / PIC
         </h3>
 
-        {{-- -tombol edit pic --}}
         <button type="button" class="edit-pic-btn"
-                onclick="openPucMOdal()"
+                onclick="openPicModal()"
                 title="edit / Ganti PIC">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
-                </svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
+            </svg>
         </button>
 
-        
         <div class="info-list">
             @if($application['pic_name'] && $application['pic_name'] !== '-')
                 <div class="info-row"><span class="info-label">Nama</span><span class="info-value">{{ $application['pic_name'] }}</span></div>
@@ -203,108 +201,18 @@
         </div>
     </div>
 
-    {{-- ===== MODAL EDIT / TAMBAH PIC ===== --}}
-        <div id="picModal" class="modal-overlay" style="display: none;">
-            <div class="modal-box">
-                <h3 class="modal-title" id="picModalTitle">Edit PIC Aplikasi</h3>
-                
-                {{-- Tab: Pilih PIC Existing / Tambah PIC Baru --}}
-                <div class="pic-tabs">
-                    <button type="button" class="pic-tab active" id="tabExisting" onclick="switchPicTab('existing')">
-                        Pilih PIC
-                    </button>
-                    <button type="button" class="pic-tab" id="tabNew" onclick="switchPicTab('new')">
-                        + PIC Baru
-                    </button>
-                </div>
-                
-                {{-- ===== FORM 1: PILIH PIC EXISTING ===== --}}
-                <form id="picFormExisting" method="POST" action="{{ route('application.update-pic', $application['id']) }}">
-                    @csrf
-                    @method('PUT')
-                    
-                    <div class="modal-form-group">
-                        <label for="id_pic">Pilih PIC <span style="color: red;">*</span></label>
-                        <select name="id_pic" id="id_pic" required>
-                            <option value="">-- Pilih PIC --</option>
-                            @foreach($application['pics'] as $picId => $picName)
-                                <option value="{{ $picId }}" 
-                                    {{ ($application['pic_name'] ?? '') === $picName ? 'selected' : '' }}>
-                                    {{ $picName }}
-                                </option>
-                            @endforeach
-                        </select>
-                    </div>
-                    
-                    <div class="modal-actions">
-                        <button type="button" class="modal-btn-cancel" onclick="closePicModal()">
-                            Batal
-                        </button>
-                        <button type="submit" class="modal-btn-submit">
-                            Simpan
-                        </button>
-                    </div>
-                </form>
-                
-                {{-- ===== FORM 2: TAMBAH PIC BARU ===== --}}
-                <form id="picFormNew" method="POST" action="{{ route('application.store-pic') }}" style="display: none;">
-                    @csrf
-                    <input type="hidden" name="id_aplikasi" value="{{ $application['id'] }}">
-                    
-                    <div class="modal-form-group">
-                        <label for="nama_pic">Nama Lengkap <span style="color: red;">*</span></label>
-                        <input type="text" name="nama_pic" id="nama_pic" 
-                            placeholder="Contoh: Budi Santoso" required>
-                    </div>
-                    
-                    <div class="modal-form-group">
-                        <label for="jabatan">Jabatan</label>
-                        <input type="text" name="jabatan" id="jabatan" 
-                            placeholder="Contoh: System Engineer">
-                    </div>
-                    
-                    <div class="modal-form-group">
-                        <label for="divisi">Divisi</label>
-                        <input type="text" name="divisi" id="divisi" 
-                            placeholder="Contoh: IT Infrastructure">
-                    </div>
-                    
-                    <div class="modal-form-group">
-                        <label for="email">Email</label>
-                        <input type="email" name="email" id="email" 
-                            placeholder="Contoh: budi@kemendik.go.id">
-                    </div>
-                    
-                    <div class="modal-form-group">
-                        <label for="telepon">No. Telepon</label>
-                        <input type="text" name="telepon" id="telepon" 
-                            placeholder="Contoh: +62 812 0000 0003">
-                    </div>
-                    
-                    <div class="modal-actions">
-                        <button type="button" class="modal-btn-cancel" onclick="closePicModal()">
-                            Batal
-                        </button>
-                        <button type="submit" class="modal-btn-submit">
-                            Tambah PIC
-                        </button>
-                    </div>
-                </form>
-            </div>
+    {{-- Maintenance --}}
+    <div class="card" style="position: relative;">
+        <div class="history-header" style="display: flex; justify-content: space-between; align-items: center; gap: 0.75rem; margin-bottom: 1rem;">
+            <span>Maintenance</span>
+            <button type="button" class="add-maintenance-btn" onclick="openMaintenanceModal()" title="Tambah Jadwal Maintenance" style="position: static; width: 2rem; height: 2rem;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/>
+                </svg>
+            </button>
         </div>
-        
-        {{-- TOMBOL TAMBAH MAINTENANCE --}}
-        <button type="button" class="add-maintenance-btn" 
-                onclick="openMaintenanceModal()" 
-                title="Tambah Jadwal Maintenance">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/>
-            </svg>
-        </button>
-        
+
         <div style="display: flex; flex-direction: column; gap: 0.75rem;">
-            
-            {{-- Maintenance Terakhir --}}
             @if($application['last_maintenance'])
             <div class="maintenance-box">
                 <div class="maintenance-box-title">Maintenance Terakhir</div>
@@ -319,8 +227,7 @@
                 </div>
             </div>
             @endif
-            
-            {{-- Maintenance Berikutnya (BISA DIKLIK 2X BUAT EDIT HANYA YANG Scheduled / In Progress) --}}
+
             @php
                 $nextMaintenanceEditable = isset($application['next_maintenance']['status']) && in_array($application['next_maintenance']['status'], ['Scheduled', 'In Progress'], true);
             @endphp
@@ -360,7 +267,7 @@
             @endif
         </div>
     </div>
-    
+
     {{-- Riwayat Maintenance --}}
     <div class="card">
         <div class="history-header">Riwayat Maintenance</div>
@@ -393,6 +300,80 @@
     </div>
 </div>
 
+{{-- ===== MODAL EDIT / TAMBAH PIC ===== --}}
+<div id="picModal" class="modal-overlay" style="display: none;">
+    <div class="modal-box">
+        <h3 class="modal-title" id="picModalTitle">Edit PIC Aplikasi</h3>
+
+        <div class="pic-tabs">
+            <button type="button" class="pic-tab active" id="tabExisting" onclick="switchPicTab('existing')">
+                Pilih PIC
+            </button>
+            <button type="button" class="pic-tab" id="tabNew" onclick="switchPicTab('new')">
+                + PIC Baru
+            </button>
+        </div>
+
+        <form id="picFormExisting" method="POST" action="{{ route('application.update-pic', $application['id']) }}">
+            @csrf
+            @method('PUT')
+
+            <div class="modal-form-group">
+                <label for="existing_pic_id">Pilih PIC <span style="color: red;">*</span></label>
+                <select name="id_pic" id="existing_pic_id" required>
+                    <option value="">-- Pilih PIC --</option>
+                    @foreach($application['pics'] as $picId => $picName)
+                        <option value="{{ $picId }}"
+                            {{ ($application['pic_name'] ?? '') === $picName ? 'selected' : '' }}>
+                            {{ $picName }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+
+            <div class="modal-actions">
+                <button type="button" class="modal-btn-cancel" onclick="closePicModal()">Batal</button>
+                <button type="submit" class="modal-btn-submit">Simpan</button>
+            </div>
+        </form>
+
+        <form id="picFormNew" method="POST" action="{{ route('application.store-pic') }}" style="display: none;">
+            @csrf
+            <input type="hidden" name="id_aplikasi" value="{{ $application['id'] }}">
+
+            <div class="modal-form-group">
+                <label for="nama_pic">Nama Lengkap <span style="color: red;">*</span></label>
+                <input type="text" name="nama_pic" id="nama_pic" placeholder="Contoh: Budi Santoso" required>
+            </div>
+
+            <div class="modal-form-group">
+                <label for="jabatan">Jabatan</label>
+                <input type="text" name="jabatan" id="jabatan" placeholder="Contoh: System Engineer">
+            </div>
+
+            <div class="modal-form-group">
+                <label for="divisi">Divisi</label>
+                <input type="text" name="divisi" id="divisi" placeholder="Contoh: IT Infrastructure">
+            </div>
+
+            <div class="modal-form-group">
+                <label for="email">Email</label>
+                <input type="email" name="email" id="email" placeholder="Contoh: budi@kemendik.go.id">
+            </div>
+
+            <div class="modal-form-group">
+                <label for="telepon">No. Telepon</label>
+                <input type="text" name="telepon" id="telepon" placeholder="Contoh: +62 812 0000 0003">
+            </div>
+
+            <div class="modal-actions">
+                <button type="button" class="modal-btn-cancel" onclick="closePicModal()">Batal</button>
+                <button type="submit" class="modal-btn-submit">Tambah PIC</button>
+            </div>
+        </form>
+    </div>
+</div>
+
 {{-- ===== MODAL TAMBAH/EDIT MAINTENANCE ===== --}}
 <div id="maintenanceModal" class="modal-overlay" style="display: none;">
     <div class="modal-box">
@@ -411,8 +392,8 @@
             </div>
 
             <div class="modal-form-group">
-                <label for="id_pic">PIC</label>
-                <select name="id_pic" id="id_pic">
+                <label for="maintenance_pic_id">PIC</label>
+                <select name="id_pic" id="maintenance_pic_id">
                     <option value="">-- Pilih PIC --</option>
                     @foreach($application['pics'] as $picId => $picName)
                         <option value="{{ $picId }}">{{ $picName }}</option>
@@ -472,14 +453,20 @@
 
         // ===== MODAL PIC =====
     function openPicModal() {
-        document.getElementById('picModal').style.display = 'flex';
-        switchPicTab('existing');  // Default ke tab "Pilih PIC"
+        const modal = document.getElementById('picModal');
+        if (!modal) return;
+
+        modal.style.display = 'flex';
+        switchPicTab('existing');
     }
 
     function closePicModal() {
-        document.getElementById('picModal').style.display = 'none';
-        // Reset form
-        document.getElementById('picFormNew').reset();
+        const modal = document.getElementById('picModal');
+        if (!modal) return;
+
+        modal.style.display = 'none';
+        const formNew = document.getElementById('picFormNew');
+        if (formNew) formNew.reset();
     }
 
     function switchPicTab(tab) {
@@ -487,7 +474,9 @@
         const tabNew = document.getElementById('tabNew');
         const formExisting = document.getElementById('picFormExisting');
         const formNew = document.getElementById('picFormNew');
-        
+
+        if (!tabExisting || !tabNew || !formExisting || !formNew) return;
+
         if (tab === 'existing') {
             tabExisting.classList.add('active');
             tabNew.classList.remove('active');
@@ -501,14 +490,20 @@
         }
     }
 
-    // Tutup modal PIC kalo klik di luar
-    document.getElementById('picModal').addEventListener('click', function(e) {
-        if (e.target === this) closePicModal();
-    });
+    const picModal = document.getElementById('picModal');
+    if (picModal) {
+        picModal.addEventListener('click', function(e) {
+            if (e.target === this) closePicModal();
+        });
+    }
 
-    // Tutup modal PIC kalo tekan ESC
     document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape') closePicModal();
+        if (e.key === 'Escape') {
+            const picModalOpen = document.getElementById('picModal');
+            if (picModalOpen && picModalOpen.style.display === 'flex') closePicModal();
+            const maintenanceModalOpen = document.getElementById('maintenanceModal');
+            if (maintenanceModalOpen && maintenanceModalOpen.style.display === 'flex') closeMaintenanceModal();
+        }
     });
 
     // ===== MODAL MAINTENANCE =====
@@ -517,7 +512,7 @@
         document.getElementById('maintenanceSubmitBtn').textContent = 'Simpan';
         document.getElementById('editMaintenanceId').value = '';
         document.getElementById('jenis_maintenance').value = '';
-        document.getElementById('id_pic').value = '';
+        document.getElementById('maintenance_pic_id').value = '';
         document.getElementById('jadwal_tanggal').value = '';
         document.getElementById('jam_mulai').value = '';
         document.getElementById('jam_selesai').value = '';
@@ -540,7 +535,7 @@
         document.getElementById('maintenanceSubmitBtn').textContent = 'Update';
         document.getElementById('editMaintenanceId').value = maintenanceId;
         document.getElementById('jenis_maintenance').value = maintenanceType;
-        document.getElementById('id_pic').value = maintenancePic || '';
+        document.getElementById('maintenance_pic_id').value = maintenancePic || '';
         document.getElementById('status').value = maintenanceStatus;
         document.getElementById('jadwal_tanggal').value = maintenanceDate;
         

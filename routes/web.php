@@ -32,6 +32,8 @@ Route::middleware(['auth.session'])->group(function () {
     Route::post('/application', [ApplicationController::class, 'store'])->name('application.store');
     Route::get('/application/{id}/edit', [ApplicationController::class, 'edit'])->name('application.edit');
     Route::put('/application/{id}', [ApplicationController::class, 'update'])->name('application.update');
+    Route::put('/application/{id}/pic', [ApplicationController::class, 'updatePic'])->name('application.update-pic');
+    Route::post('/application/pic', [ApplicationController::class, 'storePic'])->name('application.store-pic');
     Route::delete('/application/{id}', [ApplicationController::class, 'destroy'])->name('application.destroy');
     Route::get('/application/{id}', [ApplicationController::class, 'show'])->name('application.detail');
 
