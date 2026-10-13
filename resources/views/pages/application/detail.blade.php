@@ -469,6 +469,48 @@
 </footer>
 
 <script>
+
+        // ===== MODAL PIC =====
+    function openPicModal() {
+        document.getElementById('picModal').style.display = 'flex';
+        switchPicTab('existing');  // Default ke tab "Pilih PIC"
+    }
+
+    function closePicModal() {
+        document.getElementById('picModal').style.display = 'none';
+        // Reset form
+        document.getElementById('picFormNew').reset();
+    }
+
+    function switchPicTab(tab) {
+        const tabExisting = document.getElementById('tabExisting');
+        const tabNew = document.getElementById('tabNew');
+        const formExisting = document.getElementById('picFormExisting');
+        const formNew = document.getElementById('picFormNew');
+        
+        if (tab === 'existing') {
+            tabExisting.classList.add('active');
+            tabNew.classList.remove('active');
+            formExisting.style.display = 'block';
+            formNew.style.display = 'none';
+        } else {
+            tabNew.classList.add('active');
+            tabExisting.classList.remove('active');
+            formNew.style.display = 'block';
+            formExisting.style.display = 'none';
+        }
+    }
+
+    // Tutup modal PIC kalo klik di luar
+    document.getElementById('picModal').addEventListener('click', function(e) {
+        if (e.target === this) closePicModal();
+    });
+
+    // Tutup modal PIC kalo tekan ESC
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') closePicModal();
+    });
+
     // ===== MODAL MAINTENANCE =====
     function openMaintenanceModal() {
         document.getElementById('maintenanceModalTitle').textContent = 'Tambah Jadwal Maintenance';
