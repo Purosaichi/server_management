@@ -80,10 +80,15 @@
             </div>
 
             <div class="app-form-group">
-                <label for="nama_domain">Domain</label>
-                <input type="text" name="nama_domain" id="nama_domain"
-                       value="{{ old('nama_domain') }}"
-                       placeholder="Contoh: aplikasi.example.com">
+                <label for="id_domain">Domain</label>
+                <select name="id_domain" id="id_domain">
+                    <option value="">-- Pilih Domain --</option>
+                    @foreach($domains as $domain)
+                        <option value="{{ $domain->id_domain }}" {{ old('id_domain') == $domain->id_domain ? 'selected' : '' }}>
+                            {{ $domain->nama_domain }}{{ $domain->nama_aplikasi ? ' (saat ini: ' . $domain->nama_aplikasi . ')' : '' }}
+                        </option>
+                    @endforeach
+                </select>
             </div>
 
             <div class="app-form-group">

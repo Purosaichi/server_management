@@ -188,6 +188,17 @@ class DomainController extends Controller
             'tanggal_kadaluarsa' => 'nullable|date|after_or_equal:tanggal_pembelian',
             'perpanjangan_otomatis' => 'boolean',
             'id_pic' => 'nullable|integer|exists:pic,id_pic',
+            'ssl_provider' => 'nullable|string|max:100',
+            'ssl_status' => 'nullable|string|max:50',
+            'tanggal_ssl_terbit' => 'nullable|date',
+            'ssl_tanggal_kadaluarsa' => 'nullable|date|after_or_equal:tanggal_ssl_terbit',
+            'ssl_tipe' => 'nullable|string|max:100',
+            'billing_status' => 'nullable|in:Paid,Unpaid',
+            'billing_cycle' => 'nullable|string|max:50',
+            'last_payment' => 'nullable|date',
+            'next_due_date' => 'nullable|date',
+            'amount' => 'nullable|numeric|min:0',
+            'payment_method' => 'nullable|string|max:100',
         ]);
 
         Domain::create($validated);

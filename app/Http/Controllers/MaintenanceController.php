@@ -13,11 +13,11 @@ class MaintenanceController extends Controller
      */
     public function index()
     {
-        // ===== STATISTIK =====
-        $total      = DB::table('maintenance')->count();
-        $completed  = DB::table('maintenance')->where('status', 'Completed')->count();
-        $inProgress = DB::table('maintenance')->where('status', 'In Progress')->count();
-        $scheduled  = DB::table('maintenance')->where('status', 'Scheduled')->count();
+        // ===== STATISTIK (FILTER SOFT DELETE) =====
+        $total      = DB::table('maintenance')->whereNull('deleted_at')->count();
+        $completed  = DB::table('maintenance')->whereNull('deleted_at')->where('status', 'Completed')->count();
+        $inProgress = DB::table('maintenance')->whereNull('deleted_at')->where('status', 'In Progress')->count();
+        $scheduled  = DB::table('maintenance')->whereNull('deleted_at')->where('status', 'Scheduled')->count();
 
         $stats = [
             'total'       => $total,
@@ -161,6 +161,26 @@ class MaintenanceController extends Controller
             return redirect()->back()
                 ->with('error', 'Gagal mengupdate maintenance: ' . $e->getMessage())
                 ->withInput();
+        }
+    }
+
+    /**
+     * Soft delete maintenance yang statusnya Completed atau Canceled
+     */
+    public function clear()
+    {
+        try {
+            $deleted = DB::table('maintenance')
+                ->whereIn('status', ['Completed', 'Canceled'])
+                ->whereNull('deleted_at')
+                ->update(['deleted_at' => now()]);
+
+            return redirect()->route('maintenance.maintenance')
+                ->with('success', "Berhasil menghapus {$deleted} data maintenance (Completed/Canceled).");
+
+        } catch (\Exception $e) {
+            return redirect()->back()
+                ->with('error', 'Gagal menghapus data: ' . $e->getMessage());
         }
     }
 }

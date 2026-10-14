@@ -33,4 +33,31 @@ class DomainTest extends TestCase
         $this->assertStringContainsString('/domain/42', $html);
         $this->assertStringNotContainsString('/domain/1', $html);
     }
+
+    public function test_create_domain_form_includes_domain_detail_fields(): void
+    {
+        $html = view('pages.domain.create', [
+            'aplikasis' => collect(),
+            'pics' => collect(),
+        ])->render();
+
+        $this->assertStringContainsString('SSL Certificate', $html);
+        $this->assertStringContainsString('Billing Information', $html);
+
+        foreach ([
+            'ssl_provider',
+            'ssl_status',
+            'tanggal_ssl_terbit',
+            'ssl_tanggal_kadaluarsa',
+            'ssl_tipe',
+            'billing_status',
+            'billing_cycle',
+            'last_payment',
+            'next_due_date',
+            'amount',
+            'payment_method',
+        ] as $field) {
+            $this->assertStringContainsString('name="' . $field . '"', $html);
+        }
+    }
 }

@@ -19,5 +19,16 @@ class Domain extends Model
         'tanggal_kadaluarsa',
         'perpanjangan_otomatis',
         'id_pic',
+        'ssl_provider',
+        'ssl_status',
+        'tanggal_ssl_terbit',
+        'ssl_tanggal_kadaluarsa',
+        'ssl_tipe',
+        'billing_status',
+        'billing_cycle',
+        'last_payment',
+        'next_due_date',
+        'amount',
+        'payment_method',
     ];
 }

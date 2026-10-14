@@ -166,7 +166,12 @@ class ApplicationController extends Controller
             ->orderBy('nama_lisensi')
             ->get(['id_lisensi', 'nama_lisensi', 'provider']);
 
-        return view('pages.application.create', compact('servers', 'licenses'));
+        $domains = DB::table('domain')
+            ->leftJoin('aplikasi', 'domain.id_aplikasi', '=', 'aplikasi.id_aplikasi')
+            ->orderBy('domain.nama_domain')
+            ->get(['domain.id_domain', 'domain.nama_domain', 'aplikasi.nama_aplikasi']);
+
+        return view('pages.application.create', compact('servers', 'licenses', 'domains'));
     }
 
     /**
@@ -190,7 +195,11 @@ class ApplicationController extends Controller
                 'integer',
                 Rule::exists('server', 'id_server')->whereNull('deleted_at'),
             ],
-            'nama_domain' => 'nullable|string|max:150|unique:domain,nama_domain',
+            'id_domain' => [
+                'nullable',
+                'integer',
+                Rule::exists('domain', 'id_domain'),
+            ],
             'id_lisensi' => [
                 'nullable',
                 'integer',
@@ -222,7 +231,11 @@ class ApplicationController extends Controller
                     'dibuat_pada' => now(),
                 ], 'id_aplikasi');
 
-                $this->saveApplicationDomain($applicationId, null, $request->input('nama_domain'));
+                if ($request->filled('id_domain')) {
+                    DB::table('domain')
+                        ->where('id_domain', $request->id_domain)
+                        ->update(['id_aplikasi' => $applicationId]);
+                }
                 $this->assignServerLicense($request->id_server, $licenseId);
             });
 

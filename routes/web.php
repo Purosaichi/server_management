@@ -55,6 +55,7 @@ Route::middleware(['auth.session'])->group(function () {
 
     Route::get('/maintenance', [MaintenanceController::class, 'index'])->name('maintenance.maintenance');
     Route::post('/maintenance', [MaintenanceController::class, 'store'])->name('maintenance.store');
+    Route::delete('/maintenance/clear', [MaintenanceController::class, 'clear'])->name('maintenance.clear');
     Route::put('/maintenance/{id}', [MaintenanceController::class, 'update'])->name('maintenance.update');
     Route::get('/alerts', [AlertController::class, 'index'])->name('alerts.alerts');
 
