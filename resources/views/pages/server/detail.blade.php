@@ -372,13 +372,46 @@
                     <option value="Canceled">Canceled</option>
                 </select>
             </div>
-            <div class="server-maintenance-form-group">
-                <label for="maintenance_note">Catatan</label>
-                <textarea name="catatan" id="maintenance_note" rows="3"></textarea>
-            </div>
-            <div class="server-maintenance-modal-actions">
-                <button type="button" class="server-maintenance-cancel" onclick="closeMaintenanceModal()">Batal</button>
-                <button type="submit" class="server-maintenance-submit" id="maintenanceSubmitBtn">Simpan</button>
+            {{-- Catatan Terakhir --}}
+            <div class="card" style="position: relative;">
+                <h3 class="card-title">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
+                        <path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/>
+                    </svg>
+                    Catatan Terakhir
+                </h3>
+                
+                {{-- Tombol Tambah Catatan (di pojok kanan atas) --}}
+                <button type="button" class="add-note-btn" onclick="openNoteModal()" title="Tambah Catatan">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/>
+                    </svg>
+                </button>
+                
+                @if($latestNote)
+                    {{-- Catatan Ada --}}
+                    <div class="note note-clickable" 
+                        ondblclick="editNote(this)"
+                        data-note-id="{{ $latestNote->id_note }}"
+                        data-note-text="{{ $latestNote->catatan }}"
+                        data-note-pic="{{ $latestNote->id_pic ?? '' }}"
+                        title="Double click untuk edit">
+                        {{ $latestNote->catatan }}
+                    </div>
+                    <div class="note-by">
+                        Ditambahkan oleh <strong>{{ $latestNote->nama_pic ?? '-' }}</strong><br>
+                        {{ \Carbon\Carbon::parse($latestNote->dibuat_pada)->translatedFormat('d F Y, H:i') }}
+                        @if($latestNote->diperbarui_pada)
+                            <br><em style="font-size: 0.7rem;">Diedit: {{ \Carbon\Carbon::parse($latestNote->diperbarui_pada)->translatedFormat('d F Y, H:i') }}</em>
+                        @endif
+                    </div>
+                @else
+                    {{-- Catatan Kosong --}}
+                    <div class="note-empty">
+                        Belum ada catatan. Klik tombol <strong>+</strong> di pojok kanan untuk menambahkan.
+                    </div>
+                @endif
             </div>
         </form>
     </div>
