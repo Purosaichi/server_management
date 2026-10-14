@@ -422,6 +422,52 @@
 </footer>
 
 <script>
+    function openNoteModal() {
+        const form = document.getElementById('noteForm');
+        form.reset();
+        form.action = @json(route('server-notes.store'));
+        document.querySelector('#noteForm input[name="_method"]')?.remove();
+        document.getElementById('noteModalTitle').textContent = 'Tambah Catatan';
+        document.getElementById('noteSubmitBtn').textContent = 'Simpan';
+        document.getElementById('editNoteId').value = '';
+        document.getElementById('noteModal').style.display = 'flex';
+    }
+
+    function editNote(el) {
+        const data = el.dataset;
+        const form = document.getElementById('noteForm');
+        form.action = @json(url('/server-notes')) + '/' + encodeURIComponent(data.noteId);
+        
+        // Tambah method PUT
+        let methodInput = document.querySelector('#noteForm input[name="_method"]');
+        if (!methodInput) {
+            methodInput = document.createElement('input');
+            methodInput.type = 'hidden';
+            methodInput.name = '_method';
+            form.appendChild(methodInput);
+        }
+        methodInput.value = 'PUT';
+        
+        document.getElementById('noteModalTitle').textContent = 'Edit Catatan';
+        document.getElementById('noteSubmitBtn').textContent = 'Update';
+        document.getElementById('editNoteId').value = data.noteId;
+        document.getElementById('note_text').value = data.noteText;
+        document.getElementById('note_pic').value = data.notePic || '';
+        document.getElementById('noteModal').style.display = 'flex';
+    }
+
+    function closeNoteModal() {
+        document.getElementById('noteModal').style.display = 'none';
+    }
+
+    document.getElementById('noteModal').addEventListener('click', function(e) {
+        if (e.target === this) closeNoteModal();
+    });
+
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') closeNoteModal();
+    });    
+
     function openMaintenanceModal() {
         const form = document.getElementById('maintenanceForm');
         form.reset();
