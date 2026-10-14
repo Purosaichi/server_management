@@ -96,7 +96,7 @@
         <h3 class="srv-form-section">Spesifikasi Hardware</h3>
         <div class="srv-form-grid">
             <div class="srv-form-group">
-                <label for="jumlah_prosessor">Jumlah Prosessor</label>
+                <label for="jumlah_prosessor">CPU Core</label>
                 <input type="number" name="jumlah_prosessor" id="jumlah_prosessor" 
                        value="{{ old('jumlah_prosessor') }}" 
                        placeholder="Contoh: 2">
