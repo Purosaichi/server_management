@@ -22,29 +22,47 @@ class ServerController extends Controller
     /**
      * Halaman detail server
      */
-    public function show(int $id)
-    {
-        $server = collect($this->servers())->firstWhere('id', $id);
+   public function show(int $id)
+{
+    $server = collect($this->servers())->firstWhere('id', $id);
 
-        abort_unless($server, 404);
+    abort_unless($server, 404);
 
-        $server = array_merge($server, $this->serverDetails($server));
-        $pics = DB::table('pic')->orderBy('nama_pic')->pluck('nama_pic', 'id_pic');
-        $applications = DB::table('aplikasi')
-            ->where('id_server', $id)
-            ->whereNull('deleted_at')
-            ->orderBy('nama_aplikasi')
-            ->get([
-                'id_aplikasi',
-                'kode_aplikasi',
-                'nama_aplikasi',
-                'kategori',
-                'versi',
-                'status',
-            ]);
+    $server = array_merge($server, $this->serverDetails($server));
+    $pics = DB::table('pic')->orderBy('nama_pic')->pluck('nama_pic', 'id_pic');
+    
+    $applications = DB::table('aplikasi')
+        ->where('id_server', $id)
+        ->whereNull('deleted_at')
+        ->orderBy('nama_aplikasi')
+        ->get([
+            'id_aplikasi',
+            'kode_aplikasi',
+            'nama_aplikasi',
+            'kategori',
+            'versi',
+            'status',
+        ]);
 
-        return view('pages.server.detail', compact('server', 'pics', 'applications'));
-    }
+    // ===== AMBIL CATATAN TERAKHIR =====
+    $latestNote = DB::table('server_notes')
+        ->leftJoin('pic', 'pic.id_pic', '=', 'server_notes.id_pic')
+        ->where('server_notes.id_server', $id)
+        ->whereNull('server_notes.deleted_at')
+        ->orderBy('server_notes.dibuat_pada', 'desc')
+        ->select(
+            'server_notes.id_note',
+            'server_notes.catatan',
+            'server_notes.id_pic',
+            'server_notes.dibuat_pada',
+            'server_notes.diperbarui_pada',
+            'pic.nama_pic',
+            'pic.jabatan'
+        )
+        ->first();
+
+    return view('pages.server.detail', compact('server', 'pics', 'applications', 'latestNote'));
+}
 
     /**
      * Halaman form tambah server
