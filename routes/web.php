@@ -38,7 +38,12 @@ Route::middleware(['auth.session'])->group(function () {
     Route::get('/application/{id}', [ApplicationController::class, 'show'])->name('application.detail');
 
     Route::get('/domain', [DomainController::class, 'index'])->name('domain.domain');
+    Route::get('/domain/create', [DomainController::class, 'create'])->name('domain.create');
+    Route::post('/domain', [DomainController::class, 'store'])->name('domain.store');)
     Route::get('/domain/{id}', [DomainController::class, 'show'])->name('domain.detail');
+    Route::get('/domain/{id}/edit', [DomainController::class, 'edit'])->name('domain.edit');
+    Route::put('/domain/{id}', [DomainController::class, 'update'])->name('domain.update');
+    Route::delete('/domain/{id}', [DomainController::class, 'destroy'])->name('domain.destroy');
 
     Route::get('/licenses', [LicenseController::class, 'index'])->name('licenses.licenses');
     Route::get('/licenses/{id}', [LicenseController::class, 'show'])->name('licenses.detail');
