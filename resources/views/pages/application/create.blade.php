@@ -97,7 +97,6 @@
                         </option>
                     @endforeach
                 </select>
-                <small>Lisensi terhubung ke aset server dan dapat digunakan bersama oleh aplikasi pada server yang sama.</small>
             </div>
 
             <div class="app-form-group">

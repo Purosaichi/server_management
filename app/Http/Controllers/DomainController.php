@@ -3,10 +3,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Domain;
 use App\Models\DomainActivity;
 use App\Models\DomainDetail;
 use Carbon\Carbon;
 use Illuminate\Database\QueryException;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class DomainController extends Controller
 {
@@ -164,5 +167,71 @@ class DomainController extends Controller
         ];
 
         return $reminders;
+    }
+
+    public function create()
+    {
+        $aplikasis = \App\Models\AplikasiDetail::all();
+        $pics = DB::table('pic')->orderBy('nama_pic')->pluck('nama_pic', 'id_pic');
+
+        return view('pages.domain.create', compact('aplikasis', 'pics'));
+    }
+
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
+            'nama_domain' => 'required|string|max:150|unique:domain,nama_domain',
+            'id_aplikasi' => 'nullable|integer|exists:aplikasi,id_aplikasi',
+            'status' => 'required|in:Aktif,Tidak Aktif',
+            'registrar' => 'nullable|string|max:100',
+            'tanggal_pembelian' => 'nullable|date',
+            'tanggal_kadaluarsa' => 'nullable|date|after_or_equal:tanggal_pembelian',
+            'perpanjangan_otomatis' => 'boolean',
+            'id_pic' => 'nullable|integer|exists:pic,id_pic',
+        ]);
+
+        Domain::create($validated);
+
+        return redirect()->route('domain.domain')
+            ->with('success', 'Domain berhasil ditambahkan!');
+    }
+
+    public function edit(int $id)
+    {
+        $domain = Domain::findOrFail($id);
+        $aplikasis = \App\Models\AplikasiDetail::all();
+        $pics = DB::table('pic')->orderBy('nama_pic')->pluck('nama_pic', 'id_pic');
+
+        return view('pages.domain.edit', compact('domain', 'aplikasis', 'pics'));
+    }
+
+    public function update(Request $request, int $id)
+    {
+        $domain = Domain::findOrFail($id);
+
+        $validated = $request->validate([
+            'nama_domain' => 'required|string|max:150|unique:domain,nama_domain,' . $id . ',id_domain',
+            'id_aplikasi' => 'nullable|integer|exists:aplikasi,id_aplikasi',
+            'status' => 'required|in:Aktif,Tidak Aktif',
+            'registrar' => 'nullable|string|max:100',
+            'tanggal_pembelian' => 'nullable|date',
+            'tanggal_kadaluarsa' => 'nullable|date|after_or_equal:tanggal_pembelian',
+            'perpanjangan_otomatis' => 'boolean',
+            'id_pic' => 'nullable|integer|exists:pic,id_pic',
+        ]);
+
+        $domain->update($validated);
+
+        return redirect()->route('domain.domain')
+            ->with('success', 'Domain berhasil diperbarui!');
+    }
+
+    public function destroy(int $id)
+    {
+        $domain = Domain::findOrFail($id);
+        $domain->delete();
+
+        return redirect()->route('domain.domain')
+            ->with('success', 'Domain berhasil dihapus!');
     }
 }

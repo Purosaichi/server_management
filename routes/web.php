@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ServerController;
+use App\Http\Controllers\ServerNoteController;
 use App\Http\Controllers\ApplicationController;
 use App\Http\Controllers\MaintenanceController;
 use App\Http\Controllers\AlertController;
@@ -27,6 +28,10 @@ Route::middleware(['auth.session'])->group(function () {
     Route::delete('/server/{id}', [ServerController::class, 'destroy'])->name('server.destroy');
     Route::get('/server/{id}', [ServerController::class, 'show'])->name('server.detail');
 
+    Route::post('/server-notes', [ServerNoteController::class, 'store'])->name('server-notes.store');
+    Route::put('/server-notes/{id}', [ServerNoteController::class, 'update'])->name('server-notes.update');
+    Route::delete('/server-notes/{id}', [ServerNoteController::class, 'destroy'])->name('server-notes.destroy');
+
     Route::get('/application', [ApplicationController::class, 'index'])->name('application.index');
     Route::get('/application/create', [ApplicationController::class, 'create'])->name('application.create');
     Route::post('/application', [ApplicationController::class, 'store'])->name('application.store');
@@ -39,7 +44,7 @@ Route::middleware(['auth.session'])->group(function () {
 
     Route::get('/domain', [DomainController::class, 'index'])->name('domain.domain');
     Route::get('/domain/create', [DomainController::class, 'create'])->name('domain.create');
-    Route::post('/domain', [DomainController::class, 'store'])->name('domain.store');)
+    Route::post('/domain', [DomainController::class, 'store'])->name('domain.store');
     Route::get('/domain/{id}', [DomainController::class, 'show'])->name('domain.detail');
     Route::get('/domain/{id}/edit', [DomainController::class, 'edit'])->name('domain.edit');
     Route::put('/domain/{id}', [DomainController::class, 'update'])->name('domain.update');

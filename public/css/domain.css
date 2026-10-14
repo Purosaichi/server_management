@@ -112,6 +112,23 @@
     font-size: 0.875rem;
 }
 
+.dmn-btn-add {
+    background: #0a4bff;
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-weight: 500;
+    transition: background 0.2s;
+    display: inline-block;
+    white-space: nowrap;
+}
+
+.dmn-btn-add:hover {
+    background: #0836c7;
+}
+
 .dmn-btn-detail:hover {
     text-decoration: underline;
 }

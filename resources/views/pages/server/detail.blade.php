@@ -85,6 +85,7 @@
 <div id="tab-overview" class="tab-content active">
     <div class="content-grid">
         
+        {{-- KOLOM 1 --}}
         <div class="column">
             <div class="card">
                 <h3 class="card-title">
@@ -137,6 +138,7 @@
                 </div>
             </div>
 
+            {{-- Riwayat Maintenance --}}
             <div class="card">
                 <div class="maintenance-history-header">
                     <h3 class="card-title">
@@ -201,6 +203,7 @@
             </div>
         </div>
         
+        {{-- KOLOM 2 --}}
         <div class="column">
             <div class="card">
                 <h3 class="card-title">
@@ -238,6 +241,7 @@
             </div>
         </div>
         
+        {{-- KOLOM 3 --}}
         <div class="column">
             <div class="card">
                 <h3 class="card-title">
@@ -257,7 +261,8 @@
                 </div>
             </div>
             
-            <div class="card">
+            {{-- Catatan Terakhir --}}
+            <div class="card" style="position: relative;">
                 <h3 class="card-title">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
@@ -265,13 +270,35 @@
                     </svg>
                     Catatan Terakhir
                 </h3>
-                <div class="note">{{ $server['last_note'] }}</div>
-                <div class="note-by">
-                    Ditambahkan oleh <strong>{{ $server['last_note_by'] }}</strong><br>
-                    {{ $server['last_note_date'] }}
-                </div>
+                
+                <button type="button" class="add-note-btn" onclick="openNoteModal()" title="Tambah Catatan">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/>
+                    </svg>
+                </button>
+                
+                @if($latestNote)
+                    <div class="note note-clickable" 
+                        ondblclick="editNote(this)"
+                        data-note-id="{{ $latestNote->id_note }}"
+                        data-note-text="{{ $latestNote->catatan }}"
+                        data-note-pic="{{ $latestNote->id_pic ?? '' }}"
+                        title="Double click untuk edit">
+                        {{ $latestNote->catatan }}
+                    </div>
+                    <div class="note-by">
+                        Ditambahkan oleh <strong>{{ $latestNote->nama_pic ?? '-' }}</strong><br>
+                        {{ \Carbon\Carbon::parse($latestNote->dibuat_pada)->translatedFormat('d F Y, H:i') }}
+                        @if($latestNote->diperbarui_pada)
+                            <br><em style="font-size: 0.7rem;">Diedit: {{ \Carbon\Carbon::parse($latestNote->diperbarui_pada)->translatedFormat('d F Y, H:i') }}</em>
+                        @endif
+                    </div>
+                @else
+                    <div class="note-empty">
+                        Belum ada catatan. Klik tombol <strong>+</strong> di pojok kanan untuk menambahkan.
+                    </div>
+                @endif
             </div>
-            
         </div>
     </div>
 </div>
@@ -328,6 +355,7 @@
     </div>
 </div>
 
+{{-- ===== MODAL MAINTENANCE ===== --}}
 <div id="maintenanceModal" class="server-maintenance-modal" style="display: none;">
     <div class="server-maintenance-modal-box">
         <h3 class="server-maintenance-modal-title" id="maintenanceModalTitle">Tambah Jadwal Maintenance</h3>
@@ -372,46 +400,47 @@
                     <option value="Canceled">Canceled</option>
                 </select>
             </div>
-            {{-- Catatan Terakhir --}}
-            <div class="card" style="position: relative;">
-                <h3 class="card-title">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
-                        <path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/>
-                    </svg>
-                    Catatan Terakhir
-                </h3>
-                
-                {{-- Tombol Tambah Catatan (di pojok kanan atas) --}}
-                <button type="button" class="add-note-btn" onclick="openNoteModal()" title="Tambah Catatan">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/>
-                    </svg>
-                </button>
-                
-                @if($latestNote)
-                    {{-- Catatan Ada --}}
-                    <div class="note note-clickable" 
-                        ondblclick="editNote(this)"
-                        data-note-id="{{ $latestNote->id_note }}"
-                        data-note-text="{{ $latestNote->catatan }}"
-                        data-note-pic="{{ $latestNote->id_pic ?? '' }}"
-                        title="Double click untuk edit">
-                        {{ $latestNote->catatan }}
-                    </div>
-                    <div class="note-by">
-                        Ditambahkan oleh <strong>{{ $latestNote->nama_pic ?? '-' }}</strong><br>
-                        {{ \Carbon\Carbon::parse($latestNote->dibuat_pada)->translatedFormat('d F Y, H:i') }}
-                        @if($latestNote->diperbarui_pada)
-                            <br><em style="font-size: 0.7rem;">Diedit: {{ \Carbon\Carbon::parse($latestNote->diperbarui_pada)->translatedFormat('d F Y, H:i') }}</em>
-                        @endif
-                    </div>
-                @else
-                    {{-- Catatan Kosong --}}
-                    <div class="note-empty">
-                        Belum ada catatan. Klik tombol <strong>+</strong> di pojok kanan untuk menambahkan.
-                    </div>
-                @endif
+            <div class="server-maintenance-form-group">
+                <label for="maintenance_note">Catatan</label>
+                <textarea name="catatan" id="maintenance_note" rows="3"></textarea>
+            </div>
+            <div class="server-maintenance-modal-actions">
+                <button type="button" class="server-maintenance-cancel" onclick="closeMaintenanceModal()">Batal</button>
+                <button type="submit" class="server-maintenance-submit" id="maintenanceSubmitBtn">Simpan</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+{{-- ===== MODAL CATATAN ===== --}}
+<div id="noteModal" class="modal-overlay" style="display: none;">
+    <div class="modal-box">
+        <h3 class="modal-title" id="noteModalTitle">Tambah Catatan</h3>
+        
+        <form id="noteForm" method="POST" action="{{ route('server-notes.store') }}">
+            @csrf
+            <input type="hidden" name="id_server" value="{{ $server['id'] }}">
+            <input type="hidden" name="id_note" id="editNoteId" value="">
+            
+            <div class="modal-form-group">
+                <label for="note_pic">PIC</label>
+                <select name="id_pic" id="note_pic">
+                    <option value="">-- Pilih PIC --</option>
+                    @foreach($pics as $picId => $picName)
+                        <option value="{{ $picId }}">{{ $picName }}</option>
+                    @endforeach
+                </select>
+            </div>
+            
+            <div class="modal-form-group">
+                <label for="note_text">Catatan <span style="color: red;">*</span></label>
+                <textarea name="catatan" id="note_text" rows="4" 
+                          placeholder="Tulis catatan di sini..." required></textarea>
+            </div>
+            
+            <div class="modal-actions">
+                <button type="button" class="modal-btn-cancel" onclick="closeNoteModal()">Batal</button>
+                <button type="submit" class="modal-btn-submit" id="noteSubmitBtn">Simpan</button>
             </div>
         </form>
     </div>
@@ -422,6 +451,7 @@
 </footer>
 
 <script>
+    // ===== MODAL CATATAN =====
     function openNoteModal() {
         const form = document.getElementById('noteForm');
         form.reset();
@@ -438,7 +468,6 @@
         const form = document.getElementById('noteForm');
         form.action = @json(url('/server-notes')) + '/' + encodeURIComponent(data.noteId);
         
-        // Tambah method PUT
         let methodInput = document.querySelector('#noteForm input[name="_method"]');
         if (!methodInput) {
             methodInput = document.createElement('input');
@@ -466,8 +495,9 @@
 
     document.addEventListener('keydown', function(e) {
         if (e.key === 'Escape') closeNoteModal();
-    });    
+    });
 
+    // ===== MODAL MAINTENANCE =====
     function openMaintenanceModal() {
         const form = document.getElementById('maintenanceForm');
         form.reset();
@@ -516,6 +546,7 @@
         if (event.key === 'Escape') closeMaintenanceModal();
     });
 
+    // ===== TAB =====
     function showTab(event, tabName) {
         event.preventDefault();
         
