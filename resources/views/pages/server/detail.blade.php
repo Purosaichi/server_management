@@ -547,6 +547,23 @@
 </footer>
 
 <script>
+
+    // ===== MODAL NETWORK =====
+    function openNetworkModal() {
+        document.getElementById('networkModal').style.display = 'flex';
+    }
+
+    function closeNetworkModal() {
+        document.getElementById('networkModal').style.display = 'none';
+    }
+
+    document.getElementById('networkModal').addEventListener('click', function(e) {
+        if (e.target === this) closeNetworkModal();
+    });
+
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') closeNetworkModal();
+    });
     // ===== MODAL CATATAN =====
     function openNoteModal() {
         const form = document.getElementById('noteForm');
