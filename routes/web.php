@@ -25,6 +25,7 @@ Route::middleware(['auth.session'])->group(function () {
     Route::post('/server', [ServerController::class, 'store'])->name('server.store');
     Route::get('/server/{id}/edit', [ServerController::class, 'edit'])->name('server.edit');
     Route::put('/server/{id}', [ServerController::class, 'update'])->name('server.update');
+    Route::put('/server/{id}/network', [ServerController::class, 'updateNetwork'])->name('server.update-network');
     Route::delete('/server/{id}', [ServerController::class, 'destroy'])->name('server.destroy');
     Route::get('/server/{id}', [ServerController::class, 'show'])->name('server.detail');
 

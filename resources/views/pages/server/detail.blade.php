@@ -243,13 +243,6 @@
         
         {{-- KOLOM 3 --}}
         <div class="column">
-            <div class="card">
-                <h3 class="card-title">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M5 12.55a11 11 0 0114.08 0M1.42 9a16 16 0 0121.16 0M8.53 16.11a6 6 0 016.95 0M12 20h.01"/>
-                    </svg>
-                    Informasi Jaringan
-                {{-- Informasi Jaringan --}}
             <div class="card" style="position: relative;">
                 <h3 class="card-title">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -257,14 +250,13 @@
                     </svg>
                     Informasi Jaringan
                 </h3>
-                
-                {{-- Tombol Edit (di pojok kanan atas) --}}
+
                 <button type="button" class="edit-network-btn" onclick="openNetworkModal()" title="Edit Informasi Jaringan">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
                     </svg>
                 </button>
-                
+
                 <div class="info-list">
                     <div class="info-row"><span class="info-label">IP Address</span><span class="info-value">{{ $server['ip_address'] }}</span></div>
                     <div class="info-row"><span class="info-label">Subnet Mask</span><span class="info-value">{{ $server['subnet_mask'] }}</span></div>
@@ -275,8 +267,7 @@
                     <div class="info-row"><span class="info-label">Network Usage</span><span class="info-value">↓ {{ $server['network_usage_down'] }} ↑ {{ $server['network_usage_up'] }}</span></div>
                 </div>
             </div>
-            
-            {{-- Catatan Terakhir --}}
+
             <div class="card" style="position: relative;">
                 <h3 class="card-title">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -285,15 +276,15 @@
                     </svg>
                     Catatan Terakhir
                 </h3>
-                
+
                 <button type="button" class="add-note-btn" onclick="openNoteModal()" title="Tambah Catatan">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/>
                     </svg>
                 </button>
-                
+
                 @if($latestNote)
-                    <div class="note note-clickable" 
+                    <div class="note note-clickable"
                         ondblclick="editNote(this)"
                         data-note-id="{{ $latestNote->id_note }}"
                         data-note-text="{{ $latestNote->catatan }}"
