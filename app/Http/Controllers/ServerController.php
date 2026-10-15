@@ -9,9 +9,7 @@ use Illuminate\Support\Facades\DB;
 
 class ServerController extends Controller
 {
-    /**
-     * Halaman daftar server
-     */
+    /*all servers data*/
     public function index()
     {
         $servers = $this->servers();
@@ -19,9 +17,7 @@ class ServerController extends Controller
         return view('pages.server.server', compact('servers'));
     }
 
-    /**
-     * Halaman detail server
-     */
+    /*detail server*/
    public function show(int $id)
 {
     $server = collect($this->servers())->firstWhere('id', $id);
@@ -44,7 +40,7 @@ class ServerController extends Controller
             'status',
         ]);
 
-    // ===== AMBIL CATATAN TERAKHIR =====
+ /*catatan terakhir*/
     $latestNote = DB::table('server_notes')
         ->leftJoin('pic', 'pic.id_pic', '=', 'server_notes.id_pic')
         ->where('server_notes.id_server', $id)
@@ -64,17 +60,13 @@ class ServerController extends Controller
     return view('pages.server.detail', compact('server', 'pics', 'applications', 'latestNote'));
 }
 
-    /**
-     * Halaman form tambah server
-     */
+    /*form tambah server*/
     public function create()
     {
         return view('pages.server.create');
     }
 
-    /**
-     * Proses simpan server baru
-     */
+    /*simpan server baru*/
     public function store(Request $request)
     {
         $request->validate([
@@ -152,9 +144,7 @@ class ServerController extends Controller
         }
     }
 
-    /**
-     * Halaman form edit server
-     */
+    /*form edit server*/
     public function edit(int $id)
     {
         // Ambil data server dari view + tabel server
@@ -205,9 +195,7 @@ class ServerController extends Controller
         return view('pages.server.edit', compact('server'));
     }
 
-    /**
-     * Proses update server
-     */
+    /*proses update server*/
     public function update(Request $request, int $id)
     {
         $request->validate([
@@ -289,9 +277,7 @@ class ServerController extends Controller
         }
     }
 
-    /**
-     * Soft delete server (set deleted_at)
-     */
+    //*soft delete*/
     public function destroy(int $id)
     {
         try {
@@ -308,9 +294,7 @@ class ServerController extends Controller
         }
     }
 
-    /**
-     * Data detail server (buat halaman detail)
-     */
+    /*data detail server*/
     private function serverDetails(array $server): array
     {
         $isOffline = $server['status'] === 'Offline';
@@ -389,9 +373,7 @@ class ServerController extends Controller
         ];
     }
 
-    /**
-     * Ambil data server dari view vw_server_status
-     */
+    /*ambil data server dari view vw_server_status*/
     private function servers(): array
     {
         return ServerStatus::query()
@@ -418,9 +400,7 @@ class ServerController extends Controller
             ->toArray();
     }
 
-    /**
-     * Format uptime dari detik ke "Xd Yh Zm"
-     */
+    /*Format uptime dari detik ke "Xd Yh Zm"*/
     private function formatUptime($detik): string
     {
         if (!$detik) {
