@@ -418,4 +418,45 @@ class ServerController extends Controller
 
         return "{$hari}d {$jam}h {$menit}m";
     }
+
+    /**
+ * Update informasi jaringan server
+ */
+    public function updateNetwork(Request $request, int $id)
+    {
+        $request->validate([
+            'alamat_ip_manajemen' => 'nullable|string|max:45',
+            'alamat_ip_produksi' => 'nullable|string|max:45',
+            'subnet_mask' => 'nullable|string|max:45',
+            'gateway' => 'nullable|string|max:45',
+            'dns_server' => 'nullable|string|max:100',
+            'mac_address' => 'nullable|string|max:20',
+            'network_speed' => 'nullable|string|max:20',
+            'network_usage_down' => 'nullable|string|max:20',
+            'network_usage_up' => 'nullable|string|max:20',
+        ]);
+
+        try {
+            DB::table('server')
+                ->where('id_server', $id)
+                ->update([
+                    'alamat_ip_manajemen' => $request->alamat_ip_manajemen,
+                    'alamat_ip_produksi' => $request->alamat_ip_produksi,
+                    'subnet_mask' => $request->subnet_mask,
+                    'gateway' => $request->gateway,
+                    'dns_server' => $request->dns_server,
+                    'mac_address' => $request->mac_address,
+                    'network_speed' => $request->network_speed,
+                    'network_usage_down' => $request->network_usage_down,
+                    'network_usage_up' => $request->network_usage_up,
+                ]);
+
+            return redirect()->back()->with('success', 'Informasi jaringan berhasil diupdate!');
+
+        } catch (\Exception $e) {
+            return redirect()->back()
+                ->with('error', 'Gagal mengupdate informasi jaringan: ' . $e->getMessage())
+                ->withInput();
+        }
+    }
 }

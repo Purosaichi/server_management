@@ -249,7 +249,22 @@
                         <path d="M5 12.55a11 11 0 0114.08 0M1.42 9a16 16 0 0121.16 0M8.53 16.11a6 6 0 016.95 0M12 20h.01"/>
                     </svg>
                     Informasi Jaringan
+                {{-- Informasi Jaringan --}}
+            <div class="card" style="position: relative;">
+                <h3 class="card-title">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M5 12.55a11 11 0 0114.08 0M1.42 9a16 16 0 0121.16 0M8.53 16.11a6 6 0 016.95 0M12 20h.01"/>
+                    </svg>
+                    Informasi Jaringan
                 </h3>
+                
+                {{-- Tombol Edit (di pojok kanan atas) --}}
+                <button type="button" class="edit-network-btn" onclick="openNetworkModal()" title="Edit Informasi Jaringan">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
+                    </svg>
+                </button>
+                
                 <div class="info-list">
                     <div class="info-row"><span class="info-label">IP Address</span><span class="info-value">{{ $server['ip_address'] }}</span></div>
                     <div class="info-row"><span class="info-label">Subnet Mask</span><span class="info-value">{{ $server['subnet_mask'] }}</span></div>
@@ -407,6 +422,87 @@
             <div class="server-maintenance-modal-actions">
                 <button type="button" class="server-maintenance-cancel" onclick="closeMaintenanceModal()">Batal</button>
                 <button type="submit" class="server-maintenance-submit" id="maintenanceSubmitBtn">Simpan</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+{{-- ===== MODAL INFORMASI JARINGAN ===== --}}
+<div id="networkModal" class="modal-overlay" style="display: none;">
+    <div class="modal-box">
+        <h3 class="modal-title">Edit Informasi Jaringan</h3>
+        
+        <form id="networkForm" method="POST" action="{{ route('server.update-network', $server['id']) }}">
+            @csrf
+            @method('PUT')
+            
+            <div class="modal-form-group">
+                <label for="network_ip_manajemen">IP Manajemen</label>
+                <input type="text" name="alamat_ip_manajemen" id="network_ip_manajemen" 
+                       value="{{ $server['ip_address'] }}" 
+                       placeholder="Contoh: 10.10.1.1">
+            </div>
+            
+            <div class="modal-form-group">
+                <label for="network_ip_produksi">IP Produksi</label>
+                <input type="text" name="alamat_ip_produksi" id="network_ip_produksi" 
+                       placeholder="Contoh: 103.231.3.1">
+            </div>
+            
+            <div class="modal-form-row">
+                <div class="modal-form-group">
+                    <label for="network_subnet">Subnet Mask</label>
+                    <input type="text" name="subnet_mask" id="network_subnet" 
+                           value="{{ $server['subnet_mask'] }}" 
+                           placeholder="Contoh: 255.255.255.0">
+                </div>
+                <div class="modal-form-group">
+                    <label for="network_gateway">Gateway</label>
+                    <input type="text" name="gateway" id="network_gateway" 
+                           value="{{ $server['gateway'] }}" 
+                           placeholder="Contoh: 192.168.1.1">
+                </div>
+            </div>
+            
+            <div class="modal-form-group">
+                <label for="network_dns">DNS Server</label>
+                <input type="text" name="dns_server" id="network_dns" 
+                       value="{{ $server['dns_server'] }}" 
+                       placeholder="Contoh: 8.8.8.8, 1.1.1.1">
+            </div>
+            
+            <div class="modal-form-group">
+                <label for="network_mac">MAC Address</label>
+                <input type="text" name="mac_address" id="network_mac" 
+                       value="{{ $server['mac_address'] }}" 
+                       placeholder="Contoh: 00:1A:2B:3C:4D:5E">
+            </div>
+            
+            <div class="modal-form-row">
+                <div class="modal-form-group">
+                    <label for="network_speed">Speed</label>
+                    <input type="text" name="network_speed" id="network_speed" 
+                           value="{{ $server['speed'] }}" 
+                           placeholder="Contoh: 1 Gbps">
+                </div>
+                <div class="modal-form-group">
+                    <label for="network_down">Usage Down</label>
+                    <input type="text" name="network_usage_down" id="network_down" 
+                           value="{{ $server['network_usage_down'] }}" 
+                           placeholder="Contoh: 125 Mbps">
+                </div>
+            </div>
+            
+            <div class="modal-form-group">
+                <label for="network_up">Usage Up</label>
+                <input type="text" name="network_usage_up" id="network_up" 
+                       value="{{ $server['network_usage_up'] }}" 
+                       placeholder="Contoh: 48 Mbps">
+            </div>
+            
+            <div class="modal-actions">
+                <button type="button" class="modal-btn-cancel" onclick="closeNetworkModal()">Batal</button>
+                <button type="submit" class="modal-btn-submit">Simpan</button>
             </div>
         </form>
     </div>
