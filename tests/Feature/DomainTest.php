@@ -48,6 +48,7 @@ class DomainTest extends TestCase
         ])->render();
 
         $this->assertStringNotContainsString('name="id_aplikasi"', $html);
+        $this->assertStringContainsString('class="app-form-group app-checkbox-group"', $html);
         $this->assertStringContainsString('SSL Certificate', $html);
         $this->assertStringContainsString('Billing Information', $html);
 

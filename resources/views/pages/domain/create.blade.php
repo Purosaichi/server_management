@@ -70,7 +70,7 @@
                 </select>
             </div>
 
-            <div class="app-form-group" style="display: flex; align-items: center; gap: 0.75rem; padding-top: 2rem;">
+            <div class="app-form-group app-checkbox-group">
                 <input type="checkbox" name="perpanjangan_otomatis" id="perpanjangan_otomatis" value="1" {{ old('perpanjangan_otomatis') ? 'checked' : '' }}>
                 <label for="perpanjangan_otomatis">Perpanjangan Otomatis</label>
             </div>
