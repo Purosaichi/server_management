@@ -164,9 +164,7 @@ class MaintenanceController extends Controller
         }
     }
 
-    /**
-     * Soft delete maintenance yang statusnya Completed atau Canceled
-     */
+    /*soft delete maintenance yang statusnya Completed atau Canceled*/
     public function clear()
     {
         try {
