@@ -7,28 +7,18 @@ use Illuminate\Database\Eloquent\Model;
 class Domain extends Model
 {
     protected $table = 'domain';
+
     protected $primaryKey = 'id_domain';
+
     public $timestamps = false;
 
     protected $fillable = [
         'nama_domain',
-        'id_aplikasi',
         'status',
         'registrar',
         'tanggal_pembelian',
         'tanggal_kadaluarsa',
         'perpanjangan_otomatis',
         'id_pic',
-        'ssl_provider',
-        'ssl_status',
-        'tanggal_ssl_terbit',
-        'ssl_tanggal_kadaluarsa',
-        'ssl_tipe',
-        'billing_status',
-        'billing_cycle',
-        'last_payment',
-        'next_due_date',
-        'amount',
-        'payment_method',
     ];
 }

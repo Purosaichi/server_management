@@ -36,18 +36,6 @@
             </div>
 
             <div class="app-form-group">
-                <label for="id_aplikasi">Aplikasi</label>
-                <select name="id_aplikasi" id="id_aplikasi">
-                    <option value="">-- Pilih Aplikasi --</option>
-                    @foreach($aplikasis as $aplikasi)
-                        <option value="{{ $aplikasi->id_aplikasi }}" {{ old('id_aplikasi') == $aplikasi->id_aplikasi ? 'selected' : '' }}>
-                            {{ $aplikasi->nama_aplikasi }}
-                        </option>
-                    @endforeach
-                </select>
-            </div>
-
-            <div class="app-form-group">
                 <label for="status">Status <span style="color: red;">*</span></label>
                 <select name="status" id="status" required>
                     <option value="Aktif" {{ old('status') == 'Aktif' ? 'selected' : '' }}>Aktif</option>

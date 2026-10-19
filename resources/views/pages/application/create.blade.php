@@ -85,7 +85,7 @@
                     <option value="">-- Pilih Domain --</option>
                     @foreach($domains as $domain)
                         <option value="{{ $domain->id_domain }}" {{ old('id_domain') == $domain->id_domain ? 'selected' : '' }}>
-                            {{ $domain->nama_domain }}{{ $domain->nama_aplikasi ? ' (saat ini: ' . $domain->nama_aplikasi . ')' : '' }}
+                            {{ $domain->nama_domain }}
                         </option>
                     @endforeach
                 </select>

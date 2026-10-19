@@ -34,18 +34,6 @@
             </div>
 
             <div class="app-form-group">
-                <label for="id_aplikasi">Aplikasi</label>
-                <select name="id_aplikasi" id="id_aplikasi">
-                    <option value="">-- Pilih Aplikasi --</option>
-                    @foreach($aplikasis as $aplikasi)
-                        <option value="{{ $aplikasi->id_aplikasi }}" {{ old('id_aplikasi', $domain->id_aplikasi) == $aplikasi->id_aplikasi ? 'selected' : '' }}>
-                            {{ $aplikasi->nama_aplikasi }}
-                        </option>
-                    @endforeach
-                </select>
-            </div>
-
-            <div class="app-form-group">
                 <label for="status">Status <span style="color: red;">*</span></label>
                 <select name="status" id="status" required>
                     <option value="Aktif" {{ old('status', $domain->status) == 'Aktif' ? 'selected' : '' }}>Aktif</option>
@@ -83,6 +71,77 @@
             <div class="app-form-group" style="display: flex; align-items: center; gap: 0.75rem; padding-top: 2rem;">
                 <input type="checkbox" name="perpanjangan_otomatis" id="perpanjangan_otomatis" value="1" {{ old('perpanjangan_otomatis', $domain->perpanjangan_otomatis) ? 'checked' : '' }}>
                 <label for="perpanjangan_otomatis">Perpanjangan Otomatis</label>
+            </div>
+        </div>
+
+        <h3 class="app-form-section">SSL Certificate</h3>
+        <div class="app-form-grid">
+            <div class="app-form-group">
+                <label for="ssl_provider">Provider</label>
+                <input type="text" name="ssl_provider" id="ssl_provider" value="{{ old('ssl_provider', $sslCertificate->provider ?? '') }}">
+            </div>
+
+            <div class="app-form-group">
+                <label for="ssl_status">Status SSL</label>
+                <select name="ssl_status" id="ssl_status">
+                    <option value="">-- Pilih Status --</option>
+                    @foreach(['Valid', 'Expired', 'Pending'] as $status)
+                        <option value="{{ $status }}" {{ old('ssl_status', $sslCertificate->status ?? '') == $status ? 'selected' : '' }}>{{ $status }}</option>
+                    @endforeach
+                </select>
+            </div>
+
+            <div class="app-form-group">
+                <label for="tanggal_ssl_terbit">Issued Date</label>
+                <input type="date" name="tanggal_ssl_terbit" id="tanggal_ssl_terbit" value="{{ old('tanggal_ssl_terbit', $sslCertificate->tanggal_terbit ?? '') }}">
+            </div>
+
+            <div class="app-form-group">
+                <label for="ssl_tanggal_kadaluarsa">Expiration Date</label>
+                <input type="date" name="ssl_tanggal_kadaluarsa" id="ssl_tanggal_kadaluarsa" value="{{ old('ssl_tanggal_kadaluarsa', $sslCertificate->tanggal_kadaluarsa ?? '') }}">
+            </div>
+
+            <div class="app-form-group">
+                <label for="ssl_tipe">Certificate Type</label>
+                <input type="text" name="ssl_tipe" id="ssl_tipe" value="{{ old('ssl_tipe', $sslCertificate->tipe_sertifikat ?? '') }}">
+            </div>
+        </div>
+
+        <h3 class="app-form-section">Billing Information</h3>
+        <div class="app-form-grid">
+            <div class="app-form-group">
+                <label for="billing_status">Status Pembayaran</label>
+                <select name="billing_status" id="billing_status">
+                    <option value="">-- Pilih Status --</option>
+                    @foreach(['Paid', 'Unpaid'] as $status)
+                        <option value="{{ $status }}" {{ old('billing_status', $billing->status_pembayaran ?? '') == $status ? 'selected' : '' }}>{{ $status }}</option>
+                    @endforeach
+                </select>
+            </div>
+
+            <div class="app-form-group">
+                <label for="billing_cycle">Billing Cycle</label>
+                <input type="text" name="billing_cycle" id="billing_cycle" value="{{ old('billing_cycle', $billing->siklus_tagihan ?? '') }}">
+            </div>
+
+            <div class="app-form-group">
+                <label for="last_payment">Last Payment</label>
+                <input type="date" name="last_payment" id="last_payment" value="{{ old('last_payment', $billing->tanggal_bayar_terakhir ?? '') }}">
+            </div>
+
+            <div class="app-form-group">
+                <label for="next_due_date">Next Due Date</label>
+                <input type="date" name="next_due_date" id="next_due_date" value="{{ old('next_due_date', $billing->tanggal_jatuh_tempo ?? '') }}">
+            </div>
+
+            <div class="app-form-group">
+                <label for="amount">Amount</label>
+                <input type="number" name="amount" id="amount" value="{{ old('amount', $billing->jumlah ?? '') }}" min="0" step="0.01">
+            </div>
+
+            <div class="app-form-group">
+                <label for="payment_method">Payment Method</label>
+                <input type="text" name="payment_method" id="payment_method" value="{{ old('payment_method', $billing->metode_pembayaran ?? '') }}">
             </div>
         </div>
 

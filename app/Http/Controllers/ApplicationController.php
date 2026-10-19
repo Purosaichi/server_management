@@ -6,6 +6,7 @@ use App\Models\AplikasiDetail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\ValidationException;
 
 class ApplicationController extends Controller
 {
@@ -167,9 +168,9 @@ class ApplicationController extends Controller
             ->get(['id_lisensi', 'nama_lisensi', 'provider']);
 
         $domains = DB::table('domain')
-            ->leftJoin('aplikasi', 'domain.id_aplikasi', '=', 'aplikasi.id_aplikasi')
+            ->whereNull('domain.id_aplikasi')
             ->orderBy('domain.nama_domain')
-            ->get(['domain.id_domain', 'domain.nama_domain', 'aplikasi.nama_aplikasi']);
+            ->get(['domain.id_domain', 'domain.nama_domain']);
 
         return view('pages.application.create', compact('servers', 'licenses', 'domains'));
     }
@@ -198,7 +199,7 @@ class ApplicationController extends Controller
             'id_domain' => [
                 'nullable',
                 'integer',
-                Rule::exists('domain', 'id_domain'),
+                Rule::exists('domain', 'id_domain')->whereNull('id_aplikasi'),
             ],
             'id_lisensi' => [
                 'nullable',
@@ -231,17 +232,19 @@ class ApplicationController extends Controller
                     'dibuat_pada' => now(),
                 ], 'id_aplikasi');
 
-                if ($request->filled('id_domain')) {
-                    DB::table('domain')
-                        ->where('id_domain', $request->id_domain)
-                        ->update(['id_aplikasi' => $applicationId]);
-                }
+                $this->saveApplicationDomain(
+                    $applicationId,
+                    null,
+                    $request->filled('id_domain') ? (int) $request->input('id_domain') : null
+                );
                 $this->assignServerLicense($request->id_server, $licenseId);
             });
 
             return redirect()->route('application.index')
                 ->with('success', 'Aplikasi berhasil ditambahkan!');
 
+        } catch (ValidationException $e) {
+            throw $e;
         } catch (\Exception $e) {
             return redirect()->back()
                 ->with('error', 'Gagal menambahkan aplikasi: ' . $e->getMessage())
@@ -274,9 +277,13 @@ class ApplicationController extends Controller
         $currentDomainId = DB::table('domain')
             ->where('id_aplikasi', $id)
             ->value('id_domain');
-        $currentDomainName = $currentDomainId
-            ? DB::table('domain')->where('id_domain', $currentDomainId)->value('nama_domain')
-            : null;
+        $domains = DB::table('domain')
+            ->where(function ($query) use ($id) {
+                $query->whereNull('id_aplikasi')
+                    ->orWhere('id_aplikasi', $id);
+            })
+            ->orderBy('nama_domain')
+            ->get(['id_domain', 'nama_domain']);
         $currentAssetId = $app->id_server
             ? DB::table('server')->where('id_server', $app->id_server)->value('id_aset')
             : null;
@@ -291,8 +298,8 @@ class ApplicationController extends Controller
             'app',
             'servers',
             'licenses',
+            'domains',
             'currentDomainId',
-            'currentDomainName',
             'selectedLicenseId'
         ));
     }
@@ -322,11 +329,13 @@ class ApplicationController extends Controller
                 'integer',
                 Rule::exists('server', 'id_server')->whereNull('deleted_at'),
             ],
-            'nama_domain' => [
+            'id_domain' => [
                 'nullable',
-                'string',
-                'max:150',
-                Rule::unique('domain', 'nama_domain')->ignore($currentDomainId, 'id_domain'),
+                'integer',
+                Rule::exists('domain', 'id_domain')->where(function ($query) use ($id) {
+                    $query->whereNull('id_aplikasi')
+                        ->orWhere('id_aplikasi', $id);
+                }),
             ],
             'id_lisensi' => [
                 'nullable',
@@ -360,13 +369,19 @@ class ApplicationController extends Controller
                         'diperbarui_pada' => now(),
                     ]);
 
-                $this->saveApplicationDomain($id, $currentDomainId, $request->input('nama_domain'));
+                $this->saveApplicationDomain(
+                    $id,
+                    $currentDomainId ? (int) $currentDomainId : null,
+                    $request->filled('id_domain') ? (int) $request->input('id_domain') : null
+                );
                 $this->assignServerLicense($request->id_server, $licenseId);
             });
 
             return redirect()->route('application.index')
                 ->with('success', 'Aplikasi berhasil diupdate!');
 
+        } catch (ValidationException $e) {
+            throw $e;
         } catch (\Exception $e) {
             return redirect()->back()
                 ->with('error', 'Gagal mengupdate aplikasi: ' . $e->getMessage())
@@ -393,30 +408,33 @@ class ApplicationController extends Controller
         }
     }
 
-    private function saveApplicationDomain(int $applicationId, ?int $domainId, ?string $domainName): void
+    private function saveApplicationDomain(int $applicationId, ?int $currentDomainId, ?int $domainId): void
     {
-        if ($domainName === null || trim($domainName) === '') {
-            if ($domainId !== null) {
-                DB::table('domain')
-                    ->where('id_domain', $domainId)
-                    ->where('id_aplikasi', $applicationId)
-                    ->update(['id_aplikasi' => null]);
+        if ($domainId !== null) {
+            $domain = DB::table('domain')
+                ->where('id_domain', $domainId)
+                ->lockForUpdate()
+                ->first();
+
+            if (! $domain || ($domain->id_aplikasi !== null && (int) $domain->id_aplikasi !== $applicationId)) {
+                throw ValidationException::withMessages([
+                    'id_domain' => 'Domain tersebut sudah digunakan oleh aplikasi lain.',
+                ]);
             }
 
-            return;
+            if ((int) ($domain->id_aplikasi ?? 0) !== $applicationId) {
+                DB::table('domain')
+                    ->where('id_domain', $domainId)
+                    ->update(['id_aplikasi' => $applicationId]);
+            }
         }
 
-        if ($domainId !== null) {
+        if ($currentDomainId !== null && $currentDomainId !== $domainId) {
             DB::table('domain')
-                ->where('id_domain', $domainId)
-                ->update(['nama_domain' => trim($domainName)]);
-            return;
+                ->where('id_domain', $currentDomainId)
+                ->where('id_aplikasi', $applicationId)
+                ->update(['id_aplikasi' => null]);
         }
-
-        DB::table('domain')->insert([
-            'nama_domain' => trim($domainName),
-            'id_aplikasi' => $applicationId,
-        ]);
     }
 
     private function assignServerLicense(?int $serverId, ?int $licenseId): void

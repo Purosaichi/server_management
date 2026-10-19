@@ -2,6 +2,12 @@
 
 namespace Tests\Feature;
 
+use App\Http\Controllers\DomainController;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\MessageBag;
 use Tests\TestCase;
 
 class DomainTest extends TestCase
@@ -37,10 +43,11 @@ class DomainTest extends TestCase
     public function test_create_domain_form_includes_domain_detail_fields(): void
     {
         $html = view('pages.domain.create', [
-            'aplikasis' => collect(),
+            'errors' => new MessageBag,
             'pics' => collect(),
         ])->render();
 
+        $this->assertStringNotContainsString('name="id_aplikasi"', $html);
         $this->assertStringContainsString('SSL Certificate', $html);
         $this->assertStringContainsString('Billing Information', $html);
 
@@ -57,7 +64,74 @@ class DomainTest extends TestCase
             'amount',
             'payment_method',
         ] as $field) {
-            $this->assertStringContainsString('name="' . $field . '"', $html);
+            $this->assertStringContainsString('name="'.$field.'"', $html);
         }
+    }
+
+    public function test_storing_domain_saves_ssl_and_billing_to_their_tables(): void
+    {
+        Schema::create('domain', function (Blueprint $table) {
+            $table->increments('id_domain');
+            $table->string('nama_domain')->unique();
+            $table->string('status');
+            $table->string('registrar')->nullable();
+            $table->date('tanggal_pembelian')->nullable();
+            $table->date('tanggal_kadaluarsa')->nullable();
+            $table->boolean('perpanjangan_otomatis')->default(false);
+            $table->unsignedInteger('id_pic')->nullable();
+        });
+        Schema::create('ssl_certificate', function (Blueprint $table) {
+            $table->increments('id_ssl');
+            $table->unsignedInteger('id_domain');
+            $table->string('provider')->nullable();
+            $table->string('status')->default('Valid');
+            $table->string('tipe_sertifikat')->nullable();
+            $table->date('tanggal_terbit')->nullable();
+            $table->date('tanggal_kadaluarsa')->nullable();
+        });
+        Schema::create('tagihan', function (Blueprint $table) {
+            $table->increments('id_tagihan');
+            $table->string('jenis_tagihan');
+            $table->unsignedInteger('id_domain')->nullable();
+            $table->unsignedInteger('id_lisensi')->nullable();
+            $table->string('status_pembayaran')->default('Unpaid');
+            $table->string('siklus_tagihan')->nullable();
+            $table->date('tanggal_bayar_terakhir')->nullable();
+            $table->date('tanggal_jatuh_tempo')->nullable();
+            $table->decimal('jumlah', 12, 2)->nullable();
+            $table->string('metode_pembayaran')->nullable();
+        });
+
+        app(DomainController::class)->store(Request::create('/domain', 'POST', [
+            'nama_domain' => 'regression-test.example',
+            'status' => 'Aktif',
+            'ssl_provider' => 'Test SSL',
+            'ssl_status' => 'Valid',
+            'tanggal_ssl_terbit' => '2026-10-19',
+            'ssl_tanggal_kadaluarsa' => '2027-10-19',
+            'ssl_tipe' => 'DV',
+            'billing_status' => 'Paid',
+            'billing_cycle' => '1 tahun',
+            'last_payment' => '2026-10-19',
+            'next_due_date' => '2027-10-19',
+            'amount' => '250000',
+            'payment_method' => 'Transfer bank',
+        ]));
+
+        $domainId = DB::table('domain')->where('nama_domain', 'regression-test.example')->value('id_domain');
+
+        $this->assertDatabaseHas('ssl_certificate', [
+            'id_domain' => $domainId,
+            'provider' => 'Test SSL',
+            'status' => 'Valid',
+            'tipe_sertifikat' => 'DV',
+        ]);
+        $this->assertDatabaseHas('tagihan', [
+            'id_domain' => $domainId,
+            'jenis_tagihan' => 'Domain',
+            'status_pembayaran' => 'Paid',
+            'jumlah' => 250000,
+            'metode_pembayaran' => 'Transfer bank',
+        ]);
     }
 }
