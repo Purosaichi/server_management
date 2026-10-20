@@ -101,6 +101,23 @@ class LicenseTest extends TestCase
         }
     }
 
+    public function test_red_hat_license_uses_the_valid_png_logo(): void
+    {
+        $this->createLicenseTables();
+        DB::table('lisensi')->insert([
+            'nama_lisensi' => 'Red Hat Enterprise Linux',
+            'provider' => 'Red Hat',
+            'status' => 'Aman',
+            'jumlah_lisensi' => 1,
+            'logo' => 'redhat.png',
+        ]);
+
+        $this->withSession(['user_id' => 1, 'user_name' => 'Administrator'])
+            ->get('/licenses')
+            ->assertOk()
+            ->assertSee('images/Red-Hat.png');
+    }
+
     private function createLicenseTables(): void
     {
         Schema::create('lisensi', function (Blueprint $table) {

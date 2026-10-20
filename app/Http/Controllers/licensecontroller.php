@@ -340,6 +340,7 @@ class LicenseController extends Controller
             'ubuntu.png' => 'ubuntu_pro.png',
             'elastic.png' => 'elastic_stack.png',
             'vmware.png' => 'VMware.png',
+            'redhat.png' => 'Red-Hat.png',
         ];
 
         return $logoAliases[$logo] ?? $logo;
