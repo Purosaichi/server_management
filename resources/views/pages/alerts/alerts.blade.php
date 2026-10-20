@@ -11,7 +11,6 @@
 
 <div class="alerts-header">
     <h1>Alerts</h1>
-    <p>Peringatan kondisi server dan aplikasi.</p>
 </div>
 
 <div class="alerts-stats-grid">

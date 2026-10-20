@@ -61,13 +61,12 @@
                             <a href="{{ route('domain.edit', $domain['id']) }}" class="dmn-btn-edit">
                                 Edit
                             </a>
-                            <form action="{{ route('domain.destroy', $domain['id']) }}" method="POST">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="dmn-btn-delete">
-                                    Hapus
-                                </button>
-                            </form>
+                            <button type="button" class="dmn-btn-delete"
+                                data-delete-url="{{ route('domain.destroy', $domain['id']) }}"
+                                data-domain-name="{{ $domain['domain'] }}"
+                                onclick="showDomainDeleteModal(this)">
+                                Hapus
+                            </button>
                         </div>
                     </td>
                 </tr>
@@ -76,7 +75,60 @@
         </table>
     </div>
 </div>
+
+<div id="domainDeleteModal" class="dmn-modal-overlay" style="display: none;" aria-hidden="true">
+    <div class="dmn-modal" role="alertdialog" aria-modal="true" aria-labelledby="domainDeleteTitle" aria-describedby="domainDeleteText">
+        <div class="dmn-modal-icon" aria-hidden="true">⚠️</div>
+        <h3 id="domainDeleteTitle" class="dmn-modal-title">Konfirmasi Hapus</h3>
+        <p id="domainDeleteText" class="dmn-modal-text">
+            Apakah Anda yakin ingin menghapus domain <strong id="domainDeleteName"></strong>?
+        </p>
+        <div class="dmn-modal-actions">
+            <button type="button" class="dmn-modal-cancel" onclick="closeDomainDeleteModal()" data-modal-cancel>
+                Batal
+            </button>
+            <form id="domainDeleteForm" method="POST">
+                @csrf
+                @method('DELETE')
+                <button type="submit" class="dmn-modal-confirm">
+                    Ya, Hapus
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+
 <footer class="footer">
     <p>&copy; 2026 Direktorat Jenderal Guru, Tenaga Kependidikan dan Pendidikan Guru - Kemendikdasmen</p>
 </footer>
+
+<script>
+    const domainDeleteModal = document.getElementById('domainDeleteModal');
+    let domainDeleteTrigger = null;
+
+    function showDomainDeleteModal(button) {
+        domainDeleteTrigger = button;
+        document.getElementById('domainDeleteName').textContent = button.dataset.domainName;
+        document.getElementById('domainDeleteForm').action = button.dataset.deleteUrl;
+        domainDeleteModal.style.display = 'flex';
+        domainDeleteModal.setAttribute('aria-hidden', 'false');
+        domainDeleteModal.querySelector('[data-modal-cancel]').focus();
+    }
+
+    function closeDomainDeleteModal() {
+        domainDeleteModal.style.display = 'none';
+        domainDeleteModal.setAttribute('aria-hidden', 'true');
+        domainDeleteTrigger?.focus();
+    }
+
+    domainDeleteModal.addEventListener('click', function (event) {
+        if (event.target === domainDeleteModal) closeDomainDeleteModal();
+    });
+
+    document.addEventListener('keydown', function (event) {
+        if (event.key === 'Escape' && domainDeleteModal.style.display === 'flex') {
+            closeDomainDeleteModal();
+        }
+    });
+</script>
 @endsection

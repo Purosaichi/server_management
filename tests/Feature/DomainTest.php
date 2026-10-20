@@ -58,7 +58,9 @@ class DomainTest extends TestCase
 
         $this->assertStringContainsString('href="/domain/42/edit"', $html);
         $this->assertStringContainsString('class="dmn-btn-delete"', $html);
-        $this->assertStringContainsString('action="/domain/42"', $html);
+        $this->assertStringContainsString('data-delete-url="/domain/42"', $html);
+        $this->assertStringContainsString('Konfirmasi Hapus', $html);
+        $this->assertStringContainsString('Ya, Hapus', $html);
         $this->assertStringContainsString('name="_method" value="DELETE"', $html);
     }
 

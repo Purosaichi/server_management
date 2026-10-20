@@ -1,16 +1,25 @@
 .alerts-header {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 4rem;
+    box-sizing: border-box;
+    padding: 0.75rem 1.5rem;
     margin-bottom: 1.5rem;
+    background: linear-gradient(to right, #0a4bff, #7398ff, #0a4bff);
+    border-bottom: 1px solid #e5e7eb;
+    border-radius: 0.5rem;
 }
 
 .alerts-header h1 {
     font-size: 1.5rem;
-    font-weight: 700;
-    color: #1f2937;
+    font-weight: 600;
+    color: #ffffff;
 }
 
 .alerts-header p {
     font-size: 0.875rem;
-    color: #6b7280;
+    color: #ffffff;
 }
 
 .alerts-stats-grid {
