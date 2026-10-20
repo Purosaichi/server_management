@@ -1,5 +1,18 @@
 .lic-back-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     margin-bottom: 1rem;
+}
+
+.lic-detail-edit {
+    padding: 0.5rem 1rem;
+    border-radius: 0.375rem;
+    background: #dbeafe;
+    color: #1d4ed8;
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-decoration: none;
 }
 
 .lic-back {
@@ -267,6 +280,12 @@
 
 .lic-payment-status {
     color: #374151;
+}
+
+.lic-payment-empty {
+    padding: 1rem !important;
+    color: #6b7280;
+    text-align: center;
 }
 
 .footer {

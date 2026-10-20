@@ -7,6 +7,10 @@
 
 <link rel="stylesheet" href="{{ asset('css/licenses-detail.css') }}">
 
+@if(session('success'))
+    <div class="lic-alert-success" role="status">{{ session('success') }}</div>
+@endif
+
 <!-- /* Tombol Back */ -->
 <div class="lic-back-wrap">
     <a href="{{ route('licenses.licenses') }}" class="lic-back">
@@ -15,6 +19,7 @@
         </svg>
         Back
     </a>
+    <a href="{{ route('licenses.edit', $license['id']) }}" class="lic-detail-edit">Edit Lisensi</a>
 </div>
 
 <!-- /* HEADER CARD */ -->
@@ -70,13 +75,13 @@
         <div class="lic-info-header">
             <h4>Billing Information</h4>
             <span class="lic-info-status">
-                Status: <strong class="{{ $license['status'] === 'Expired' ? 'lic-text-danger' : 'lic-text-green' }}">
-                    {{ $license['status'] === 'Expired' ? 'Unpaid' : 'Paid' }}
+                Status: <strong class="{{ $license['billing_status'] === 'Paid' ? 'lic-text-green' : 'lic-text-danger' }}">
+                    {{ $license['billing_status'] }}
                 </strong>
             </span>
         </div>
         <ul class="lic-info-list">
-            <li><span>Billing Period</span><span>1 Tahun</span></li>
+            <li><span>Billing Period</span><span>{{ $license['billing_period'] }}</span></li>
             <li><span>Last payment</span><span>{{ $license['last_payment'] }}</span></li>
             <li><span>Next due date</span><span>{{ $license['next_due_date'] }}</span></li>
             <li><span>Amount</span><span>Rp{{ $license['amount'] }}</span></li>
@@ -89,7 +94,7 @@
         <div class="lic-info-header">
             <h4>Licenses Information</h4>
             <span class="lic-info-status">
-                Status: <strong class="lic-text-green">Active</strong>
+                Status: <strong class="{{ $license['status_type'] === 'expired' ? 'lic-text-danger' : ($license['status_type'] === 'warning' ? 'lic-text-warning' : 'lic-text-green') }}">{{ $license['status'] }}</strong>
             </span>
         </div>
         <ul class="lic-info-list">
@@ -132,24 +137,18 @@
             </tr>
         </thead>
         <tbody>
-            <tr>
-                <td>15 Agustus 2026</td>
-                <td>Rp{{ $license['amount'] }}</td>
-                <td>Transfer bank</td>
-                <td><span class="lic-payment-status">Paid</span></td>
-            </tr>
-            <tr>
-                <td>15 Agustus 2025</td>
-                <td>Rp{{ $license['amount'] }}</td>
-                <td>Transfer bank</td>
-                <td><span class="lic-payment-status">Paid</span></td>
-            </tr>
-            <tr>
-                <td>15 Agustus 2024</td>
-                <td>Rp{{ $license['amount'] }}</td>
-                <td>Transfer bank</td>
-                <td><span class="lic-payment-status">Paid</span></td>
-            </tr>
+            @forelse($payments as $payment)
+                <tr>
+                    <td>{{ $payment['date'] }}</td>
+                    <td>Rp{{ $payment['amount'] }}</td>
+                    <td>{{ $payment['method'] }}</td>
+                    <td><span class="lic-payment-status">{{ $payment['status'] }}</span></td>
+                </tr>
+            @empty
+                <tr>
+                    <td colspan="4" class="lic-payment-empty">Belum ada riwayat pembayaran.</td>
+                </tr>
+            @endforelse
         </tbody>
     </table>
 </div>

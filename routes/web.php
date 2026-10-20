@@ -52,6 +52,11 @@ Route::middleware(['auth.session'])->group(function () {
     Route::delete('/domain/{id}', [DomainController::class, 'destroy'])->name('domain.destroy');
 
     Route::get('/licenses', [LicenseController::class, 'index'])->name('licenses.licenses');
+    Route::get('/licenses/create', [LicenseController::class, 'create'])->name('licenses.create');
+    Route::post('/licenses', [LicenseController::class, 'store'])->name('licenses.store');
+    Route::get('/licenses/{id}/edit', [LicenseController::class, 'edit'])->name('licenses.edit');
+    Route::put('/licenses/{id}', [LicenseController::class, 'update'])->name('licenses.update');
+    Route::delete('/licenses/{id}', [LicenseController::class, 'destroy'])->name('licenses.destroy');
     Route::get('/licenses/{id}', [LicenseController::class, 'show'])->name('licenses.detail');
 
     Route::get('/maintenance', [MaintenanceController::class, 'index'])->name('maintenance.maintenance');

@@ -21,6 +21,142 @@
     margin-bottom: 5rem;
 }
 
+.lic-table-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1rem 1.5rem 0;
+}
+
+.lic-table-header h3 {
+    margin: 0;
+    color: #111827;
+    font-size: 1.05rem;
+    font-weight: 600;
+}
+
+.lic-table-tools,
+.lic-row-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    white-space: nowrap;
+}
+
+.lic-table-tools {
+    color: #6b7280;
+    font-size: 0.85rem;
+}
+
+.lic-btn-add,
+.lic-btn-edit,
+.lic-btn-delete {
+    display: inline-block;
+    border: 0;
+    border-radius: 0.375rem;
+    padding: 0.45rem 0.7rem;
+    font: inherit;
+    font-size: 0.8rem;
+    font-weight: 500;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.lic-btn-add {
+    background: #164fe8;
+    color: #fff;
+}
+
+.lic-btn-edit {
+    background: #dbeafe;
+    color: #1d4ed8;
+}
+
+.lic-btn-delete {
+    background: #fee2e2;
+    color: #b91c1c;
+}
+
+.lic-logo-placeholder {
+    display: grid;
+    width: 4rem;
+    height: 4rem;
+    flex-shrink: 0;
+    place-items: center;
+    border-radius: 0.5rem;
+    background: #eff6ff;
+    color: #1d4ed8;
+    font-size: 0.75rem;
+    font-weight: 700;
+}
+
+.lic-empty {
+    padding: 2rem 1rem !important;
+    color: #6b7280 !important;
+    text-align: center;
+}
+
+.lic-alert-success {
+    margin-top: 1rem;
+    padding: 0.75rem 1rem;
+    border: 1px solid #a7f3d0;
+    border-radius: 0.375rem;
+    background: #d1fae5;
+    color: #065f46;
+}
+
+.lic-form-logo-group small {
+    color: #6b7280;
+    font-size: 0.75rem;
+}
+
+.lic-form-logo-preview {
+    width: 5rem;
+    height: 5rem;
+    object-fit: contain;
+}
+
+.lic-modal-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    background: rgba(0, 0, 0, 0.5);
+}
+
+.lic-modal {
+    width: min(100%, 420px);
+    padding: 2rem;
+    border-radius: 0.75rem;
+    background: #fff;
+    text-align: center;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+}
+
+.lic-modal-icon { margin-bottom: 0.5rem; font-size: 3rem; }
+.lic-modal-title { margin-bottom: 0.75rem; color: #111827; font-size: 1.25rem; font-weight: 700; }
+.lic-modal-text { margin-bottom: 1rem; color: #4b5563; line-height: 1.5; }
+.lic-modal-actions { display: flex; justify-content: center; gap: 0.75rem; }
+.lic-modal-actions form { margin: 0; }
+
+.lic-modal-cancel,
+.lic-modal-confirm {
+    padding: 0.5rem 1.25rem;
+    border: 0;
+    border-radius: 0.5rem;
+    font: inherit;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.lic-modal-cancel { border: 1px solid #d1d5db; background: #fff; color: #374151; }
+.lic-modal-confirm { background: #dc2626; color: #fff; }
+
 .lic-table-wrapper {
     overflow-x: auto;
     padding: 1rem;
