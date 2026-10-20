@@ -36,7 +36,7 @@
             </thead>
             <tbody>
                 @foreach($domains as $domain)
-                <tr>
+                <tr class="dmn-domain-row" data-detail-url="{{ route('domain.detail', $domain['id']) }}" tabindex="0" aria-label="Detail {{ $domain['domain'] }}">
                     <td><span class="dmn-name">{{ $domain['domain'] }}</span></td>
                     <td>{{ $domain['application'] }}</td>
                     <td>
@@ -55,9 +55,6 @@
                     <td>{{ $domain['last_activity'] }}</td>
                     <td class="dmn-text-center">
                         <div class="dmn-actions">
-                            <a href="{{ route('domain.detail', $domain['id']) }}" class="dmn-btn-detail">
-                                Selengkapnya →
-                            </a>
                             <a href="{{ route('domain.edit', $domain['id']) }}" class="dmn-btn-edit">
                                 Edit
                             </a>
@@ -129,6 +126,19 @@
         if (event.key === 'Escape' && domainDeleteModal.style.display === 'flex') {
             closeDomainDeleteModal();
         }
+    });
+
+    document.querySelectorAll('.dmn-domain-row').forEach(function (row) {
+        row.addEventListener('dblclick', function (event) {
+            if (event.target.closest('a, button, form')) return;
+            window.location.assign(row.dataset.detailUrl);
+        });
+
+        row.addEventListener('keydown', function (event) {
+            if (event.key !== 'Enter') return;
+            event.preventDefault();
+            window.location.assign(row.dataset.detailUrl);
+        });
     });
 </script>
 @endsection

@@ -20,7 +20,7 @@ class DomainTest extends TestCase
             ->assertSee('Daftar Domain');
     }
 
-    public function test_domain_detail_link_uses_real_domain_id(): void
+    public function test_domain_row_has_detail_url_for_double_click(): void
     {
         $html = view('pages.domain.domain', [
             'domains' => [
@@ -36,8 +36,9 @@ class DomainTest extends TestCase
             ],
         ])->render();
 
-        $this->assertStringContainsString('/domain/42', $html);
+        $this->assertStringContainsString('data-detail-url="/domain/42"', $html);
         $this->assertStringNotContainsString('/domain/1', $html);
+        $this->assertStringNotContainsString('Selengkapnya', $html);
     }
 
     public function test_domain_list_has_functional_edit_link_and_inert_delete_button(): void
