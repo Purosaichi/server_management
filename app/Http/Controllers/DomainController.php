@@ -15,7 +15,12 @@ class DomainController extends Controller
     public function index()
     {
         try {
-            $domains = DomainDetail::orderBy('id_domain')
+            $activeDomainIds = DB::table('domain')
+                ->whereNull('deleted_at')
+                ->select('id_domain');
+
+            $domains = DomainDetail::whereIn('id_domain', $activeDomainIds)
+                ->orderBy('id_domain')
                 ->get()
                 ->map(function ($d) {
                     return [
@@ -40,6 +45,8 @@ class DomainController extends Controller
 
     public function show(int $id)
     {
+        abort_unless(Domain::whereKey($id)->exists(), 404);
+
         try {
             $domain = DomainDetail::where('id_domain', $id)->first();
             if (! $domain) {

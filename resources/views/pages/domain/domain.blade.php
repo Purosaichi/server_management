@@ -61,9 +61,13 @@
                             <a href="{{ route('domain.edit', $domain['id']) }}" class="dmn-btn-edit">
                                 Edit
                             </a>
-                            <button type="button" class="dmn-btn-delete">
-                                Hapus
-                            </button>
+                            <form action="{{ route('domain.destroy', $domain['id']) }}" method="POST">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="dmn-btn-delete">
+                                    Hapus
+                                </button>
+                            </form>
                         </div>
                     </td>
                 </tr>

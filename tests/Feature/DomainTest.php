@@ -58,7 +58,30 @@ class DomainTest extends TestCase
 
         $this->assertStringContainsString('href="/domain/42/edit"', $html);
         $this->assertStringContainsString('class="dmn-btn-delete"', $html);
-        $this->assertStringNotContainsString('action="/domain/42"', $html);
+        $this->assertStringContainsString('action="/domain/42"', $html);
+        $this->assertStringContainsString('name="_method" value="DELETE"', $html);
+    }
+
+    public function test_destroy_soft_deletes_domain_without_removing_row(): void
+    {
+        Schema::create('domain', function (Blueprint $table) {
+            $table->increments('id_domain');
+            $table->string('nama_domain');
+            $table->string('status');
+            $table->timestamp('deleted_at')->nullable();
+        });
+        DB::table('domain')->insert([
+            'id_domain' => 42,
+            'nama_domain' => 'example.com',
+            'status' => 'Aktif',
+        ]);
+
+        $this->withSession(['user_id' => 1, 'user_name' => 'Administrator'])
+            ->delete('/domain/42')
+            ->assertRedirect(route('domain.domain'));
+
+        $this->assertSame(1, DB::table('domain')->where('id_domain', 42)->count());
+        $this->assertNotNull(DB::table('domain')->where('id_domain', 42)->value('deleted_at'));
     }
 
     public function test_create_domain_form_includes_domain_detail_fields(): void

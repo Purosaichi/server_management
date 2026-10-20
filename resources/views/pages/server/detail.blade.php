@@ -85,7 +85,7 @@
 <div id="tab-overview" class="tab-content active">
     <div class="content-grid">
         
-        /* KOLOM 1 */
+        <!-- /* KOLOM 1 */ -->
         <div class="column">
             <div class="card">
                 <h3 class="card-title">
@@ -138,7 +138,7 @@
                 </div>
             </div>
 
-            /* Riwayat Maintenance */
+            <!-- /* Riwayat Maintenance */ -->
             <div class="card">
                 <div class="maintenance-history-header">
                     <h3 class="card-title">
@@ -203,7 +203,7 @@
             </div>
         </div>
         
-        /* KOLOM 2 */
+        <!-- /* KOLOM 2 */ -->
         <div class="column">
             <div class="card">
                 <h3 class="card-title">
@@ -241,7 +241,7 @@
             </div>
         </div>
         
-        /* KOLOM 3 */
+        <!-- /* KOLOM 3 */ -->
         <div class="column">
             <div class="card" style="position: relative;">
                 <h3 class="card-title">
@@ -361,7 +361,7 @@
     </div>
 </div>
 
-/* MODAL MAINTENANCE */
+<!-- /* MODAL MAINTENANCE */ -->
 <div id="maintenanceModal" class="server-maintenance-modal" style="display: none;">
     <div class="server-maintenance-modal-box">
         <h3 class="server-maintenance-modal-title" id="maintenanceModalTitle">Tambah Jadwal Maintenance</h3>
@@ -418,7 +418,7 @@
     </div>
 </div>
 
-/* MODAL INFORMASI JARINGAN */
+<!-- /* MODAL INFORMASI JARINGAN */ -->
 <div id="networkModal" class="modal-overlay" style="display: none;">
     <div class="modal-box">
         <h3 class="modal-title">Edit Informasi Jaringan</h3>
@@ -499,7 +499,7 @@
     </div>
 </div>
 
-/* MODAL CATATAN */
+<!-- /* MODAL CATATAN */ -->
 <div id="noteModal" class="modal-overlay" style="display: none;">
     <div class="modal-box">
         <h3 class="modal-title" id="noteModalTitle">Tambah Catatan</h3>

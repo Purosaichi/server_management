@@ -8,7 +8,7 @@
 @section('content')
 <link rel="stylesheet" href="{{ asset('css/application-detail.css') }}">
 
-/* Tombol Back */
+<!-- /* Tombol Back */ -->
 <div class="back-wrapper">
     <a href="{{ route('application.index') }}" class="back-btn">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -18,7 +18,7 @@
     </a>
 </div>
 
-/* Header Card */
+<!-- /* Header Card */ -->
 <div class="header-card">
     <div class="header-left">
         <div class="app-icon">
@@ -62,10 +62,10 @@
     </div>
 </div>
 
-/* Baris 1: Informasi Aplikasi, Server, Domain, Licenses */
+<!-- /* Baris 1: Informasi Aplikasi, Server, Domain, Licenses */ -->
 <div class="content-grid-4">
     
-    /* Informasi Aplikasi */
+    <!-- /* Informasi Aplikasi */ -->
     <div class="card">
         <h3 class="card-title">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -82,7 +82,7 @@
         </div>
     </div>
     
-    /* Server & Infrastruktur */
+    <!-- /* Server & Infrastruktur */ -->
     <div class="card">
         <h3 class="card-title">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -99,7 +99,7 @@
         </div>
     </div>
     
-    /* Domain */
+    <!-- /* Domain */ -->
     <div class="card">
         <h3 class="card-title">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -130,7 +130,7 @@
         </div>
     </div>
     
-    /* Licenses */
+    <!-- /* Licenses */ -->
     <div class="card">
         <h3 class="card-title">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -165,10 +165,10 @@
     </div>
 </div>
 
-/* Baris 2: Pengurus, Maintenance, Riwayat */
+<!-- /* Baris 2: Pengurus, Maintenance, Riwayat */ -->
 <div class="content-grid-3">
     
-    /* Pengurus / PIC */
+    <!-- /* Pengurus / PIC */ -->
     <div class="card" style="position: relative;">
         <h3 class="card-title">
             <svg ViewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -201,7 +201,7 @@
         </div>
     </div>
 
-    /* Maintenance */
+    <!-- /* Maintenance */ -->
     <div class="card" style="position: relative;">
         <div class="history-header" style="display: flex; justify-content: space-between; align-items: center; gap: 0.75rem; margin-bottom: 1rem;">
             <span>Maintenance</span>
@@ -267,7 +267,7 @@
         </div>
     </div>
 
-    /* Riwayat Maintenance */
+    <!-- /* Riwayat Maintenance */ -->
     <div class="card">
         <div class="history-header">Riwayat Maintenance</div>
         <table class="history-table">
@@ -299,7 +299,7 @@
     </div>
 </div>
 
-/* MODAL EDIT / TAMBAH PIC */
+<!-- /* MODAL EDIT / TAMBAH PIC */ -->
 <div id="picModal" class="modal-overlay" style="display: none;">
     <div class="modal-box">
         <h3 class="modal-title" id="picModalTitle">Edit PIC Aplikasi</h3>
@@ -373,7 +373,7 @@
     </div>
 </div>
 
-/* MODAL TAMBAH/EDIT MAINTENANCE */
+<!-- /* MODAL TAMBAH/EDIT MAINTENANCE */ -->
 <div id="maintenanceModal" class="modal-overlay" style="display: none;">
     <div class="modal-box">
         <h3 class="modal-title" id="maintenanceModalTitle">Tambah Jadwal Maintenance</h3>
