@@ -7,7 +7,7 @@
 
 <link rel="stylesheet" href="{{ asset('css/licenses-detail.css') }}">
 
-{{-- /* Tombol Back */ --}}
+/* Tombol Back */
 <div class="lic-back-wrap">
     <a href="{{ route('licenses.licenses') }}" class="lic-back">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -17,7 +17,7 @@
     </a>
 </div>
 
-{{-- /* HEADER CARD */ --}}
+/* HEADER CARD */
 <div class="lic-detail-header">
     <div class="lic-detail-logo">
         <div class="lic-detail-logo-image">
@@ -62,10 +62,10 @@
     </div>
 </div>
 
-{{-- /* CARD INFO */ --}}
+/* CARD INFO */
 <div class="lic-info-grid">
 
-    {{-- /* Billing Information */ --}}
+    /* Billing Information */
     <div class="lic-info-card">
         <div class="lic-info-header">
             <h4>Billing Information</h4>
@@ -84,7 +84,7 @@
         </ul>
     </div>
 
-    {{-- /* Licenses Information */ --}}
+    /* Licenses Information */
     <div class="lic-info-card">
         <div class="lic-info-header">
             <h4>Licenses Information</h4>
@@ -101,7 +101,7 @@
         </ul>
     </div>
 
-    {{-- /* Asset Information */ --}}
+    /* Asset Information */
     <div class="lic-info-card">
         <div class="lic-info-header">
             <h4>Asset Information</h4>
@@ -120,7 +120,7 @@
 
 </div>
 
-{{-- /* TABEL RIWAYAT PEMBAYARAN */ --}}
+/* TABEL RIWAYAT PEMBAYARAN */
 <div class="lic-payment-card">
     <table class="lic-payment-table">
         <thead>

@@ -54,9 +54,17 @@
                     </td>
                     <td>{{ $domain['last_activity'] }}</td>
                     <td class="dmn-text-center">
-                        <a href="{{ route('domain.detail', $domain['id']) }}" class="dmn-btn-detail">
-                            Selengkapnya →
-                        </a>
+                        <div class="dmn-actions">
+                            <a href="{{ route('domain.detail', $domain['id']) }}" class="dmn-btn-detail">
+                                Selengkapnya →
+                            </a>
+                            <a href="{{ route('domain.edit', $domain['id']) }}" class="dmn-btn-edit">
+                                Edit
+                            </a>
+                            <button type="button" class="dmn-btn-delete">
+                                Hapus
+                            </button>
+                        </div>
                     </td>
                 </tr>
                 @endforeach

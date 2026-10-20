@@ -12,7 +12,7 @@
     <h2 class="title-header">Application</h2>
 </div>
 
-{{-- /* Notifikasi */ --}}
+/* Notifikasi */
 @if(session('success'))
 <div class="app-alert app-alert-success">
     {{ session('success') }}
@@ -91,7 +91,7 @@
     </div>
 </div>
 
-{{-- /* MODAL KONFIRMASI HAPUS */ --}}
+/* MODAL KONFIRMASI HAPUS */
 <div id="deleteModal" class="app-modal-overlay" style="display: none;">
     <div class="app-modal">
         <div class="app-modal-icon">⚠️</div>

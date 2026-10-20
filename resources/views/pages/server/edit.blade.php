@@ -29,7 +29,7 @@
         @csrf
         @method('PUT')
 
-        {{-- /* INFORMASI DASAR */ --}}
+        /* INFORMASI DASAR */
         <h3 class="srv-form-section">Informasi Dasar</h3>
         <div class="srv-form-grid">
             <div class="srv-form-group">
@@ -93,7 +93,7 @@
             </div>
         </div>
 
-        {{-- /* SPESIFIKASI HARDWARE */ --}}
+        /* SPESIFIKASI HARDWARE */
         <h3 class="srv-form-section">Spesifikasi Hardware</h3>
         <div class="srv-form-grid">
             <div class="srv-form-group">
@@ -139,7 +139,7 @@
             </div>
         </div>
 
-        {{-- /* STATUS MONITORING */ --}}
+        /* STATUS MONITORING */
         <h3 class="srv-form-section">Status Monitoring</h3>
         <div class="srv-form-grid">
             <div class="srv-form-group">
@@ -169,7 +169,7 @@
             </div>
         </div>
 
-        {{-- /* TOMBOL AKSI */ --}}
+        /* TOMBOL AKSI */
         <div class="srv-form-actions">
             <a href="{{ route('server.index') }}" class="srv-btn-cancel">Batal</a>
             <button type="submit" class="srv-btn-submit">Update Server</button>

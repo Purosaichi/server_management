@@ -40,6 +40,27 @@ class DomainTest extends TestCase
         $this->assertStringNotContainsString('/domain/1', $html);
     }
 
+    public function test_domain_list_has_functional_edit_link_and_inert_delete_button(): void
+    {
+        $html = view('pages.domain.domain', [
+            'domains' => [
+                [
+                    'id' => 42,
+                    'domain' => 'example.com',
+                    'application' => 'SIMA',
+                    'status' => 'Aktif',
+                    'pic' => 'Budi',
+                    'ssl' => 'Valid',
+                    'last_activity' => '12 Sep 2026',
+                ],
+            ],
+        ])->render();
+
+        $this->assertStringContainsString('href="/domain/42/edit"', $html);
+        $this->assertStringContainsString('class="dmn-btn-delete"', $html);
+        $this->assertStringNotContainsString('action="/domain/42"', $html);
+    }
+
     public function test_create_domain_form_includes_domain_detail_fields(): void
     {
         $html = view('pages.domain.create', [
