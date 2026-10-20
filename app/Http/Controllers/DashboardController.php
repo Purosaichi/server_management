@@ -14,7 +14,7 @@ class DashboardController extends Controller
     {
          $stats = DashboardStat::first();
 
-        //card server
+        /*card server */
         $servers = ServerStatus::orderBy('id_server')
             ->limit(3)
             ->get()
@@ -32,7 +32,7 @@ class DashboardController extends Controller
             })
             ->toArray();
 
-        //card app
+        /*card app */
         $maintenance = \DB::table('vw_maintenance')
             ->where('target_type', 'Application')
             ->orderBy('jadwal_tanggal')
@@ -57,7 +57,7 @@ class DashboardController extends Controller
             })
             ->toArray();
 
-        // ===== REMINDER KADALUARSA (yang < 60 hari) =====
+        /* REMINDER KADALUARSA (yang < 60 hari) */
         $reminders = ReminderKadaluarsa::where('sisa_hari', '<=', 60)
             ->orderBy('sisa_hari')
             ->limit(3)

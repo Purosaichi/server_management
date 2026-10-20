@@ -21,13 +21,13 @@ class ServerNoteController extends Controller
 
         try {
             DB::transaction(function () use ($request) {
-                // Soft delete catatan lama (biar cuma 1 yang aktif)
+                /* Soft delete catatan lama (biar cuma 1 yang aktif) */
                 DB::table('server_notes')
                     ->where('id_server', $request->id_server)
                     ->whereNull('deleted_at')
                     ->update(['deleted_at' => now()]);
 
-                // Insert catatan baru
+                /* Insert catatan baru */
                 DB::table('server_notes')->insert([
                     'id_server'   => $request->id_server,
                     'catatan'     => $request->catatan,

@@ -13,7 +13,7 @@
     <h2 class="title-header">Dashboard</h2>
 </div>
 
-{{-- ===== KARTU STATISTIK ===== --}}
+{{-- /* KARTU STATISTIK */ --}}
 <div class="grid-stats-4">
     <div class="stat-card-new">
         <p class="stat-label">Total Server</p>
@@ -46,7 +46,7 @@
     </div>
 </div>
 
-{{-- ===== TABEL SERVER ===== --}}
+{{-- /* TABEL SERVER */ --}}
 <div class="table-container mb-8">
     <div class="table-header">
         <h3 class="table-title">Server</h3>
@@ -93,7 +93,7 @@
     </div>
 </div>
 
-{{-- ===== TABEL APLIKASI ===== --}}
+{{-- /* TABEL APLIKASI */ --}}
 <div class="table-container mb-8">
     <div class="table-header">
         <h3 class="table-title">Application</h3>
@@ -138,7 +138,7 @@
     </div>
 </div>
 
-{{-- ===== REMINDER KADALUARSA ===== --}}
+{{-- /* REMINDER KADALUARSA */ --}}
 @if($reminders->count() > 0)
 <div class="table-container">
     <div class="table-header">

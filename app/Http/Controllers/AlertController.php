@@ -9,7 +9,7 @@ class AlertController extends Controller
 {
     public function index()
     {
-        // ===== STATISTIK DARI VIEW =====
+        /* STATISTIK DARI VIEW */
         $statsRaw = DB::table('vw_dashboard_stats')->first();
 
         $stats = [
@@ -19,7 +19,7 @@ class AlertController extends Controller
             'info'     => DB::table('alert')->where('level', 'Info')->where('status', 'Aktif')->count(),
         ];
 
-        // ===== AMBIL DATA ALERT DARI VIEW =====
+        /* AMBIL DATA ALERT DARI VIEW */
         $allAlerts = DB::table('vw_alert')
             ->orderBy('waktu_mulai', 'desc')
             ->get()
@@ -40,7 +40,7 @@ class AlertController extends Controller
                 ];
             });
 
-        // ===== PISAHKAN PER KATEGORI =====
+        /* PISAHKAN PER KATEGORI */
         $serverAlerts      = $allAlerts->where('type', 'Server')->values()->toArray();
         $applicationAlerts = $allAlerts->where('type', 'Application')->values()->toArray();
         $domainAlerts      = $allAlerts->where('type', 'Domain')->values()->toArray();

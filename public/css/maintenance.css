@@ -315,7 +315,7 @@
     color: #065f46;
 }
 
-/* ===== Alert ===== */
+/* Alert */
 .mt-alert {
     padding: 0.75rem 1rem;
     border-radius: 0.5rem;
@@ -335,7 +335,7 @@
     border: 1px solid #fecaca;
 }
 
-/* ===== Header Kanan ===== */
+/* Header Kanan */
 .mt-header-right {
     display: flex;
     align-items: center;
@@ -343,7 +343,7 @@
     flex-wrap: wrap;
 }
 
-/* ===== Tombol Clear ===== */
+/* Tombol Clear */
 .mt-btn-clear {
     display: inline-flex;
     align-items: center;
@@ -369,7 +369,7 @@
     height: 0.875rem;
 }
 
-/* ===== Modal Overlay ===== */
+/* Modal Overlay */
 .mt-modal-overlay {
     position: fixed;
     top: 0;

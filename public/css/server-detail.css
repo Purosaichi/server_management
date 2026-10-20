@@ -690,7 +690,7 @@
     margin-top: 3rem;
 }
 
-/* ===== Tombol Tambah Catatan ===== */
+/* Tombol Tambah Catatan */
 .add-note-btn {
     position: absolute;
     top: 1.25rem;
@@ -718,7 +718,7 @@
     height: 1rem;
 }
 
-/* ===== Note Clickable ===== */
+/* Note Clickable */
 .note-clickable {
     cursor: pointer;
     transition: all 0.2s;
@@ -729,7 +729,7 @@
     border-color: #fde047;
 }
 
-/* ===== Note Empty ===== */
+/* Note Empty */
 .note-empty {
     padding: 1rem;
     text-align: center;
@@ -744,7 +744,7 @@
     color: #2563eb;
 }
 
-/* ===== Modal Overlay ===== */
+/* Modal Overlay */
 .modal-overlay {
     position: fixed;
     top: 0;
@@ -851,7 +851,7 @@
     background-color: #1d4ed8;
 }
 
-/* ===== Tombol Edit Network ===== */
+/* Tombol Edit Network */
 .edit-network-btn {
     position: absolute;
     top: 1.25rem;

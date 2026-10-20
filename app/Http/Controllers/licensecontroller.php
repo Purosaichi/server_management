@@ -56,7 +56,7 @@ class LicenseController extends Controller
             'expired_type' => $this->getExpiredType($sisaHari),
             'logo'         => $this->resolveLogo($lic->logo),
 
-            // Data detail
+            /* Data detail */
             'start_date'     => $lic->tanggal_mulai
                                 ? Carbon::parse($lic->tanggal_mulai)->format('d F Y')
                                 : '-',

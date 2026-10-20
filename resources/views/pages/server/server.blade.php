@@ -12,7 +12,7 @@
     <h2 class="title-header">Server</h2>
 </div>
 
-{{-- Notifikasi --}}
+{{-- /* Notifikasi */ --}}
 @if(session('success'))
 <div class="srv-alert srv-alert-success">
     {{ session('success') }}
@@ -86,7 +86,7 @@
     </div>
 </div>
 
-{{-- ===== MODAL KONFIRMASI HAPUS ===== --}}
+{{-- /* MODAL KONFIRMASI HAPUS */ --}}
 <div id="deleteModal" class="srv-modal-overlay" style="display: none;">
     <div class="srv-modal">
         <div class="srv-modal-icon">⚠️</div>
@@ -124,14 +124,14 @@
         document.getElementById('deleteModal').style.display = 'none';
     }
 
-    // Tutup modal kalo klik di luar
+    /* Tutup modal kalo klik di luar */
     document.getElementById('deleteModal').addEventListener('click', function(e) {
         if (e.target === this) {
             closeDeleteModal();
         }
     });
 
-    // Tutup modal kalo tekan ESC
+    /* Tutup modal kalo tekan ESC */
     document.addEventListener('keydown', function(e) {
         if (e.key === 'Escape') {
             closeDeleteModal();

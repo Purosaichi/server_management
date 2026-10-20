@@ -179,7 +179,7 @@
     font-size: 0.875rem;
     color: #000000;
 }
-/* ===== Tombol Edit ===== */
+/* Tombol Edit */
 .app-btn-edit {
     display: inline-block;
     padding: 0.375rem 0.75rem;
@@ -197,7 +197,7 @@
     background-color: #bfdbfe;
 }
 
-/* ===== Tombol Hapus ===== */
+/* Tombol Hapus */
 .app-btn-delete {
     display: inline-block;
     padding: 0.375rem 0.75rem;
@@ -215,7 +215,7 @@
     background-color: #fecaca;
 }
 
-/* ===== Tombol Tambah ===== */
+/* Tombol Tambah */
 .app-btn-add {
     display: inline-flex;
     align-items: center;
@@ -234,7 +234,7 @@
     background-color: #1d4ed8;
 }
 
-/* ===== Alert ===== */
+/* Alert */
 .app-alert {
     padding: 0.75rem 1rem;
     border-radius: 0.5rem;
@@ -254,7 +254,7 @@
     border: 1px solid #fecaca;
 }
 
-/* ===== Tombol Back ===== */
+/* Tombol Back */
 .app-back-wrapper {
     margin-bottom: 1rem;
 }
@@ -279,7 +279,7 @@
     border-color: #d1d5db;
 }
 
-/* ===== Form Container ===== */
+/* Form Container */
 .app-form-container {
     background: white;
     border-radius: 0.75rem;
@@ -405,7 +405,7 @@
     background-color: #1d4ed8;
 }
 
-/* ===== Modal Overlay ===== */
+/* Modal Overlay */
 .app-modal-overlay {
     position: fixed;
     top: 0;
@@ -485,7 +485,7 @@
     background-color: #b91c1c;
 }
 
-/* ===== Responsive ===== */
+/* Responsive */
 @media (max-width: 768px) {
     .app-form-grid {
         grid-template-columns: 1fr;

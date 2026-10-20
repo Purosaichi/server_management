@@ -146,12 +146,12 @@ class ServerController extends Controller
     /*form edit server*/
     public function edit(int $id)
     {
-        // Ambil data server dari view + tabel server
+        /* Ambil data server dari view + tabel server */
         $serverView = ServerStatus::where('id_server', $id)->first();
 
         abort_unless($serverView, 404);
 
-        // Ambil data teknis dari tabel server + aset
+        /* Ambil data teknis dari tabel server + aset */
         $serverDetail = DB::table('server')
             ->leftJoin('aset', 'aset.id_aset', '=', 'server.id_aset')
             ->where('server.id_server', $id)
@@ -162,13 +162,13 @@ class ServerController extends Controller
             )
             ->first();
 
-        // Ambil data monitoring terbaru
+        /* Ambil data monitoring terbaru */
         $monitoring = DB::table('server_monitoring')
             ->where('id_server', $id)
             ->orderBy('dicatat_pada', 'desc')
             ->first();
 
-        // Gabungin data buat view
+        /* Gabungin data buat view */
         $server = (object) [
             'id_server' => $serverDetail->id_server,
             'nama_server' => $serverDetail->nama_server,
@@ -221,11 +221,11 @@ class ServerController extends Controller
         try {
             DB::beginTransaction();
 
-            // Ambil id_aset
+            /* Ambil id_aset */
             $server = DB::table('server')->where('id_server', $id)->first();
             abort_unless($server, 404);
 
-            // Update tabel aset
+            /* Update tabel aset */
             DB::table('aset')
                 ->where('id_aset', $server->id_aset)
                 ->update([
@@ -233,7 +233,7 @@ class ServerController extends Controller
                     'status_aset' => $request->status_aset,
                 ]);
 
-            // Update tabel server
+            /* Update tabel server */
             DB::table('server')
                 ->where('id_server', $id)
                 ->update([
@@ -252,7 +252,7 @@ class ServerController extends Controller
                     'lokasi_rack' => $request->lokasi_rack,
                 ]);
 
-            // Insert monitoring baru (biar status up-to-date)
+            /* Insert monitoring baru (biar status up-to-date) */
             DB::table('server_monitoring')->insert([
                 'id_server' => $id,
                 'status' => $request->status_monitoring,
@@ -276,7 +276,7 @@ class ServerController extends Controller
         }
     }
 
-    //*soft delete*/
+    /*soft delete */
     public function destroy(int $id)
     {
         try {
@@ -298,7 +298,7 @@ class ServerController extends Controller
 {
     $isOffline = $server['status'] === 'Offline';
 
-    // Ambil data jaringan dari database
+    /* Ambil data jaringan dari database */
     $networkData = DB::table('vw_server_status')
         ->where('id_server', $server['id'])
         ->first();
@@ -361,7 +361,7 @@ class ServerController extends Controller
         'ram_spec' => $isOffline ? '-' : '1024 GB DDR5 ECC RDIMM',
         'storage_spec' => $isOffline ? '-' : '10 TB NVMe Enterprise U.2/U.3',
 
-        // ===== DATA JARINGAN (DARI DATABASE) =====
+        /* DATA JARINGAN (DARI DATABASE) */
         'subnet_mask' => $networkData->subnet_mask ?? '-',
         'gateway' => $networkData->gateway ?? '-',
         'dns_server' => $networkData->dns_server ?? '-',

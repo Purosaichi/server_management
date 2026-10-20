@@ -9,7 +9,7 @@
 @section('content')
 <link rel="stylesheet" href="{{ asset('css/domain-detail.css') }}">
 
-{{-- Tombol Back --}}
+{{-- /* Tombol Back */ --}}
 <div class="back-wrapper">
     <a href="{{ route('domain.domain') }}" class="back-btn">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -19,10 +19,10 @@
     </a>
 </div>
 
-{{-- Header Row --}}
+{{-- /* Header Row */ --}}
 <div class="header-row">
     
-    {{-- Header Card --}}
+    {{-- /* Header Card */ --}}
     <div class="header-card">
         <div class="domain-icon">
             <svg viewBox="0 0 50 50" fill="none" stroke="currentColor" stroke-width="2">
@@ -63,7 +63,7 @@
         </div>
     </div>
     
-    {{-- PIC Card --}}
+    {{-- /* PIC Card */ --}}
     <div class="pic-card">
         <h3 class="pic-card-title">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -81,10 +81,10 @@
     </div>
 </div>
 
-{{-- Content Grid --}}
+{{-- /* Content Grid */ --}}
 <div class="content-grid-3">
     
-    {{-- SSL Certificate --}}
+    {{-- /* SSL Certificate */ --}}
     <div class="card">
         <div class="card-header">
             <h3 class="card-title">
@@ -110,7 +110,7 @@
         </div>
     </div>
     
-    {{-- Billing Information --}}
+    {{-- /* Billing Information */ --}}
     <div class="card">
         <div class="card-header">
             <h3 class="card-title">
@@ -133,7 +133,7 @@
         </div>
     </div>
     
-    {{-- Upcoming Reminders --}}
+    {{-- /* Upcoming Reminders */ --}}
     <div class="card">
         <div class="card-header">
             <h3 class="card-title">
@@ -169,7 +169,7 @@
     </div>
 </div>
 
-{{-- Renewal / Activity History --}}
+{{-- /* Renewal / Activity History */ --}}
 <div class="history-card">
     <h3 class="history-header">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">

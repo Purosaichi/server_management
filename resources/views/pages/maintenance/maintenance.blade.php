@@ -11,7 +11,7 @@
     <h2 class="title-header">Maintenance</h2>
 </div>
 
-{{-- Notifikasi --}}
+{{-- /* Notifikasi */ --}}
 @if(session('success'))
 <div class="mt-alert mt-alert-success">
     {{ session('success') }}
@@ -204,7 +204,7 @@
     </div>
 </div>
 
-{{-- ===== MODAL KONFIRMASI CLEAR ===== --}}
+{{-- /* MODAL KONFIRMASI CLEAR */ --}}
 <div id="clearModal" class="mt-modal-overlay" style="display: none;">
     <div class="mt-modal-box">
         <div class="mt-modal-icon">🗑️</div>
@@ -232,7 +232,7 @@
 </footer>
 
 <script>
-    // ===== FILTER =====
+    /* FILTER */
     document.addEventListener('DOMContentLoaded', function() {
         const filterButtons = document.querySelectorAll('.mt-filter-btn');
         const tableRows = document.querySelectorAll('#maintenance-table-body tr');
@@ -264,7 +264,7 @@
         });
     });
 
-    // ===== MODAL CLEAR =====
+    /* MODAL CLEAR */
     function openClearModal() {
         document.getElementById('clearModal').style.display = 'flex';
     }

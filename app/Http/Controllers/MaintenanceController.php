@@ -13,7 +13,7 @@ class MaintenanceController extends Controller
      */
     public function index()
     {
-        // ===== STATISTIK (FILTER SOFT DELETE) =====
+        /*statistik soft delete*/
         $total      = DB::table('maintenance')->whereNull('deleted_at')->count();
         $completed  = DB::table('maintenance')->whereNull('deleted_at')->where('status', 'Completed')->count();
         $inProgress = DB::table('maintenance')->whereNull('deleted_at')->where('status', 'In Progress')->count();
@@ -27,7 +27,7 @@ class MaintenanceController extends Controller
             'period'      => Carbon::now()->translatedFormat('F Y'),
         ];
 
-        // ===== AMBIL DATA DARI VIEW =====
+        /*ambil data dari view*/
         $allMaintenances = DB::table('vw_maintenance')
             ->orderBy('jadwal_tanggal', 'asc')
             ->get()
@@ -54,12 +54,12 @@ class MaintenanceController extends Controller
                 ];
             });
 
-        // ===== PISAHKAN PER KATEGORI =====
+        /* PISAHKAN PER KATEGORI */
         $ServerMaintenance      = $allMaintenances->where('kategori', 'Server')->values()->toArray();
         $ApplicationMaintenance = $allMaintenances->where('kategori', 'Application')->values()->toArray();
         $DomainMaintenance      = $allMaintenances->where('kategori', 'Domain')->values()->toArray();
 
-        // ===== UNTUK TABEL UTAMA =====
+        /* UNTUK TABEL UTAMA */
         $maintenances = $allMaintenances->toArray();
 
         return view('pages.maintenance.maintenance', compact(

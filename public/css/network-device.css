@@ -1,6 +1,6 @@
-/* ===== public/css/network-device.css ===== */
+/* public/css/network-device.css */
 
-/* ===== Header ===== */
+/* Header */
 .header {
     background: linear-gradient(to right, #0a4bff, #7398ff, #0a4bff);
     padding: 1rem 1.5rem;
@@ -14,7 +14,7 @@
     margin-bottom: 1rem;
 }
 
-/* ===== Tab Navigasi ===== */
+/* Tab Navigasi */
 .nd-tabs {
     display: flex;
     gap: 2rem;
@@ -43,7 +43,7 @@
     color: #2563eb;
 }
 
-/* ===== Container Tabel ===== */
+/* Container Tabel */
 .nd-table-container {
     background: white;
     border-radius: 0.75rem;
@@ -116,7 +116,7 @@
     color: #111827;
 }
 
-/* ===== Badge Jenis ===== */
+/* Badge Jenis */
 .nd-badge {
     padding: 0.25rem 0.625rem;
     font-size: 0.75rem;
@@ -140,7 +140,7 @@
     color: #9a3412;
 }
 
-/* ===== Status Badge ===== */
+/* Status Badge */
 .nd-status {
     padding: 0.25rem 0.625rem;
     font-size: 0.75rem;
@@ -159,7 +159,7 @@
     color: #991b1b;
 }
 
-/* ===== Tombol Detail ===== */
+/* Tombol Detail */
 .nd-btn-detail {
     color: #2563eb;
     font-weight: 500;
@@ -175,7 +175,7 @@
     text-align: center;
 }
 
-/* ===== Tombol Back ===== */
+/* Tombol Back */
 .nd-back-wrapper {
     margin-bottom: 1rem;
 }
@@ -200,7 +200,7 @@
     border-color: #d1d5db;
 }
 
-/* ===== Detail Card ===== */
+/* Detail Card */
 .nd-detail-card {
     background: white;
     border-radius: 0.75rem;

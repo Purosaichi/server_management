@@ -110,8 +110,8 @@ return [
             'charset' => 'utf8',
             'prefix' => '',
             'prefix_indexes' => true,
-            'encrypt' => env('DB_ENCRYPT', 'no'),           // tambahin ini
-            'trust_server_certificate' => env('DB_TRUST_SERVER_CERTIFICATE', true),  // tambahin ini
+            'encrypt' => env('DB_ENCRYPT', 'no'),           /* tambahin ini */
+            'trust_server_certificate' => env('DB_TRUST_SERVER_CERTIFICATE', true),  /* tambahin ini */
         ],
 
     ],

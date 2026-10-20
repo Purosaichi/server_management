@@ -12,7 +12,7 @@
     <h2 class="title-header">Network Device</h2>
 </div>
 
-{{-- Tab Navigasi --}}
+{{-- /* Tab Navigasi */ --}}
 <div class="nd-tabs">
     <a href="{{ route('network-device.router') }}" 
        class="nd-tab {{ $activeTab === 'router' ? 'active' : '' }}">
@@ -24,7 +24,7 @@
     </a>
 </div>
 
-{{-- Konten Tab --}}
+{{-- /* Konten Tab */ --}}
 @if($activeTab === 'router')
     @include('pages.network-device.router', ['routers' => $routers])
 @elseif($activeTab === 'switch')

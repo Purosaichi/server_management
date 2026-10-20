@@ -42,7 +42,7 @@ class ApplicationController extends Controller
 
         abort_unless($app, 404);
 
-        // Ambil maintenance terakhir & berikutnya
+        /* Ambil maintenance terakhir & berikutnya */
         $lastMaintenance = DB::table('vw_maintenance')
             ->where('target_type', 'Application')
             ->where('nama_target', $app->nama_aplikasi)
@@ -82,13 +82,13 @@ class ApplicationController extends Controller
                 ? '(' . \Carbon\Carbon::parse($app->tanggal_mulai_operasi)->diffForHumans(null, true) . ')'
                 : '',
 
-            // Server & Infrastruktur
+            /* Server & Infrastruktur */
             'server' => $app->nama_server ?? '-',
             'ip_address' => $app->alamat_ip_produksi ?? '-',
             'os' => $app->sistem_operasi ?? '-',
             'database' => $app->database_digunakan ?? '-',
 
-            // Domain
+            /* Domain */
             'domain' => $app->nama_domain ?? '-',
             'ssl_certificate' => $app->status_ssl ?? 'Tidak Ada',
             'ssl_expired' => $app->ssl_kadaluarsa 
@@ -96,7 +96,7 @@ class ApplicationController extends Controller
                 : '-',
             'domain_status' => $app->status_domain ?? 'Tidak Aktif',
 
-            // Licenses (LENGKAP)
+            /* Licenses (LENGKAP) */
             'license_name' => $app->license_name ?? '-',
             'license_provider' => $app->license_provider ?? '-',
             'license_count' => $app->license_count ? $app->license_count . ' License' : '-',
@@ -108,14 +108,14 @@ class ApplicationController extends Controller
                 : '',
             'license_status' => $app->license_status ?? '-',
 
-            // Pengurus / PIC
+            /* Pengurus / PIC */
             'pic_name' => $app->nama_pic ?? '-',
             'pic_jabatan' => $app->pic_jabatan ?? '-',
             'pic_email' => $app->pic_email ?? '-',
             'pic_telepon' => $app->pic_telepon ?? '-',
             'pic_divisi' => $app->pic_divisi ?? '-', 
 
-            // Maintenance Terakhir
+            /* Maintenance Terakhir */
             'last_maintenance' => $lastMaintenance ? [
                 'id' => $lastMaintenance->id_maintenance,
                 'tanggal' => \Carbon\Carbon::parse($lastMaintenance->jadwal_tanggal)->format('d F Y'),
@@ -125,7 +125,7 @@ class ApplicationController extends Controller
                 'status' => $lastMaintenance->status,
             ] : null,
 
-            // Maintenance Berikutnya
+            /* Maintenance Berikutnya */
             'next_maintenance' => $nextMaintenance ? [
                 'id' => $nextMaintenance->id_maintenance,
                 'tanggal' => \Carbon\Carbon::parse($nextMaintenance->jadwal_tanggal)->format('d F Y'),
@@ -138,7 +138,7 @@ class ApplicationController extends Controller
 
             'pics' => DB::table('pic')->orderBy('nama_pic')->pluck('nama_pic', 'id_pic'),
 
-            // Riwayat Maintenance
+            /* Riwayat Maintenance */
             'maintenance_history' => $maintenanceHistory->map(function ($m) {
                 return [
                     'id' => $m->id_maintenance,
@@ -504,7 +504,7 @@ public function storePic(Request $request)
 
     try {
         DB::transaction(function () use ($request) {
-            // Insert PIC baru ke tabel pic
+            /* Insert PIC baru ke tabel pic */
             $idPic = DB::table('pic')->insertGetId([
                 'nama_pic' => $request->nama_pic,
                 'jabatan' => $request->jabatan,
@@ -513,7 +513,7 @@ public function storePic(Request $request)
                 'telepon' => $request->telepon,
             ]);
 
-            // Update aplikasi pake PIC baru
+            /* Update aplikasi pake PIC baru */
             DB::table('aplikasi')
                 ->where('id_aplikasi', $request->id_aplikasi)
                 ->update([
