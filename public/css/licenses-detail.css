@@ -189,6 +189,19 @@
     padding: 1rem;
 }
 
+.lic-info-card-editable {
+    cursor: pointer;
+}
+
+.lic-info-card-editable:hover {
+    border-color: #9ca3af;
+}
+
+.lic-info-card-editable:focus-visible {
+    outline: 2px solid #2563eb;
+    outline-offset: 2px;
+}
+
 .lic-info-header {
     display: flex;
     align-items: flex-start;

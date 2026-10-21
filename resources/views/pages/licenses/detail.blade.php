@@ -19,7 +19,6 @@
         </svg>
         Back
     </a>
-    <a href="{{ route('licenses.edit', $license['id']) }}" class="lic-detail-edit">Edit Lisensi</a>
 </div>
 
 <!-- /* HEADER CARD */ -->
@@ -90,7 +89,10 @@
     </div>
 
     <!-- /* Licenses Information */ -->
-    <div class="lic-info-card">
+    <div id="licenseInfoCard" class="lic-info-card lic-info-card-editable" role="link" tabindex="0"
+         aria-label="Edit informasi lisensi dengan double click"
+         data-edit-url="{{ route('licenses.edit', $license['id']) }}"
+         title="Double click untuk edit lisensi">
         <div class="lic-info-header">
             <h4>Licenses Information</h4>
             <span class="lic-info-status">
@@ -156,4 +158,14 @@
 <footer class="footer">
     © 2026 Direktorat Jenderal Guru, Tenaga Kependidikan dan Pendidikan Guru - Kemendikdasmen
 </footer>
+
+<script>
+    const licenseInfoCard = document.getElementById('licenseInfoCard');
+    const openLicenseEdit = () => window.location.assign(licenseInfoCard.dataset.editUrl);
+
+    licenseInfoCard.addEventListener('dblclick', openLicenseEdit);
+    licenseInfoCard.addEventListener('keydown', function (event) {
+        if (event.key === 'Enter') openLicenseEdit();
+    });
+</script>
 @endsection
