@@ -12,7 +12,7 @@
     <div class="nd-back-wrapper">
         <a href="{{ route('network-device.router') }}" class="nd-back-btn">
             <span aria-hidden="true">←</span>
-            Kembali ke daftar router
+            Back
         </a>
     </div>
 
