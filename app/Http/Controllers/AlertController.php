@@ -9,17 +9,7 @@ class AlertController extends Controller
 {
     public function index()
     {
-        /* STATISTIK DARI VIEW */
-        $statsRaw = DB::table('vw_dashboard_stats')->first();
-
-        $stats = [
-            'total'    => $statsRaw->alert_aktif ?? 0,
-            'critical' => $statsRaw->alert_critical ?? 0,
-            'warning'  => DB::table('alert')->where('level', 'Warning')->where('status', 'Aktif')->count(),
-            'info'     => DB::table('alert')->where('level', 'Info')->where('status', 'Aktif')->count(),
-        ];
-
-        /* AMBIL DATA ALERT DARI VIEW */
+        /* Ambil data alert dari view */
         $allAlerts = DB::table('vw_alert')
             ->orderBy('waktu_mulai', 'desc')
             ->get()
@@ -40,7 +30,14 @@ class AlertController extends Controller
                 ];
             });
 
-        /* PISAHKAN PER KATEGORI */
+        $stats = [
+            'total'    => $allAlerts->count(),
+            'critical' => $allAlerts->filter(fn ($alert) => strtolower((string) $alert['level']) === 'critical')->count(),
+            'warning'  => $allAlerts->filter(fn ($alert) => strtolower((string) $alert['level']) === 'warning')->count(),
+            'info'     => $allAlerts->filter(fn ($alert) => strtolower((string) $alert['level']) === 'info')->count(),
+        ];
+
+        /* Pisahkan alert berdasarkan kategori */
         $serverAlerts      = $allAlerts->where('type', 'Server')->values()->toArray();
         $applicationAlerts = $allAlerts->where('type', 'Application')->values()->toArray();
         $domainAlerts      = $allAlerts->where('type', 'Domain')->values()->toArray();
