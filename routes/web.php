@@ -64,6 +64,10 @@ Route::middleware(['auth.session'])->group(function () {
     Route::delete('/maintenance/clear', [MaintenanceController::class, 'clear'])->name('maintenance.clear');
     Route::put('/maintenance/{id}', [MaintenanceController::class, 'update'])->name('maintenance.update');
     Route::get('/alerts', [AlertController::class, 'index'])->name('alerts.alerts');
+    Route::post('/alerts', [AlertController::class, 'store'])->name('alerts.store');
+    Route::put('/alerts/{id}', [AlertController::class, 'update'])->name('alerts.update');
+    Route::delete('/alerts/{id}', [AlertController::class, 'destroy'])->name('alerts.destroy');
+    Route::delete('/alerts', [AlertController::class, 'clear'])->name('alerts.clear');
 
     Route::prefix('network-device')->name('network-device.')->group(function () {
         Route::get('/router', [NetworkDeviceController::class, 'router'])->name('router');
