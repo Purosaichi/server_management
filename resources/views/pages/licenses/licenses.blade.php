@@ -39,7 +39,7 @@
             </thead>
             <tbody>
                 @forelse($licenses as $lic)
-                <tr>
+                <tr class="lic-row" data-detail-url="{{ route('licenses.detail', ['id' => $lic['id']]) }}">
                     <td>
                         <div class="lic-name-cell">
                             @if($lic['logo'])
@@ -71,7 +71,6 @@
                     </td>
                     <td>
                         <div class="lic-row-actions">
-                            <a href="{{ route('licenses.detail', ['id' => $lic['id']]) }}" class="lic-btn-detail">Detail</a>
                             <a href="{{ route('licenses.edit', ['id' => $lic['id']]) }}" class="lic-btn-edit">Edit</a>
                             <button type="button" class="lic-btn-delete"
                                 data-delete-url="{{ route('licenses.destroy', ['id' => $lic['id']]) }}"
@@ -141,6 +140,13 @@
         if (event.key === 'Escape' && licenseDeleteModal.style.display === 'flex') {
             closeLicenseDeleteModal();
         }
+    });
+
+    document.querySelector('.lic-table-wrapper tbody').addEventListener('dblclick', function (event) {
+        if (event.target.closest('.lic-row-actions')) return;
+
+        const row = event.target.closest('tr[data-detail-url]');
+        if (row) window.location.assign(row.dataset.detailUrl);
     });
 </script>
 @endsection
