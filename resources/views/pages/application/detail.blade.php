@@ -22,11 +22,13 @@
 <div class="header-card">
     <div class="header-left">
         <div class="app-icon">
-            <svg viewBox="0 0 60 60" fill="none">
-                <circle cx="30" cy="20" r="8" fill="white"/>
-                <path d="M15 45c0-8 7-14 15-14s15 6 15 14" stroke="white" stroke-width="3" fill="none"/>
-                <circle cx="45" cy="18" r="6" fill="white" opacity="0.7"/>
-                <path d="M38 40c0-5 4-9 9-9s9 4 9 9" stroke="white" stroke-width="2.5" fill="none" opacity="0.7"/>
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <rect x="3" y="4" width="18" height="16" rx="2" stroke="currentColor" stroke-width="1.7"/>
+                <path d="M3 9h18" stroke="currentColor" stroke-width="1.7"/>
+                <circle cx="6.5" cy="6.5" r=".75" fill="currentColor"/>
+                <circle cx="9.5" cy="6.5" r=".75" fill="currentColor"/>
+                <rect x="6.5" y="12" width="4" height="5" rx=".75" fill="currentColor" fill-opacity=".9"/>
+                <path d="M13 12h4.5M13 14.5h4.5M13 17h3" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
             </svg>
         </div>
         
