@@ -244,3 +244,188 @@
     color: #111827;
     line-height: 1.5;
 }
+
+.nd-router-detail {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.nd-router-detail .nd-back-wrapper {
+    margin-bottom: 1.25rem;
+}
+
+.nd-router-detail .nd-back-btn {
+    gap: 0.625rem;
+    color: #475569;
+}
+
+.nd-router-detail .nd-back-btn span {
+    color: #2563eb;
+    font-size: 1.1rem;
+    line-height: 1;
+}
+
+.nd-router-hero {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    margin-bottom: 1.25rem;
+    padding: 1.75rem;
+    border: 1px solid #dbeafe;
+    border-radius: 0.25rem;
+    background: linear-gradient(115deg, #fafdff 0%, #ffffff 75%);
+    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.05);
+}
+
+.nd-router-hero-icon {
+    display: grid;
+    width: 3.75rem;
+    height: 3.75rem;
+    flex: 0 0 auto;
+    place-items: center;
+    border-radius: 1rem;
+    background: #2563eb;
+    color: #fff;
+    box-shadow: 0 8px 16px rgba(37, 99, 235, 0.2);
+}
+
+.nd-router-hero-icon svg {
+    width: 2rem;
+    height: 2rem;
+}
+
+.nd-router-hero-content {
+    min-width: 0;
+    flex: 1;
+}
+
+.nd-router-eyebrow {
+    color: #2563eb;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.nd-router-hero-content h2 {
+    margin: 0.25rem 0;
+    color: #0f172a;
+    font-size: 1.5rem;
+    font-weight: 700;
+    line-height: 1.3;
+}
+
+.nd-router-hero-content p,
+.nd-router-section-heading p {
+    margin: 0;
+    color: #64748b;
+    font-size: 0.875rem;
+    line-height: 1.5;
+}
+
+.nd-router-type {
+    padding: 0.45rem 0.8rem;
+    border: 1px solid #bfdbfe;
+    border-radius: 0.30rem;
+    background: #fff;
+    color: #1d4ed8;
+    font-size: 0.8rem;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.nd-router-info-card {
+    padding: 1.5rem;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.25rem;
+    background: #fff;
+    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.04);
+}
+
+.nd-router-section-heading {
+    margin-bottom: 1.25rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.nd-router-section-heading h3 {
+    margin: 0 0 0.25rem;
+    color: #111827;
+    font-size: 1.05rem;
+    font-weight: 700;
+}
+
+.nd-router-detail .nd-detail-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.875rem;
+}
+
+.nd-router-detail .nd-detail-item {
+    min-width: 0;
+    min-height: 5.25rem;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 1rem;
+    border: 1px solid #eef2f7;
+    border-radius: 0.75rem;
+    background: #f8fafc;
+}
+
+.nd-router-detail .nd-detail-label {
+    color: #64748b;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.nd-router-detail .nd-detail-value {
+    overflow-wrap: anywhere;
+    color: #0f172a;
+    font-size: 0.95rem;
+    font-weight: 600;
+}
+
+.nd-router-detail .nd-router-monospace {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+@media (max-width: 900px) {
+    .nd-router-detail .nd-detail-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 640px) {
+    .nd-router-hero {
+        align-items: flex-start;
+        flex-wrap: wrap;
+        gap: 1rem;
+        padding: 1.25rem;
+    }
+
+    .nd-router-hero-content {
+        flex-basis: calc(100% - 4.75rem);
+    }
+
+    .nd-router-hero-content h2 {
+        font-size: 1.25rem;
+    }
+
+    .nd-router-type {
+        margin-left: 4.75rem;
+    }
+
+    .nd-router-info-card {
+        padding: 1rem;
+    }
+
+    .nd-router-detail .nd-detail-grid {
+        grid-template-columns: 1fr;
+        gap: 0.625rem;
+    }
+
+    .nd-router-detail .nd-detail-item {
+        min-height: auto;
+        padding: 0.875rem;
+    }
+}
