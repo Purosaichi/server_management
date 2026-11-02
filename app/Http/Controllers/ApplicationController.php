@@ -33,9 +33,8 @@ class ApplicationController extends Controller
         return view('pages.application.application', compact('applications'));
     }
 
-    /**
-     * Halaman detail aplikasi
-     */
+    
+    /** Halaman detail aplikasi **/
     public function show(int $id)
     {
         $app = AplikasiDetail::where('id_aplikasi', $id)->first();
