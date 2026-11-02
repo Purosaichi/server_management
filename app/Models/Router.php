@@ -15,7 +15,7 @@ class Router extends Model
         'jenis_router',
         'kapasitas_bandwidth',
         'protokol_routing',
-        'jumlah_tunnel-vpn',
+        'jumlah_tunnel_vpn',
         'status_vpn',
         'status_nat',
         'status_ha',

@@ -168,8 +168,192 @@
     color: #991b1b;
 }
 
+.nd-btn-edit,
+.nd-btn-delete {
+    display: inline-block;
+    border: 0;
+    border-radius: 0.375rem;
+    padding: 0.4rem 0.7rem;
+    font: inherit;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.nd-btn-edit {
+    margin-right: 0.35rem;
+    background: #dbeafe;
+    color: #1d4ed8;
+}
+
+.nd-btn-edit:hover {
+    background: #bfdbfe;
+}
+
+.nd-btn-delete {
+    background: #fee2e2;
+    color: #b91c1c;
+}
+
+.nd-btn-delete:hover {
+    background: #fecaca;
+}
+
 .nd-text-center {
     text-align: center;
+}
+
+.nd-alert {
+    margin-bottom: 1rem;
+    border-radius: 0.5rem;
+    padding: 0.875rem 1rem;
+}
+
+.nd-alert-success {
+    background: #d1fae5;
+    color: #065f46;
+}
+
+.nd-alert-error {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+.nd-alert ul {
+    margin: 0;
+    padding-left: 1.25rem;
+}
+
+.nd-modal-overlay {
+    position: fixed;
+    z-index: 1000;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    background: rgba(17, 24, 39, 0.55);
+}
+
+.nd-modal {
+    width: min(100%, 28rem);
+    border-radius: 0.75rem;
+    background: #fff;
+    padding: 1.5rem;
+    box-shadow: 0 20px 25px rgba(0, 0, 0, 0.15);
+}
+
+.nd-modal-title {
+    margin: 0 0 0.75rem;
+    color: #111827;
+    font-size: 1.125rem;
+}
+
+.nd-modal-text {
+    color: #4b5563;
+}
+
+.nd-modal-actions,
+.nd-edit-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.75rem;
+    margin-top: 1.5rem;
+}
+
+.nd-modal-actions form {
+    margin: 0;
+}
+
+.nd-btn-cancel,
+.nd-btn-delete-confirm,
+.nd-btn-save {
+    display: inline-block;
+    border: 0;
+    border-radius: 0.375rem;
+    padding: 0.6rem 0.9rem;
+    font: inherit;
+    font-weight: 500;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.nd-btn-cancel {
+    background: #f3f4f6;
+    color: #374151;
+}
+
+.nd-btn-delete-confirm {
+    background: #dc2626;
+    color: #fff;
+}
+
+.nd-btn-save {
+    background: #2563eb;
+    color: #fff;
+}
+
+.nd-edit-form {
+    max-width: 64rem;
+    margin: 0 auto 2rem;
+    border: 1px solid #f3f4f6;
+    border-radius: 0.75rem;
+    background: #fff;
+    padding: 1.5rem;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.nd-edit-title {
+    margin: 0 0 1.5rem;
+    color: #111827;
+    font-size: 1.375rem;
+}
+
+.nd-edit-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+}
+
+.nd-edit-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+}
+
+.nd-edit-field label {
+    color: #374151;
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.nd-edit-field input,
+.nd-edit-field select {
+    width: 100%;
+    min-height: 2.5rem;
+    border: 1px solid #d1d5db;
+    border-radius: 0.375rem;
+    background: #fff;
+    padding: 0.5rem 0.75rem;
+    color: #111827;
+    font: inherit;
+}
+
+.nd-edit-field input:focus,
+.nd-edit-field select:focus {
+    outline: 2px solid #2563eb;
+    outline-offset: 1px;
+}
+
+@media (max-width: 640px) {
+    .nd-edit-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .nd-edit-form {
+        padding: 1rem;
+    }
 }
 
 /* Tombol Back */

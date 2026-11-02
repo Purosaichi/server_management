@@ -50,10 +50,19 @@
                         </span>
                     </td>
                     <td>{{ $router->alamat_ip_manajemen ?? '-' }}</td>
+                    <td class="nd-text-center">
+                        <a href="{{ route('network-device.router-edit', $router->id_router) }}" class="nd-btn-edit">Edit</a>
+                        <button type="button" class="nd-btn-delete"
+                            data-delete-url="{{ route('network-device.router-destroy', $router->id_router) }}"
+                            data-device-name="router #{{ $router->id_router }}"
+                            onclick="showNetworkDeviceDeleteModal(this)">
+                            Hapus
+                        </button>
+                    </td>
                 </tr>
                 @empty
                 <tr>
-                    <td colspan="9" style="text-align: center; color: #9ca3af; padding: 2rem;">
+                    <td colspan="10" style="text-align: center; color: #9ca3af; padding: 2rem;">
                         Belum ada data router.
                     </td>
                 </tr>

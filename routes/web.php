@@ -72,7 +72,13 @@ Route::middleware(['auth.session'])->group(function () {
     Route::prefix('network-device')->name('network-device.')->group(function () {
         Route::get('/router', [NetworkDeviceController::class, 'router'])->name('router');
         Route::get('/switch', [NetworkDeviceController::class, 'switch'])->name('switch');
+        Route::get('/router/{id}/edit', [NetworkDeviceController::class, 'editRouter'])->name('router-edit');
+        Route::put('/router/{id}', [NetworkDeviceController::class, 'updateRouter'])->name('router-update');
+        Route::delete('/router/{id}', [NetworkDeviceController::class, 'destroyRouter'])->name('router-destroy');
         Route::get('/router/{id}', [NetworkDeviceController::class, 'routerDetail'])->name('router-detail');
+        Route::get('/switch/{id}/edit', [NetworkDeviceController::class, 'editSwitch'])->name('switch-edit');
+        Route::put('/switch/{id}', [NetworkDeviceController::class, 'updateSwitch'])->name('switch-update');
+        Route::delete('/switch/{id}', [NetworkDeviceController::class, 'destroySwitch'])->name('switch-destroy');
         Route::get('/switch/{id}', [NetworkDeviceController::class, 'switchDetail'])->name('switch-detail');
     });
 });

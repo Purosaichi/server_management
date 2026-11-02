@@ -19,6 +19,7 @@
                     <th>VLAN</th>
                     <th>IP Manajemen</th>
                     <th>MAC Address</th>
+                    <th class="nd-text-center">Aksi</th>
                 </tr>
             </thead>
             <tbody>
@@ -48,10 +49,19 @@
                     <td>{{ $switch->jumlah_vlan ?? '-' }}</td>
                     <td>{{ $switch->alamat_ip_manajemen ?? '-' }}</td>
                     <td>{{ $switch->alamat_mac ?? '-' }}</td>
+                    <td class="nd-text-center">
+                        <a href="{{ route('network-device.switch-edit', $switch->id_switch) }}" class="nd-btn-edit">Edit</a>
+                        <button type="button" class="nd-btn-delete"
+                            data-delete-url="{{ route('network-device.switch-destroy', $switch->id_switch) }}"
+                            data-device-name="switch #{{ $switch->id_switch }}"
+                            onclick="showNetworkDeviceDeleteModal(this)">
+                            Hapus
+                        </button>
+                    </td>
                 </tr>
                 @empty
                 <tr>
-                    <td colspan="12" style="text-align: center; color: #9ca3af; padding: 2rem;">
+                    <td colspan="13" style="text-align: center; color: #9ca3af; padding: 2rem;">
                         Belum ada data switch.
                     </td>
                 </tr>
