@@ -34,4 +34,19 @@
 <footer class="footer">
     <p>&copy; 2026 Direktorat Jenderal Guru, Tenaga Kependidikan dan Pendidikan Guru - Kemendikdasmen</p>
 </footer>
+
+<script>
+    document.querySelectorAll('.nd-device-row').forEach(function (row) {
+        row.addEventListener('dblclick', function (event) {
+            if (event.target.closest('a, button, form')) return;
+            window.location.assign(row.dataset.detailUrl);
+        });
+
+        row.addEventListener('keydown', function (event) {
+            if (event.key !== 'Enter') return;
+            event.preventDefault();
+            window.location.assign(row.dataset.detailUrl);
+        });
+    });
+</script>
 @endsection

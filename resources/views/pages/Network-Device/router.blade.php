@@ -16,12 +16,11 @@
                     <th>Status NAT</th>
                     <th>Status HA</th>
                     <th>IP Manajemen</th>
-                    <th class="nd-text-center">Aksi</th>
                 </tr>
             </thead>
             <tbody>
                 @forelse($routers as $router)
-                <tr>
+                <tr class="nd-device-row" data-detail-url="{{ route('network-device.router-detail', $router->id_router) }}" tabindex="0" aria-label="Detail router {{ $router->id_router }}">
                     <td><span class="nd-name">{{ $router->id_router }}</span></td>
                     <td>
                         <span class="nd-badge 
@@ -51,15 +50,10 @@
                         </span>
                     </td>
                     <td>{{ $router->alamat_ip_manajemen ?? '-' }}</td>
-                    <td class="nd-text-center">
-                        <a href="{{ route('network-device.router-detail', $router->id_router) }}" class="nd-btn-detail">
-                            Selengkapnya →
-                        </a>
-                    </td>
                 </tr>
                 @empty
                 <tr>
-                    <td colspan="10" style="text-align: center; color: #9ca3af; padding: 2rem;">
+                    <td colspan="9" style="text-align: center; color: #9ca3af; padding: 2rem;">
                         Belum ada data router.
                     </td>
                 </tr>
