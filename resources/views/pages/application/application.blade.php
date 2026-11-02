@@ -43,7 +43,6 @@
                     <th>Domain</th>
                     <th>Licenses</th>
                     <th>Next Maintenance</th>
-                    <th class="app-text-center">Aksi</th>
                 </tr>
             </thead>
             <tbody>

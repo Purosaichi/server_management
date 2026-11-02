@@ -19,7 +19,6 @@
                     <th>VLAN</th>
                     <th>IP Manajemen</th>
                     <th>MAC Address</th>
-                    <th class="nd-text-center">Aksi</th>
                 </tr>
             </thead>
             <tbody>

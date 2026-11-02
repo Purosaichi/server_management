@@ -97,7 +97,6 @@
                     <th>Status</th>
                     <th>Durasi</th>
                     <th>PIC</th>
-                    <th>Aksi</th>
                 </tr>   
             </thead>
             <tbody id="alerts-table-body">

@@ -34,7 +34,6 @@
                     <th>Status</th>
                     <th>Jumlah Lisensi</th>
                     <th>Tanggal Expired</th>
-                    <th>Aksi</th>
                 </tr>
             </thead>
             <tbody>

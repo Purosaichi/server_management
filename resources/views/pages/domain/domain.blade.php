@@ -31,7 +31,6 @@
                     <th>PIC</th>
                     <th>SSL Certificate</th>
                     <th>Last Activity</th>
-                    <th class="dmn-text-center">Aksi</th>
                 </tr>
             </thead>
             <tbody>
