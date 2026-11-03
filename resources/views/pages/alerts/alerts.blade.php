@@ -82,7 +82,12 @@
         </div>
         <div class="alerts-header-actions">
             <button type="button" class="alerts-add-button" id="add-alert-button">Tambah Alert</button>
-            <button type="button" class="alerts-clear-all-button" id="clear-all-alerts">Clear Semua</button>
+            <button type="button" class="alerts-clear-all-button" id="clear-all-alerts" title="Hapus semua alert yang sudah Selesai">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                </svg>
+                Clear
+            </button>
         </div>
     </div>
     <div class="alerts-table-wrapper">
@@ -350,8 +355,9 @@
 
     <div class="alerts-modal" id="confirm-modal" hidden>
         <div class="alerts-modal-backdrop" data-close-modal></div>
-        <section class="alerts-modal-dialog alerts-confirm-dialog" role="dialog" aria-modal="true" aria-labelledby="confirm-title">
+        <section class="alerts-modal-dialog alerts-confirm-dialog alerts-clear-confirm-dialog" role="dialog" aria-modal="true" aria-labelledby="confirm-title">
             <button type="button" class="alerts-modal-close" data-close-modal aria-label="Tutup">&times;</button>
+            <div class="alerts-clear-modal-icon" aria-hidden="true">🗑️</div>
             <h2 id="confirm-title">Clear alert?</h2>
             <p id="confirm-message">Alert yang dipilih akan dihapus permanen.</p>
             <form id="clear-alert-form" method="POST" action="{{ route('alerts.clear') }}">
@@ -359,7 +365,7 @@
                 <input type="hidden" name="_method" value="DELETE">
                 <div class="alerts-modal-actions">
                     <button type="button" class="alerts-cancel-button" data-close-modal>Batal</button>
-                    <button type="submit" class="alerts-row-clear-button">Clear</button>
+                    <button type="submit" class="alerts-clear-confirm-button">Ya, Hapus</button>
                 </div>
             </form>
         </section>
@@ -442,7 +448,7 @@
             clearForm.action = url;
             document.getElementById('confirm-title').textContent = all ? 'Clear semua alert?' : 'Clear alert?';
             document.getElementById('confirm-message').textContent = all
-                ? 'Semua alert akan dihapus permanen.'
+                ? 'Semua alert dengan status Selesai akan dihapus permanen. Alert Aktif tetap tersimpan.'
                 : 'Alert ini akan dihapus permanen.';
             openModal(confirmModal);
         }

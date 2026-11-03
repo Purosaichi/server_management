@@ -97,9 +97,10 @@ class AlertController extends Controller
 
     public function clear()
     {
-        $deleted = DB::table('alert')->delete();
+        $deleted = DB::table('alert')->where('status', 'Selesai')->delete();
 
-        return redirect()->route('alerts.alerts')->with('success', "Berhasil menghapus {$deleted} alert.");
+        return redirect()->route('alerts.alerts')
+            ->with('success', "Berhasil menghapus {$deleted} alert berstatus Selesai.");
     }
 
     private function alertPayload(Request $request, bool $allowInfo = false): array

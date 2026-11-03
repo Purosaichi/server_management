@@ -329,6 +329,30 @@
     cursor: pointer;
 }
 
+.alerts-clear-all-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    border-color: #fecaca;
+    border-radius: 0.5rem;
+    padding: 0.375rem 0.75rem;
+    background: #ff0000;
+    color: #fff;
+    font-size: 0.75rem;
+    font-weight: 500;
+    transition: all 0.2s;
+}
+
+.alerts-clear-all-button:hover {
+    border-color: #fca5a5;
+    background: #ff4747;
+}
+
+.alerts-clear-all-button svg {
+    width: 0.875rem;
+    height: 0.875rem;
+}
+
 .alerts-edit-button {
     border: 1px solid #bfdbfe;
     border-radius: 0.375rem;
@@ -488,6 +512,59 @@
     margin: -0.5rem 0 0;
     color: #6b7280;
     font-size: 0.875rem;
+}
+
+.alerts-clear-confirm-dialog {
+    width: min(90%, 420px);
+    padding: 2rem;
+    border-radius: 0.75rem;
+    text-align: center;
+    animation: alertsModalFadeIn 0.2s ease-out;
+}
+
+.alerts-clear-modal-icon {
+    margin-bottom: 0.5rem;
+    font-size: 3rem;
+}
+
+.alerts-clear-confirm-dialog h2 {
+    margin: 0 0 0.75rem;
+    font-size: 1.25rem;
+}
+
+.alerts-clear-confirm-dialog p {
+    margin: 0 0 1.5rem;
+    line-height: 1.5;
+}
+
+.alerts-clear-confirm-dialog .alerts-modal-actions {
+    justify-content: center;
+    gap: 0.75rem;
+}
+
+.alerts-clear-confirm-dialog .alerts-cancel-button,
+.alerts-clear-confirm-button {
+    border-radius: 0.5rem;
+    padding: 0.5rem 1.25rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.alerts-clear-confirm-button {
+    border: 0;
+    background: #dc2626;
+    color: #fff;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.alerts-clear-confirm-button:hover {
+    background: #b91c1c;
+}
+
+@keyframes alertsModalFadeIn {
+    from { opacity: 0; transform: scale(0.95); }
+    to { opacity: 1; transform: scale(1); }
 }
 
 .alerts-modal button:focus-visible,
