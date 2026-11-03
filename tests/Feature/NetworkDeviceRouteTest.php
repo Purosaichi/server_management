@@ -87,7 +87,10 @@ class NetworkDeviceRouteTest extends TestCase
             ->get('/network-device/router/create')
             ->assertOk()
             ->assertSee('Tambah Router Baru')
-            ->assertSee('name="jenis_router"', false);
+            ->assertSee('name="jenis_router"', false)
+            ->assertSee('<select id="status_vpn" name="status_vpn">', false)
+            ->assertSee('<select id="status_nat" name="status_nat">', false)
+            ->assertSee('<select id="status_ha" name="status_ha">', false);
 
         $this->withSession(['user_id' => 1, 'user_name' => 'Administrator'])
             ->post('/network-device/router', [
@@ -132,7 +135,8 @@ class NetworkDeviceRouteTest extends TestCase
             ->get('/network-device/switch/create')
             ->assertOk()
             ->assertSee('Tambah Switch Baru')
-            ->assertSee('name="jenis_switch"', false);
+            ->assertSee('name="jenis_switch"', false)
+            ->assertSee('<select id="status_stack" name="status_stack">', false);
 
         $this->withSession(['user_id' => 1, 'user_name' => 'Administrator'])
             ->post('/network-device/switch', [

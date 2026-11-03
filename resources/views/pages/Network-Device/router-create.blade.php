@@ -52,15 +52,30 @@
         </div>
         <div class="nd-edit-field">
             <label for="status_vpn">Status VPN</label>
-            <input id="status_vpn" name="status_vpn" type="text" value="{{ old('status_vpn') }}">
+            <select id="status_vpn" name="status_vpn">
+                <option value="">-- Pilih status --</option>
+                @foreach(['Aktif', 'Tidak Aktif'] as $status)
+                    <option value="{{ $status }}" @selected(old('status_vpn') === $status)>{{ $status }}</option>
+                @endforeach
+            </select>
         </div>
         <div class="nd-edit-field">
             <label for="status_nat">Status NAT</label>
-            <input id="status_nat" name="status_nat" type="text" value="{{ old('status_nat') }}">
+            <select id="status_nat" name="status_nat">
+                <option value="">-- Pilih status --</option>
+                @foreach(['Aktif', 'Tidak Aktif'] as $status)
+                    <option value="{{ $status }}" @selected(old('status_nat') === $status)>{{ $status }}</option>
+                @endforeach
+            </select>
         </div>
         <div class="nd-edit-field">
             <label for="status_ha">Status HA</label>
-            <input id="status_ha" name="status_ha" type="text" value="{{ old('status_ha') }}">
+            <select id="status_ha" name="status_ha">
+                <option value="">-- Pilih status --</option>
+                @foreach(['Aktif', 'Tidak Aktif'] as $status)
+                    <option value="{{ $status }}" @selected(old('status_ha') === $status)>{{ $status }}</option>
+                @endforeach
+            </select>
         </div>
         <div class="nd-edit-field">
             <label for="alamat_ip_manajemen">IP Manajemen</label>

@@ -65,7 +65,12 @@
         </div>
         <div class="nd-edit-field">
             <label for="status_stack">Status Stack</label>
-            <input id="status_stack" name="status_stack" type="text" value="{{ old('status_stack', $switch->status_stack) }}">
+            <select id="status_stack" name="status_stack">
+                <option value="">-- Pilih status --</option>
+                @foreach(['Aktif', 'Tidak Aktif'] as $status)
+                    <option value="{{ $status }}" @selected(old('status_stack', $switch->status_stack) === $status)>{{ $status }}</option>
+                @endforeach
+            </select>
         </div>
         <div class="nd-edit-field">
             <label for="jumlah_anggota_stack">Anggota Stack</label>

@@ -47,9 +47,9 @@ class NetworkDeviceController extends Controller
             'kapasitas_bandwidth' => 'nullable|numeric|min:0',
             'protokol_routing' => 'nullable|string|max:100',
             'jumlah_tunnel_vpn' => 'nullable|integer|min:0',
-            'status_vpn' => 'nullable|string|max:50',
-            'status_nat' => 'nullable|string|max:50',
-            'status_ha' => 'nullable|string|max:50',
+            'status_vpn' => 'nullable|in:Aktif,Tidak Aktif',
+            'status_nat' => 'nullable|in:Aktif,Tidak Aktif',
+            'status_ha' => 'nullable|in:Aktif,Tidak Aktif',
             'alamat_ip_manajemen' => 'nullable|ip',
         ]);
 
@@ -74,7 +74,7 @@ class NetworkDeviceController extends Controller
             'jumlah_port_tersedia' => 'nullable|integer|min:0',
             'kecepatan_port' => 'nullable|string|max:50',
             'jumlah_port_uplink' => 'nullable|integer|min:0',
-            'status_stack' => 'nullable|string|max:50',
+            'status_stack' => 'nullable|in:Aktif,Tidak Aktif',
             'jumlah_anggota_stack' => 'nullable|integer|min:0',
             'jumlah_vlan' => 'nullable|integer|min:0',
             'alamat_ip_manajemen' => 'nullable|ip',
@@ -108,9 +108,9 @@ class NetworkDeviceController extends Controller
             'kapasitas_bandwidth' => 'nullable|numeric|min:0',
             'protokol_routing' => 'nullable|string|max:100',
             'jumlah_tunnel_vpn' => 'nullable|integer|min:0',
-            'status_vpn' => 'nullable|string|max:50',
-            'status_nat' => 'nullable|string|max:50',
-            'status_ha' => 'nullable|string|max:50',
+            'status_vpn' => 'nullable|in:Aktif,Tidak Aktif',
+            'status_nat' => 'nullable|in:Aktif,Tidak Aktif',
+            'status_ha' => 'nullable|in:Aktif,Tidak Aktif',
             'alamat_ip_manajemen' => 'nullable|ip',
         ]);
 
@@ -152,7 +152,7 @@ class NetworkDeviceController extends Controller
             'jumlah_port_tersedia' => 'nullable|integer|min:0',
             'kecepatan_port' => 'nullable|string|max:50',
             'jumlah_port_uplink' => 'nullable|integer|min:0',
-            'status_stack' => 'nullable|string|max:50',
+            'status_stack' => 'nullable|in:Aktif,Tidak Aktif',
             'jumlah_anggota_stack' => 'nullable|integer|min:0',
             'jumlah_vlan' => 'nullable|integer|min:0',
             'alamat_ip_manajemen' => 'nullable|ip',
