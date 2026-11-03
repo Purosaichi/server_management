@@ -96,7 +96,7 @@
                     <th>Deskripsi</th>
                     <th>Status</th>
                     <th>Durasi</th>
-                    <th>PIC</th>
+                    <th>PIC</th>    
                 </tr>   
             </thead>
             <tbody id="alerts-table-body">

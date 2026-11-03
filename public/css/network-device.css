@@ -72,6 +72,27 @@
     color: #6b7280;
 }
 
+.nd-table-actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.nd-btn-add {
+    display: inline-block;
+    border-radius: 0.375rem;
+    padding: 0.5rem 0.75rem;
+    background: #2563eb;
+    color: #fff;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    text-decoration: none;
+}
+
+.nd-btn-add:hover {
+    background: #1d4ed8;
+}
+
 .nd-table-wrapper {
     overflow-x: auto;
 }
@@ -166,6 +187,18 @@
 .nd-status-inactive {
     background-color: #fee2e2;
     color: #991b1b;
+}
+
+/* Tombol untuk membuka detail perangkat dari tabel */
+.nd-btn-detail {
+    color: #2563eb;
+    font-weight: 500;
+    text-decoration: none;
+    font-size: 0.8125rem;
+}
+
+.nd-btn-detail:hover {
+    text-decoration: underline;
 }
 
 .nd-btn-edit,
@@ -410,6 +443,8 @@
     flex-direction: column;
     gap: 0.35rem;
     padding: 0.5rem 0;
+    background-color: #f9fafb;
+    border-radius: 0.5rem;
 }
 
 .nd-detail-label {
@@ -608,6 +643,23 @@
     .nd-router-detail .nd-detail-item {
         min-height: auto;
         padding: 0.875rem;
+    }
+}
+
+/* Footer pada halaman daftar perangkat */
+.footer {
+    background-color: #ffd000;
+    padding: 1rem 1.5rem;
+    text-align: center;
+    font-size: 0.875rem;
+    color: #000000;
+    margin-top: 2rem;
+}
+
+/* Susun detail menjadi satu kolom di layar kecil */
+@media (max-width: 768px) {
+    .nd-detail-grid {
+        grid-template-columns: 1fr;
     }
 }
 

@@ -35,6 +35,58 @@ class NetworkDeviceController extends Controller
         ]);
     }
 
+    public function createRouter()
+    {
+        return view('pages.network-device.router-create');
+    }
+
+    public function storeRouter(Request $request)
+    {
+        $validated = $request->validate([
+            'jenis_router' => 'required|in:Core,Edge,Branch',
+            'kapasitas_bandwidth' => 'nullable|numeric|min:0',
+            'protokol_routing' => 'nullable|string|max:100',
+            'jumlah_tunnel_vpn' => 'nullable|integer|min:0',
+            'status_vpn' => 'nullable|string|max:50',
+            'status_nat' => 'nullable|string|max:50',
+            'status_ha' => 'nullable|string|max:50',
+            'alamat_ip_manajemen' => 'nullable|ip',
+        ]);
+
+        Router::create($validated);
+
+        return redirect()->route('network-device.router')
+            ->with('success', 'Data router berhasil ditambahkan.');
+    }
+
+    public function createSwitch()
+    {
+        return view('pages.network-device.switch-create');
+    }
+
+    public function storeSwitch(Request $request)
+    {
+        $validated = $request->validate([
+            'jenis_switch' => 'required|in:Core,Distribution,Access',
+            'lapisan_jaringan' => 'nullable|string|max:50',
+            'jumlah_port' => 'nullable|integer|min:0',
+            'jumlah_port_terpakai' => 'nullable|integer|min:0',
+            'jumlah_port_tersedia' => 'nullable|integer|min:0',
+            'kecepatan_port' => 'nullable|string|max:50',
+            'jumlah_port_uplink' => 'nullable|integer|min:0',
+            'status_stack' => 'nullable|string|max:50',
+            'jumlah_anggota_stack' => 'nullable|integer|min:0',
+            'jumlah_vlan' => 'nullable|integer|min:0',
+            'alamat_ip_manajemen' => 'nullable|ip',
+            'alamat_mac' => 'nullable|string|max:17',
+        ]);
+
+        SwitchDevice::create($validated);
+
+        return redirect()->route('network-device.switch')
+            ->with('success', 'Data switch berhasil ditambahkan.');
+    }
+
     public function routerDetail(int $id)
     {
         $router = Router::find($id);
