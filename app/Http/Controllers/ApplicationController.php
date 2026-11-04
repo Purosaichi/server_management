@@ -13,9 +13,35 @@ class ApplicationController extends Controller
     /**
      * Halaman daftar aplikasi
      */
-    public function index()
+    public function index(Request $request)
     {
-        $applications = AplikasiDetail::orderBy('id_aplikasi')
+        $filters = $request->validate([
+            'search' => 'nullable|string|max:150',
+            'status' => 'nullable|in:Aktif,Down,Maintenance',
+        ]);
+        $search = trim($filters['search'] ?? '');
+        $status = $filters['status'] ?? '';
+
+        $applicationStats = AplikasiDetail::query()
+            ->selectRaw('COUNT(DISTINCT id_aplikasi) as total')
+            ->selectRaw(
+                'COUNT(DISTINCT CASE WHEN status_aplikasi = ? THEN id_aplikasi END) as active',
+                ['Aktif']
+            )
+            ->selectRaw(
+                'COUNT(DISTINCT CASE WHEN status_aplikasi = ? THEN id_aplikasi END) as down',
+                ['Down']
+            )
+            ->first();
+
+        $applications = AplikasiDetail::query()
+            ->when($search !== '', function ($query) use ($search) {
+                $query->where('nama_aplikasi', 'like', '%' . $search . '%');
+            })
+            ->when($status !== '', function ($query) use ($status) {
+                $query->where('status_aplikasi', $status);
+            })
+            ->orderBy('id_aplikasi')
             ->get()
             ->map(function ($a) {
                 return [
@@ -30,7 +56,12 @@ class ApplicationController extends Controller
             })
             ->toArray();
 
-        return view('pages.application.application', compact('applications'));
+        return view('pages.application.application', compact(
+            'applications',
+            'applicationStats',
+            'search',
+            'status'
+        ));
     }
 
     

@@ -71,7 +71,8 @@ class LicenseController extends Controller
                 ];
             });
 
-        $sisaHari = $this->daysUntilExpiration($lic->tanggal_kadaluarsa);
+        $effectiveExpiry = $billing?->tanggal_jatuh_tempo ?? $lic->tanggal_kadaluarsa;
+        $sisaHari = $this->daysUntilExpiration($effectiveExpiry);
 
         $license = [
             'id'           => $lic->id_lisensi,
@@ -80,16 +81,16 @@ class LicenseController extends Controller
             'status'       => $lic->status,
             'status_type'  => $this->getStatusType($lic->status),
             'jumlah'       => $lic->jumlah_lisensi . ' License',
-            'expired'      => $lic->tanggal_kadaluarsa
-                                ? Carbon::parse($lic->tanggal_kadaluarsa)->format('d M Y')
+            'expired'      => $effectiveExpiry
+                                ? Carbon::parse($effectiveExpiry)->format('d M Y')
                                 : '-',
             'expired_note' => $this->getExpiredNote($sisaHari),
             'expired_type' => $this->getExpiredType($sisaHari),
             'logo'         => $this->resolveLogo($lic->logo),
 
             /* Data detail */
-            'start_date'     => $lic->tanggal_mulai
-                                ? Carbon::parse($lic->tanggal_mulai)->format('d F Y')
+            'start_date'     => ($billing?->tanggal_bayar_terakhir ?? $lic->tanggal_mulai)
+                                ? Carbon::parse($billing?->tanggal_bayar_terakhir ?? $lic->tanggal_mulai)->format('d F Y')
                                 : '-',
             'license_number' => $lic->nomor_lisensi,
             'license_type'   => $lic->jenis_lisensi,
@@ -186,13 +187,11 @@ class LicenseController extends Controller
 
     private function validateLicense(Request $request, ?int $id = null): array
     {
-        return $request->validate([
+        $validated = $request->validate([
             'nama_lisensi' => 'required|string|max:150',
             'provider' => 'required|string|max:100',
             'status' => 'required|in:Aman,Akan Expired,Expired',
             'jumlah_lisensi' => 'required|integer|min:1',
-            'tanggal_mulai' => 'nullable|date',
-            'tanggal_kadaluarsa' => 'nullable|date|after_or_equal:tanggal_mulai',
             'nomor_lisensi' => 'nullable|string|max:150',
             'jenis_lisensi' => 'nullable|string|max:100',
             'logo' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:5120',
@@ -204,6 +203,15 @@ class LicenseController extends Controller
             'payment_method' => 'nullable|string|max:100',
             'id_aset' => 'nullable|integer|exists:aset,id_aset',
         ]);
+
+        if (filled($validated['last_payment'] ?? null) && filled($validated['billing_period'] ?? null)) {
+            $validated['next_due_date'] = $this->calculateDueDate(
+                $validated['last_payment'],
+                $validated['billing_period'],
+            ) ?? ($validated['next_due_date'] ?? null);
+        }
+
+        return $validated;
     }
 
     private function licenseAttributes(array $validated, ?string $logo): array
@@ -213,8 +221,8 @@ class LicenseController extends Controller
             'provider' => $validated['provider'],
             'status' => $validated['status'],
             'jumlah_lisensi' => $validated['jumlah_lisensi'],
-            'tanggal_mulai' => $validated['tanggal_mulai'] ?? null,
-            'tanggal_kadaluarsa' => $validated['tanggal_kadaluarsa'] ?? null,
+            'tanggal_mulai' => $validated['last_payment'] ?? null,
+            'tanggal_kadaluarsa' => $validated['next_due_date'] ?? null,
             'nomor_lisensi' => $validated['nomor_lisensi'] ?? null,
             'jenis_lisensi' => $validated['jenis_lisensi'] ?? null,
             'logo' => $logo,
@@ -278,6 +286,29 @@ class LicenseController extends Controller
             'jenis_tagihan' => 'Lisensi',
             'id_lisensi' => $licenseId,
         ]);
+    }
+
+    private function calculateDueDate(string $startDate, string $billingPeriod): ?string
+    {
+        if (! preg_match('/^\s*(\d+)\s*(hari|days?|minggu|weeks?|bulan|months?|tahun|years?)\s*$/i', $billingPeriod, $matches)) {
+            return null;
+        }
+
+        $amount = (int) $matches[1];
+        $unit = strtolower($matches[2]);
+        $date = Carbon::parse($startDate);
+
+        if (in_array($unit, ['hari', 'day', 'days'], true)) {
+            $date->addDays($amount);
+        } elseif (in_array($unit, ['minggu', 'week', 'weeks'], true)) {
+            $date->addWeeks($amount);
+        } elseif (in_array($unit, ['bulan', 'month', 'months'], true)) {
+            $date->addMonthsNoOverflow($amount);
+        } else {
+            $date->addMonthsNoOverflow($amount * 12);
+        }
+
+        return $date->toDateString();
     }
 
     private function saveAsset(int $licenseId, mixed $assetId): void

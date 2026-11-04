@@ -25,6 +25,21 @@
 </div>
 @endif
 
+<div class="app-stats-grid">
+    <div class="app-stat-card">
+        <p class="app-stat-label">Total Aplikasi</p>
+        <p class="app-stat-value">{{ $applicationStats->total }}</p>
+    </div>
+    <div class="app-stat-card app-stat-active">
+        <p class="app-stat-label">Aplikasi Aktif</p>
+        <p class="app-stat-value">{{ $applicationStats->active }}</p>
+    </div>
+    <div class="app-stat-card app-stat-down">
+        <p class="app-stat-label">Aplikasi Down</p>
+        <p class="app-stat-value">{{ $applicationStats->down }}</p>
+    </div>
+</div>
+
 <div class="app-table-container">
     <div class="app-table-header">
         <h3 class="app-table-title">Daftar Aplikasi</h3>
@@ -33,6 +48,31 @@
             <a href="{{ route('application.create') }}" class="app-btn-add">+ Tambah Aplikasi</a>
         </div>
     </div>
+    <form id="applicationFilterForm" method="GET" action="{{ route('application.index') }}" class="app-filter-bar">
+        <label class="app-filter-field">
+            <span>Nama aplikasi</span>
+            <input
+                type="search"
+                name="search"
+                id="applicationSearch"
+                value="{{ $search }}"
+                placeholder="Cari nama aplikasi..."
+                maxlength="150"
+            >
+        </label>
+        <label class="app-filter-field">
+            <span>Status</span>
+            <select name="status">
+                <option value="">Semua status</option>
+                <option value="Aktif" @selected($status === 'Aktif')>Aktif</option>
+                <option value="Down" @selected($status === 'Down')>Down</option>
+                <option value="Maintenance" @selected($status === 'Maintenance')>Maintenance</option>
+            </select>
+        </label>
+        @if($search !== '' || $status !== '')
+            <a href="{{ route('application.index') }}" class="app-filter-reset">Reset</a>
+        @endif
+    </form>
     <div class="app-table-wrapper">
         <table>
             <thead>
@@ -118,6 +158,23 @@
 </footer>
 
 <script>
+    const applicationFilterForm = document.getElementById('applicationFilterForm');
+    const applicationSearch = document.getElementById('applicationSearch');
+    const applicationStatus = applicationFilterForm.querySelector('select[name="status"]');
+    let applicationSearchTimeout;
+
+    applicationSearch.addEventListener('input', function() {
+        clearTimeout(applicationSearchTimeout);
+        applicationSearchTimeout = setTimeout(function() {
+            applicationFilterForm.requestSubmit();
+        }, 350);
+    });
+
+    applicationStatus.addEventListener('change', function() {
+        clearTimeout(applicationSearchTimeout);
+        applicationFilterForm.requestSubmit();
+    });
+
     function showDeleteModal(id, name) {
         document.getElementById('deleteAppName').textContent = name;
         document.getElementById('deleteForm').action = '/application/' + id;

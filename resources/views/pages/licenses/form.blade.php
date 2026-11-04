@@ -61,14 +61,6 @@
                 <label for="jenis_lisensi">Jenis Lisensi</label>
                 <input type="text" id="jenis_lisensi" name="jenis_lisensi" value="{{ old('jenis_lisensi', $license->jenis_lisensi ?? '') }}" maxlength="100">
             </div>
-            <div class="app-form-group">
-                <label for="tanggal_mulai">Tanggal Mulai</label>
-                <input type="date" id="tanggal_mulai" name="tanggal_mulai" value="{{ old('tanggal_mulai', $license->tanggal_mulai ?? '') }}">
-            </div>
-            <div class="app-form-group">
-                <label for="tanggal_kadaluarsa">Tanggal Berakhir</label>
-                <input type="date" id="tanggal_kadaluarsa" name="tanggal_kadaluarsa" value="{{ old('tanggal_kadaluarsa', $license->tanggal_kadaluarsa ?? '') }}">
-            </div>
             <div class="app-form-group lic-form-logo-group">
                 <label for="logo">Foto / Logo Lisensi</label>
                 <input type="file" id="logo" name="logo" accept="image/jpeg,image/png,image/webp">
@@ -95,12 +87,12 @@
                 <input type="text" id="billing_period" name="billing_period" value="{{ old('billing_period', $billing->siklus_tagihan ?? '') }}" placeholder="Contoh: 1 Tahun">
             </div>
             <div class="app-form-group">
-                <label for="last_payment">Last Payment</label>
-                <input type="date" id="last_payment" name="last_payment" value="{{ old('last_payment', $billing->tanggal_bayar_terakhir ?? '') }}">
+                <label for="last_payment">Tanggal Mulai</label>
+                <input type="date" id="last_payment" name="last_payment" value="{{ old('last_payment', $billing->tanggal_bayar_terakhir ?? ($license->tanggal_mulai ?? '')) }}">
             </div>
             <div class="app-form-group">
-                <label for="next_due_date">Next Due Date</label>
-                <input type="date" id="next_due_date" name="next_due_date" value="{{ old('next_due_date', $billing->tanggal_jatuh_tempo ?? '') }}">
+                <label for="next_due_date">Tanggal Berakhir</label>
+                <input type="date" id="next_due_date" name="next_due_date" value="{{ old('next_due_date', $billing->tanggal_jatuh_tempo ?? ($license->tanggal_kadaluarsa ?? '')) }}" readonly>
             </div>
             <div class="app-form-group">
                 <label for="amount">Amount (Rp)</label>
@@ -133,4 +125,41 @@
         </div>
     </form>
 </div>
+<script>
+    const billingPeriodInput = document.getElementById('billing_period');
+    const billingStartDateInput = document.getElementById('last_payment');
+    const billingDueDateInput = document.getElementById('next_due_date');
+
+    function updateBillingDueDate() {
+        const period = billingPeriodInput.value.match(/^\s*(\d+)\s*(hari|days?|minggu|weeks?|bulan|months?|tahun|years?)\s*$/i);
+        if (!period || !billingStartDateInput.value) return;
+
+        const amount = Number(period[1]);
+        const unit = period[2].toLowerCase();
+        const startDate = new Date(`${billingStartDateInput.value}T00:00:00`);
+
+        if (['hari', 'day', 'days'].includes(unit)) {
+            startDate.setDate(startDate.getDate() + amount);
+        } else if (['minggu', 'week', 'weeks'].includes(unit)) {
+            startDate.setDate(startDate.getDate() + amount * 7);
+        } else {
+            const months = amount * (['tahun', 'year', 'years'].includes(unit) ? 12 : 1);
+            const targetMonth = startDate.getMonth() + months;
+            const targetYear = startDate.getFullYear() + Math.floor(targetMonth / 12);
+            const normalizedMonth = ((targetMonth % 12) + 12) % 12;
+            const lastDay = new Date(targetYear, normalizedMonth + 1, 0).getDate();
+            startDate.setFullYear(targetYear, normalizedMonth, Math.min(startDate.getDate(), lastDay));
+        }
+
+        billingDueDateInput.value = [
+            startDate.getFullYear(),
+            String(startDate.getMonth() + 1).padStart(2, '0'),
+            String(startDate.getDate()).padStart(2, '0'),
+        ].join('-');
+    }
+
+    billingPeriodInput.addEventListener('input', updateBillingDueDate);
+    billingStartDateInput.addEventListener('change', updateBillingDueDate);
+    updateBillingDueDate();
+</script>
 @endsection

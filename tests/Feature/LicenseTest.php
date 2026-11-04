@@ -23,8 +23,6 @@ class LicenseTest extends TestCase
                     'provider' => 'Microsoft',
                     'status' => 'Akan Expired',
                     'jumlah_lisensi' => 2,
-                    'tanggal_mulai' => '2026-01-01',
-                    'tanggal_kadaluarsa' => '2026-09-20',
                     'nomor_lisensi' => 'LIC-MSSQL001',
                     'jenis_lisensi' => 'Subscription',
                     'billing_status' => 'Paid',
@@ -47,7 +45,13 @@ class LicenseTest extends TestCase
                 'id_lisensi' => 1,
                 'jenis_tagihan' => 'Lisensi',
                 'status_pembayaran' => 'Paid',
+                'tanggal_jatuh_tempo' => '2027-08-15',
                 'jumlah' => 250000,
+            ]);
+            $this->assertDatabaseHas('lisensi', [
+                'id_lisensi' => 1,
+                'tanggal_mulai' => '2026-08-15',
+                'tanggal_kadaluarsa' => '2027-08-15',
             ]);
 
             $logo = DB::table('lisensi')->where('id_lisensi', 1)->value('logo');

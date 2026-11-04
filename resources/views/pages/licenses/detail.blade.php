@@ -81,8 +81,8 @@
         </div>
         <ul class="lic-info-list">
             <li><span>Billing Period</span><span>{{ $license['billing_period'] }}</span></li>
-            <li><span>Last payment</span><span>{{ $license['last_payment'] }}</span></li>
-            <li><span>Next due date</span><span>{{ $license['next_due_date'] }}</span></li>
+            <li><span>Tanggal Mulai</span><span>{{ $license['last_payment'] }}</span></li>
+            <li><span>Tanggal Berakhir</span><span>{{ $license['next_due_date'] }}</span></li>
             <li><span>Amount</span><span>Rp{{ $license['amount'] }}</span></li>
             <li><span>Payment method</span><span>{{ $license['payment_method'] }}</span></li>
         </ul>
