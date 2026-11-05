@@ -80,6 +80,11 @@
             onclick="showApplicationDetailTab('technology')">
         Teknologi Aplikasi
     </button>
+    <button type="button" id="applicationUsersTab" role="tab" aria-selected="false" aria-controls="applicationUsersPanel"
+            class="rounded-t-lg border-b-2 border-transparent px-4 py-3 text-sm font-semibold text-gray-500 hover:text-blue-700"
+            onclick="showApplicationDetailTab('users')">
+        Pengguna Aplikasi
+    </button>
 </div>
 
 <div id="applicationPanel" role="tabpanel" aria-labelledby="applicationTab">
@@ -466,6 +471,10 @@
     'application' => $application,
     'applicationTechnologies' => $applicationTechnologies,
 ])
+@include('pages.application.application-users', [
+    'application' => $application,
+    'applicationUsers' => $applicationUsers,
+])
 
 <!-- /* MODAL EDIT / TAMBAH PIC */ -->
 <div id="picModal" class="modal-overlay" style="display: none;">
@@ -622,6 +631,7 @@ function showApplicationDetailTab(tab) {
         application: ['applicationTab', 'applicationPanel'],
         domain: ['domainTab', 'domainPanel'],
         technology: ['technologyTab', 'technologyPanel'],
+        users: ['applicationUsersTab', 'applicationUsersPanel'],
     };
 
     Object.entries(tabs).forEach(([name, [tabId, panelId]]) => {

@@ -126,6 +126,15 @@ class ApplicationController extends Controller
                 ),
             ]);
         }
+        $applicationUsers = DB::table('pengguna_aplikasi')
+            ->where('id_aplikasi', $id)
+            ->orderBy('id_pengguna_aplikasi')
+            ->get([
+                'id_pengguna_aplikasi',
+                'jenis_pengguna',
+                'jumlah_pengguna',
+                'keterangan',
+            ]);
 
         /* Ambil maintenance terakhir & berikutnya */
         $lastMaintenance = DB::table('vw_maintenance')
@@ -237,7 +246,8 @@ class ApplicationController extends Controller
         return view('pages.application.detail', compact(
             'application',
             'domainDetails',
-            'applicationTechnologies'
+            'applicationTechnologies',
+            'applicationUsers'
         ));
     }
 
