@@ -93,6 +93,39 @@ class ApplicationController extends Controller
                     $domainActivities->get($domain->id_domain, collect())
                 );
             });
+        $applicationTechnologies = DB::table('teknologi_aplikasi')
+            ->where('id_aplikasi', $id)
+            ->orderBy('id_teknologi_aplikasi')
+            ->get([
+                'id_teknologi_aplikasi',
+                'bahasa_pemrograman',
+                'kerangka_pengembangan',
+                'metode_pengembangan',
+                'model_pengembangan',
+                'basis_data',
+                'sistem_operasi_server',
+                'layanan_infrastruktur',
+                'mekanisme_pembangunan',
+                'keterangan',
+            ]);
+        if ($applicationTechnologies->isEmpty()) {
+            $applicationTechnologies = collect([
+                (object) array_merge(
+                    ['id_teknologi_aplikasi' => null],
+                    array_fill_keys([
+                        'bahasa_pemrograman',
+                        'kerangka_pengembangan',
+                        'metode_pengembangan',
+                        'model_pengembangan',
+                        'basis_data',
+                        'sistem_operasi_server',
+                        'layanan_infrastruktur',
+                        'mekanisme_pembangunan',
+                        'keterangan',
+                    ], null)
+                ),
+            ]);
+        }
 
         /* Ambil maintenance terakhir & berikutnya */
         $lastMaintenance = DB::table('vw_maintenance')
@@ -201,7 +234,11 @@ class ApplicationController extends Controller
             })->toArray(),
         ];
 
-        return view('pages.application.detail', compact('application', 'domainDetails'));
+        return view('pages.application.detail', compact(
+            'application',
+            'domainDetails',
+            'applicationTechnologies'
+        ));
     }
 
     /**
@@ -458,6 +495,58 @@ class ApplicationController extends Controller
             return redirect()->back()
                 ->with('error', 'Gagal menghapus aplikasi: ' . $e->getMessage());
         }
+    }
+
+    public function storeTechnology(Request $request, int $id)
+    {
+        abort_unless(DB::table('aplikasi')->where('id_aplikasi', $id)->whereNull('deleted_at')->exists(), 404);
+
+        $validated = $request->validate($this->technologyRules());
+
+        DB::table('teknologi_aplikasi')->insert(
+            ['id_aplikasi' => $id] + $validated
+        );
+
+        return redirect()
+            ->route('application.detail', ['id' => $id, 'tab' => 'technology'])
+            ->with('success', 'Teknologi aplikasi berhasil ditambahkan.');
+    }
+
+    public function updateTechnology(Request $request, int $id, int $technologyId)
+    {
+        abort_unless(DB::table('aplikasi')->where('id_aplikasi', $id)->whereNull('deleted_at')->exists(), 404);
+
+        $technology = DB::table('teknologi_aplikasi')
+            ->where('id_teknologi_aplikasi', $technologyId)
+            ->where('id_aplikasi', $id)
+            ->exists();
+        abort_unless($technology, 404);
+
+        $validated = $request->validate($this->technologyRules());
+
+        DB::table('teknologi_aplikasi')
+            ->where('id_teknologi_aplikasi', $technologyId)
+            ->where('id_aplikasi', $id)
+            ->update($validated);
+
+        return redirect()
+            ->route('application.detail', ['id' => $id, 'tab' => 'technology'])
+            ->with('success', 'Teknologi aplikasi berhasil diperbarui.');
+    }
+
+    private function technologyRules(): array
+    {
+        return [
+            'bahasa_pemrograman' => 'nullable|string|max:200',
+            'kerangka_pengembangan' => 'nullable|string|max:200',
+            'metode_pengembangan' => 'nullable|string|max:200',
+            'model_pengembangan' => 'nullable|string|max:200',
+            'basis_data' => 'nullable|string|max:200',
+            'sistem_operasi_server' => 'nullable|string|max:200',
+            'layanan_infrastruktur' => 'nullable|string|max:200',
+            'mekanisme_pembangunan' => 'nullable|string|max:100',
+            'keterangan' => 'nullable|string',
+        ];
     }
 
     private function formatApplicationDomainDetails(object $domain, Collection $activities): array

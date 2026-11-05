@@ -75,6 +75,11 @@
             onclick="showApplicationDetailTab('domain')">
         Detail Domain
     </button>
+    <button type="button" id="technologyTab" role="tab" aria-selected="false" aria-controls="technologyPanel"
+            class="rounded-t-lg border-b-2 border-transparent px-4 py-3 text-sm font-semibold text-gray-500 hover:text-blue-700"
+            onclick="showApplicationDetailTab('technology')">
+        Teknologi Aplikasi
+    </button>
 </div>
 
 <div id="applicationPanel" role="tabpanel" aria-labelledby="applicationTab">
@@ -457,6 +462,11 @@
     @endforelse
 </div>
 
+@include('pages.application.technology', [
+    'application' => $application,
+    'applicationTechnologies' => $applicationTechnologies,
+])
+
 <!-- /* MODAL EDIT / TAMBAH PIC */ -->
 <div id="picModal" class="modal-overlay" style="display: none;">
     <div class="modal-box">
@@ -608,24 +618,32 @@
 
 <script>
 function showApplicationDetailTab(tab) {
-    const applicationPanel = document.getElementById('applicationPanel');
-    const domainPanel = document.getElementById('domainPanel');
-    const applicationTab = document.getElementById('applicationTab');
-    const domainTab = document.getElementById('domainTab');
-    const isDomainTab = tab === 'domain';
+    const tabs = {
+        application: ['applicationTab', 'applicationPanel'],
+        domain: ['domainTab', 'domainPanel'],
+        technology: ['technologyTab', 'technologyPanel'],
+    };
 
-    applicationPanel.hidden = isDomainTab;
-    domainPanel.hidden = !isDomainTab;
-    applicationTab.setAttribute('aria-selected', String(!isDomainTab));
-    domainTab.setAttribute('aria-selected', String(isDomainTab));
-    applicationTab.classList.toggle('border-blue-600', !isDomainTab);
-    applicationTab.classList.toggle('text-blue-700', !isDomainTab);
-    applicationTab.classList.toggle('border-transparent', isDomainTab);
-    applicationTab.classList.toggle('text-gray-500', isDomainTab);
-    domainTab.classList.toggle('border-blue-600', isDomainTab);
-    domainTab.classList.toggle('text-blue-700', isDomainTab);
-    domainTab.classList.toggle('border-transparent', !isDomainTab);
-    domainTab.classList.toggle('text-gray-500', !isDomainTab);
+    Object.entries(tabs).forEach(([name, [tabId, panelId]]) => {
+        const selected = name === tab;
+        const tabElement = document.getElementById(tabId);
+        const panelElement = document.getElementById(panelId);
+
+        tabElement.setAttribute('aria-selected', String(selected));
+        panelElement.hidden = !selected;
+        tabElement.classList.toggle('border-blue-600', selected);
+        tabElement.classList.toggle('text-blue-700', selected);
+        tabElement.classList.toggle('border-transparent', !selected);
+        tabElement.classList.toggle('text-gray-500', !selected);
+    });
+
+    const url = new URL(window.location.href);
+    if (tab === 'application') {
+        url.searchParams.delete('tab');
+    } else {
+        url.searchParams.set('tab', tab);
+    }
+    window.history.replaceState({}, '', url);
 }
 
 
