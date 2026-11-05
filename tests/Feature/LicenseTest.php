@@ -45,13 +45,13 @@ class LicenseTest extends TestCase
                 'id_lisensi' => 1,
                 'jenis_tagihan' => 'Lisensi',
                 'status_pembayaran' => 'Paid',
-                'tanggal_jatuh_tempo' => '2027-08-15',
+                'tanggal_jatuh_tempo' => '2026-09-20',
                 'jumlah' => 250000,
             ]);
             $this->assertDatabaseHas('lisensi', [
                 'id_lisensi' => 1,
                 'tanggal_mulai' => '2026-08-15',
-                'tanggal_kadaluarsa' => '2027-08-15',
+                'tanggal_kadaluarsa' => '2026-09-20',
             ]);
 
             $logo = DB::table('lisensi')->where('id_lisensi', 1)->value('logo');

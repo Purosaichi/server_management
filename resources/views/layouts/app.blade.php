@@ -22,6 +22,9 @@
         }
         .sidebar-active { background: #2563eb; color: #fff; }
         .sidebar-link:hover { background: #f3f4f6; }
+        .sidebar-submenu { display: none; }
+        .sidebar-dropdown:hover .sidebar-submenu,
+        .sidebar-dropdown:focus-within .sidebar-submenu { display: block; }
     </style>
 </head>
 <body class="bg-gray-50 min-h-screen">
@@ -42,14 +45,23 @@
                         <i class="fas fa-server w-5"></i>
                         <span class="ml-2">Server</span>
                     </a>
-                    <a href="{{ route('application.index') }}" class="flex items-center px-4 py-5 rounded-lg text-sm font-medium {{ request()->routeIs('application.*') ? 'sidebar-active' : 'sidebar-link text-gray-500' }}">
-                        <i class="fas fa-window-maximize w-5"></i>
-                        <span class="ml-2">Application</span>
-                    </a>
-                    <a href="{{ url('/domain') }}" class="flex items-center px-4 py-5 rounded-lg text-sm font-medium {{ request()->routeIs('domain.*') ? 'sidebar-active' : 'sidebar-link text-gray-500' }}">
-                        <i class="fas fa-globe w-5"></i>
-                        <span class="ml-2">Domain</span>
-                    </a>
+                    <div class="sidebar-dropdown">
+                        <a href="{{ route('application.index') }}" aria-haspopup="true"
+                           class="flex items-center justify-between px-4 py-5 rounded-lg text-sm font-medium {{ request()->routeIs('application.*', 'domain.*') ? 'sidebar-active' : 'sidebar-link text-gray-500' }}">
+                            <span class="flex items-center">
+                                <i class="fas fa-window-maximize w-5"></i>
+                                <span class="ml-2">Application</span>
+                            </span>
+                            <i class="fas fa-chevron-down text-xs" aria-hidden="true"></i>
+                        </a>
+                        <div class="sidebar-submenu ml-5 border-l border-gray-200 pl-3">
+                            <a href="{{ route('domain.domain') }}"
+                               class="mt-1 flex items-center rounded-lg px-4 py-3 text-sm font-medium {{ request()->routeIs('domain.*') ? 'sidebar-active' : 'sidebar-link text-gray-500' }}">
+                                <i class="fas fa-globe w-5" aria-hidden="true"></i>
+                                <span class="ml-2">Domain</span>
+                            </a>
+                        </div>
+                    </div>
                     <a href="{{ route('licenses.licenses') }}" class="flex items-center px-4 py-5 rounded-lg text-sm font-medium {{ request()->routeIs('licenses.*') ? 'sidebar-active' : 'sidebar-link text-gray-500' }}">
                         <i class="fas fa-key w-5"></i>
                         <span class="ml-2">Licenses</span>

@@ -3,7 +3,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Pengguna;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
@@ -25,7 +25,7 @@ class AuthController extends Controller
             'password' => 'required',
         ]);
 
-        $user = Pengguna::where('nama_login', $request->email)->first();
+        $user = User::where('email', $request->email)->first();
 
         if (! $user) {
             return back()->withInput()->with('error', 'Email tidak ditemukan di database.');
@@ -36,22 +36,15 @@ class AuthController extends Controller
             return back()->withInput()->with('error', 'Akun Anda tidak aktif.');
         }
 
-        $storedPassword = (string) $user->kata_sandi;
-        $passwordValid = hash_equals($storedPassword, (string) $request->password);
-
-        if (! $passwordValid && str_starts_with($storedPassword, '$')) {
-            $passwordValid = Hash::check($request->password, $storedPassword);
-        }   
-
-        if (! $passwordValid) {
+        if (! Hash::check($request->password, $user->kata_sandi)) {
             return back()->withInput()->with('error', 'Password salah.');
         }
 
         $request->session()->regenerate();
-        $request->session()->put('user_id', $user->id_pengguna);
+        $request->session()->put('user_id', $user->id_akun);
         $request->session()->put('user_name', $user->nama_pengguna);
-        $request->session()->put('user_login', $user->nama_login);
-        $request->session()->put('email', $user->nama_login);
+        $request->session()->put('user_login', $user->email);
+        $request->session()->put('email', $user->email);
 
         return redirect()->route('dashboard');
     }

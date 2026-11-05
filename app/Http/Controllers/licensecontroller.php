@@ -204,11 +204,13 @@ class LicenseController extends Controller
             'id_aset' => 'nullable|integer|exists:aset,id_aset',
         ]);
 
-        if (filled($validated['last_payment'] ?? null) && filled($validated['billing_period'] ?? null)) {
+        if (blank($validated['next_due_date'] ?? null)
+            && filled($validated['last_payment'] ?? null)
+            && filled($validated['billing_period'] ?? null)) {
             $validated['next_due_date'] = $this->calculateDueDate(
                 $validated['last_payment'],
                 $validated['billing_period'],
-            ) ?? ($validated['next_due_date'] ?? null);
+            );
         }
 
         return $validated;

@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\AplikasiDetail;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Support\Collection;
 
 class ApplicationController extends Controller
 {
@@ -72,6 +74,26 @@ class ApplicationController extends Controller
 
         abort_unless($app, 404);
 
+        $applicationDomainIds = DB::table('domain')
+            ->where('id_aplikasi', $id)
+            ->whereNull('deleted_at')
+            ->select('id_domain');
+        $domainActivities = DB::table('vw_domain_activity')
+            ->whereIn('id_domain', $applicationDomainIds)
+            ->orderByDesc('tanggal')
+            ->get()
+            ->groupBy('id_domain');
+        $domainDetails = DB::table('vw_domain_detail')
+            ->whereIn('id_domain', $applicationDomainIds)
+            ->orderBy('id_domain')
+            ->get()
+            ->map(function ($domain) use ($domainActivities) {
+                return $this->formatApplicationDomainDetails(
+                    $domain,
+                    $domainActivities->get($domain->id_domain, collect())
+                );
+            });
+
         /* Ambil maintenance terakhir & berikutnya */
         $lastMaintenance = DB::table('vw_maintenance')
             ->where('target_type', 'Application')
@@ -98,7 +120,7 @@ class ApplicationController extends Controller
             'id' => $app->id_aplikasi,
             'name' => $app->nama_aplikasi,
             'status' => $app->status_aplikasi,
-            'description' => $app->deskripsi ?? 'Aplikasi untuk mengelola sumber daya guru untuk keperluan pendidikan',
+            'description' => $app->deskripsi ?: '-',
             'code' => $app->kode_aplikasi,
             'category' => $app->kategori ?? '-',
             'sla' => $app->sla_percent ? $app->sla_percent . '%' : '-',
@@ -179,7 +201,7 @@ class ApplicationController extends Controller
             })->toArray(),
         ];
 
-        return view('pages.application.detail', compact('application'));
+        return view('pages.application.detail', compact('application', 'domainDetails'));
     }
 
     /**
@@ -436,6 +458,102 @@ class ApplicationController extends Controller
             return redirect()->back()
                 ->with('error', 'Gagal menghapus aplikasi: ' . $e->getMessage());
         }
+    }
+
+    private function formatApplicationDomainDetails(object $domain, Collection $activities): array
+    {
+        return [
+            'id' => $domain->id_domain,
+            'domain' => $domain->nama_domain,
+            'status' => $domain->status_domain ?? '-',
+            'purchase_date' => $domain->tanggal_pembelian
+                ? Carbon::parse($domain->tanggal_pembelian)->format('d F Y')
+                : '-',
+            'expiration_date' => $domain->tanggal_kadaluarsa
+                ? Carbon::parse($domain->tanggal_kadaluarsa)->format('d F Y')
+                : '-',
+            'auto_renewal' => $domain->perpanjangan_otomatis ? 'Active' : 'inactive',
+            'domain_status' => $domain->status_domain === 'Aktif' ? 'Normal' : 'Inactive',
+            'registrar' => $domain->registrar ?? '-',
+            'pic_name' => $domain->nama_pic ?? '-',
+            'pic_jabatan' => $domain->pic_jabatan ?? '-',
+            'pic_email' => $domain->pic_email ?? '-',
+            'pic_telepon' => $domain->pic_telepon ?? '-',
+            'ssl_provider' => $domain->ssl_provider ?? '-',
+            'ssl_status' => $domain->ssl_status ?? '-',
+            'ssl_issued_date' => $domain->ssl_tanggal_terbit
+                ? Carbon::parse($domain->ssl_tanggal_terbit)->format('d F Y')
+                : '-',
+            'ssl_expiration_date' => $domain->ssl_tanggal_kadaluarsa
+                ? Carbon::parse($domain->ssl_tanggal_kadaluarsa)->format('d F Y')
+                : '-',
+            'ssl_certificate_type' => $domain->ssl_tipe ?? '-',
+            'billing_status' => $domain->billing_status ?? 'Unpaid',
+            'billing_cycle' => $domain->billing_cycle ?? '1 tahun',
+            'last_payment' => $domain->last_payment
+                ? Carbon::parse($domain->last_payment)->format('d F Y')
+                : '-',
+            'next_due_date' => $domain->next_due_date
+                ? Carbon::parse($domain->next_due_date)->format('d F Y')
+                : '-',
+            'amount' => $domain->amount ? number_format($domain->amount, 0, ',', ',') : '-',
+            'payment_method' => $domain->payment_method ?? '-',
+            'reminders' => $this->buildApplicationDomainReminders($domain),
+            'activity_history' => $activities->map(function ($activity) {
+                return [
+                    'tanggal' => $activity->tanggal
+                        ? Carbon::parse($activity->tanggal)->format('d F Y')
+                        : '-',
+                    'aktifitas' => $activity->aktivitas ?? '-',
+                    'pic' => $activity->nama_pic ?? '-',
+                    'status' => $activity->status ?? '-',
+                    'catatan' => $activity->catatan ?? '-',
+                ];
+            })->toArray(),
+        ];
+    }
+
+    private function buildApplicationDomainReminders(object $domain): array
+    {
+        $reminders = [];
+
+        if ($domain->sisa_hari_domain !== null && $domain->sisa_hari_domain <= 60) {
+            $reminders[] = [
+                'type' => 'warning',
+                'title' => 'Domain akan expired',
+                'description' => $domain->nama_domain.' akan expired dalam '.$domain->sisa_hari_domain.' hari',
+                'date' => $domain->tanggal_kadaluarsa
+                    ? Carbon::parse($domain->tanggal_kadaluarsa)->format('d M Y')
+                    : '-',
+            ];
+        }
+
+        if ($domain->ssl_tanggal_kadaluarsa) {
+            $daysUntilSslExpiration = Carbon::now()->diffInDays(
+                Carbon::parse($domain->ssl_tanggal_kadaluarsa),
+                false
+            );
+
+            if ($daysUntilSslExpiration <= 60) {
+                $reminders[] = [
+                    'type' => 'info',
+                    'title' => 'SSL Certificate akan expired',
+                    'description' => 'Sertifikat SSL akan expired dalam '.round($daysUntilSslExpiration).' hari',
+                    'date' => Carbon::parse($domain->ssl_tanggal_kadaluarsa)->format('d M Y'),
+                ];
+            }
+        }
+
+        $reminders[] = [
+            'type' => 'info',
+            'title' => 'Perpanjang Domain',
+            'description' => 'Jadwalkan perpanjangan domain berikutnya',
+            'date' => $domain->tanggal_kadaluarsa
+                ? Carbon::parse($domain->tanggal_kadaluarsa)->format('d M Y')
+                : '-',
+        ];
+
+        return $reminders;
     }
 
     private function saveApplicationDomain(int $applicationId, ?int $currentDomainId, ?int $domainId): void

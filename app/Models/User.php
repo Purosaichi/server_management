@@ -12,22 +12,36 @@ class User extends Authenticatable
     /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable;
 
+    protected $table = 'users';
+
+    protected $primaryKey = 'id_akun';
+
+    public const CREATED_AT = 'dibuat_pada';
+
+    public const UPDATED_AT = 'diperbarui_pada';
+
     protected $fillable = [
-        'name',
+        'nama_pengguna',
         'email',
-        'password',
+        'kata_sandi',
+        'status_pengguna',
+        'keterangan',
     ];
 
     protected $hidden = [
-        'password',
+        'kata_sandi',
         'remember_token',
     ];
 
     protected function casts(): array
     {
         return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
+            'kata_sandi' => 'hashed',
         ];
+    }
+
+    public function getAuthPasswordName(): string
+    {
+        return 'kata_sandi';
     }
 }

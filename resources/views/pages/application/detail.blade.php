@@ -39,7 +39,7 @@
                     <span class="running-badge">RUNNING</span>
                 @endif
             </h1>
-            <p class="app-subtitle">Sistem management sumber daya guru</p>
+            <p class="app-subtitle">{{ $application['description'] }}</p>
             
             <div class="app-meta">
                 <span>Versi {{ $application['version'] }}</span>
@@ -64,6 +64,20 @@
     </div>
 </div>
 
+<div role="tablist" aria-label="Detail aplikasi" class="mb-5 flex flex-wrap gap-2 border-b border-gray-200">
+    <button type="button" id="applicationTab" role="tab" aria-selected="true" aria-controls="applicationPanel"
+            class="rounded-t-lg border-b-2 border-blue-600 px-4 py-3 text-sm font-semibold text-blue-700"
+            onclick="showApplicationDetailTab('application')">
+        Detail Aplikasi
+    </button>
+    <button type="button" id="domainTab" role="tab" aria-selected="false" aria-controls="domainPanel"
+            class="rounded-t-lg border-b-2 border-transparent px-4 py-3 text-sm font-semibold text-gray-500 hover:text-blue-700"
+            onclick="showApplicationDetailTab('domain')">
+        Detail Domain
+    </button>
+</div>
+
+<div id="applicationPanel" role="tabpanel" aria-labelledby="applicationTab">
 <!-- /* Baris 1: Informasi Aplikasi, Server, Domain, Licenses */ -->
 <div class="content-grid-4">
     
@@ -80,7 +94,6 @@
             <div class="info-row"><span class="info-label">Nama Aplikasi</span><span class="info-value">{{ $application['name'] }}</span></div>
             <div class="info-row"><span class="info-label">Kode Aplikasi</span><span class="info-value">{{ $application['code'] }}</span></div>
             <div class="info-row"><span class="info-label">Kategori</span><span class="info-value">{{ $application['category'] }}</span></div>
-            <div class="info-row"><span class="info-label">Deskripsi</span><span class="info-value">{{ $application['description'] }}</span></div>
         </div>
     </div>
     
@@ -301,6 +314,149 @@
     </div>
 </div>
 
+</div>
+
+<div id="domainPanel" role="tabpanel" aria-labelledby="domainTab" hidden>
+    <div class="mb-4">
+        <h2 class="text-xl font-bold text-gray-800">Domain {{ $application['name'] }}</h2>
+        <p class="mt-1 text-sm text-gray-500">Domain yang terhubung dengan aplikasi ini.</p>
+    </div>
+    @forelse($domainDetails as $domain)
+        <section class="mb-8">
+            <div class="mb-3 flex flex-wrap items-center justify-between gap-3">
+                <h3 class="text-lg font-bold text-gray-800">{{ $domain['domain'] }}</h3>
+                <a href="{{ route('domain.edit', $domain['id']) }}"
+                   class="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-700">
+                    <i class="fas fa-pen-to-square" aria-hidden="true"></i>
+                    Edit Detail Domain
+                </a>
+            </div>
+            <div class="mb-5 grid gap-5 xl:grid-cols-[2fr_1fr]">
+                <div class="grid gap-5 rounded-xl border border-gray-100 bg-white p-6 shadow-sm sm:grid-cols-2 lg:grid-cols-5 lg:items-center">
+                    <div class="flex items-center gap-4 sm:col-span-2 lg:col-span-1">
+                        <div class="flex h-16 w-16 shrink-0 items-center justify-center rounded-lg bg-blue-600 text-white">
+                            <i class="fas fa-globe text-2xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-bold text-gray-900">{{ $domain['domain'] }}</h3>
+                            <span class="mt-1 inline-flex rounded bg-emerald-100 px-2 py-1 text-xs font-semibold text-emerald-800">{{ $domain['status'] }}</span>
+                        </div>
+                    </div>
+                    <div>
+                        <p class="text-xs text-gray-500">Purchase date</p>
+                        <p class="mt-1 text-sm font-semibold text-gray-800">{{ $domain['purchase_date'] }}</p>
+                    </div>
+                    <div>
+                        <p class="text-xs text-gray-500">Expiration date</p>
+                        <p class="mt-1 text-sm font-semibold text-gray-800">{{ $domain['expiration_date'] }}</p>
+                    </div>
+                    <div>
+                        <p class="text-xs text-gray-500">Auto renewal</p>
+                        <p class="mt-1 text-sm font-semibold {{ $domain['auto_renewal'] === 'Active' ? 'text-green-700' : 'text-red-700' }}">{{ $domain['auto_renewal'] }}</p>
+                    </div>
+                    <div>
+                        <p class="text-xs text-gray-500">Domain status</p>
+                        <p class="mt-1 text-sm font-semibold {{ $domain['domain_status'] === 'Normal' ? 'text-green-700' : 'text-red-700' }}">{{ $domain['domain_status'] }}</p>
+                    </div>
+                </div>
+
+                <div class="rounded-xl border border-gray-100 bg-white p-6 shadow-sm">
+                    <h3 class="mb-4 flex items-center gap-2 text-sm font-semibold text-gray-800">
+                        <i class="fas fa-user text-gray-500"></i>
+                        Person In Charge (PIC)
+                    </h3>
+                    <dl class="space-y-2 text-sm">
+                        <div class="grid grid-cols-[100px_1fr] gap-2"><dt class="text-gray-500">Nama</dt><dd class="font-medium text-gray-800">{{ $domain['pic_name'] }}</dd></div>
+                        <div class="grid grid-cols-[100px_1fr] gap-2"><dt class="text-gray-500">Jabatan</dt><dd class="font-medium text-gray-800">{{ $domain['pic_jabatan'] }}</dd></div>
+                        <div class="grid grid-cols-[100px_1fr] gap-2"><dt class="text-gray-500">Email</dt><dd class="break-all font-medium text-gray-800">{{ $domain['pic_email'] }}</dd></div>
+                        <div class="grid grid-cols-[100px_1fr] gap-2"><dt class="text-gray-500">No. Telepon</dt><dd class="font-medium text-gray-800">{{ $domain['pic_telepon'] }}</dd></div>
+                    </dl>
+                </div>
+            </div>
+
+            <div class="mb-5 grid gap-5 lg:grid-cols-3">
+                <div class="rounded-xl border border-gray-100 bg-white p-5 shadow-sm">
+                    <h3 class="mb-4 flex items-center gap-2 text-sm font-semibold text-gray-800"><i class="fas fa-shield-alt text-gray-500"></i>SSL Certificate</h3>
+                    <dl class="space-y-3 text-sm">
+                        <div class="flex justify-between gap-3"><dt class="text-gray-500">Provider</dt><dd class="text-right font-medium text-gray-800">{{ $domain['ssl_provider'] }}</dd></div>
+                        <div class="flex justify-between gap-3"><dt class="text-gray-500">Status</dt><dd class="font-medium {{ $domain['ssl_status'] === 'Valid' ? 'text-green-700' : 'text-red-700' }}">{{ $domain['ssl_status'] }}</dd></div>
+                        <div class="flex justify-between gap-3"><dt class="text-gray-500">Issued date</dt><dd class="text-right font-medium text-gray-800">{{ $domain['ssl_issued_date'] }}</dd></div>
+                        <div class="flex justify-between gap-3"><dt class="text-gray-500">Expiration date</dt><dd class="text-right font-medium text-gray-800">{{ $domain['ssl_expiration_date'] }}</dd></div>
+                        <div class="flex justify-between gap-3"><dt class="text-gray-500">Certificate type</dt><dd class="text-right font-medium text-gray-800">{{ $domain['ssl_certificate_type'] }}</dd></div>
+                    </dl>
+                </div>
+
+                <div class="rounded-xl border border-gray-100 bg-white p-5 shadow-sm">
+                    <div class="mb-4 flex items-center justify-between gap-2">
+                        <h3 class="flex items-center gap-2 text-sm font-semibold text-gray-800"><i class="fas fa-credit-card text-gray-500"></i>Billing Information</h3>
+                        <span class="text-xs text-gray-500">Status: <strong class="{{ $domain['billing_status'] === 'Paid' ? 'text-green-700' : 'text-red-700' }}">{{ $domain['billing_status'] }}</strong></span>
+                    </div>
+                    <dl class="space-y-3 text-sm">
+                        <div class="flex justify-between gap-3"><dt class="text-gray-500">Billing cycle</dt><dd class="text-right font-medium text-gray-800">{{ $domain['billing_cycle'] }}</dd></div>
+                        <div class="flex justify-between gap-3"><dt class="text-gray-500">Last payment</dt><dd class="text-right font-medium text-gray-800">{{ $domain['last_payment'] }}</dd></div>
+                        <div class="flex justify-between gap-3"><dt class="text-gray-500">Next due date</dt><dd class="text-right font-medium text-gray-800">{{ $domain['next_due_date'] }}</dd></div>
+                        <div class="flex justify-between gap-3"><dt class="text-gray-500">Amount</dt><dd class="text-right font-medium text-gray-800">{{ $domain['amount'] }}</dd></div>
+                        <div class="flex justify-between gap-3"><dt class="text-gray-500">Payment method</dt><dd class="text-right font-medium text-gray-800">{{ $domain['payment_method'] }}</dd></div>
+                    </dl>
+                </div>
+
+                <div class="rounded-xl border border-gray-100 bg-white p-5 shadow-sm">
+                    <h3 class="mb-4 flex items-center gap-2 text-sm font-semibold text-gray-800"><i class="fas fa-bell text-gray-500"></i>Upcoming Reminders</h3>
+                    <div class="space-y-3">
+                        @forelse($domain['reminders'] as $reminder)
+                            <div class="rounded-lg {{ $reminder['type'] === 'warning' ? 'bg-amber-50' : 'bg-blue-50' }} p-3">
+                                <div class="flex items-start justify-between gap-3">
+                                    <div>
+                                        <p class="text-sm font-semibold text-gray-800">{{ $reminder['title'] }}</p>
+                                        <p class="mt-1 text-xs text-gray-600">{{ $reminder['description'] }}</p>
+                                    </div>
+                                    <span class="shrink-0 text-xs font-medium text-gray-500">{{ $reminder['date'] }}</span>
+                                </div>
+                            </div>
+                        @empty
+                            <p class="text-sm text-gray-400">Tidak ada reminder.</p>
+                        @endforelse
+                    </div>
+                </div>
+            </div>
+
+            <div class="overflow-hidden rounded-xl border border-gray-100 bg-white shadow-sm">
+                <h3 class="border-b border-gray-100 px-5 py-4 text-sm font-semibold text-gray-800">Renewal / Activity History</h3>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-100 text-sm">
+                        <thead class="bg-gray-50 text-left text-xs uppercase tracking-wide text-gray-500">
+                            <tr>
+                                <th class="px-5 py-3">Tanggal</th>
+                                <th class="px-5 py-3">Aktifitas</th>
+                                <th class="px-5 py-3">PIC</th>
+                                <th class="px-5 py-3">Status</th>
+                                <th class="px-5 py-3">Catatan</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-100 text-gray-700">
+                            @forelse($domain['activity_history'] as $history)
+                                <tr>
+                                    <td class="whitespace-nowrap px-5 py-3">{{ $history['tanggal'] }}</td>
+                                    <td class="px-5 py-3">{{ $history['aktifitas'] }}</td>
+                                    <td class="px-5 py-3">{{ $history['pic'] }}</td>
+                                    <td class="px-5 py-3">{{ $history['status'] }}</td>
+                                    <td class="px-5 py-3">{{ $history['catatan'] }}</td>
+                                </tr>
+                            @empty
+                                <tr><td colspan="5" class="px-5 py-6 text-center text-gray-400">Belum ada aktivitas.</td></tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+    @empty
+        <div class="rounded-xl border border-dashed border-gray-300 bg-white p-8 text-center text-sm text-gray-500">
+            Belum ada domain yang terhubung dengan aplikasi ini.
+        </div>
+    @endforelse
+</div>
+
 <!-- /* MODAL EDIT / TAMBAH PIC */ -->
 <div id="picModal" class="modal-overlay" style="display: none;">
     <div class="modal-box">
@@ -451,6 +607,27 @@
 </footer>
 
 <script>
+function showApplicationDetailTab(tab) {
+    const applicationPanel = document.getElementById('applicationPanel');
+    const domainPanel = document.getElementById('domainPanel');
+    const applicationTab = document.getElementById('applicationTab');
+    const domainTab = document.getElementById('domainTab');
+    const isDomainTab = tab === 'domain';
+
+    applicationPanel.hidden = isDomainTab;
+    domainPanel.hidden = !isDomainTab;
+    applicationTab.setAttribute('aria-selected', String(!isDomainTab));
+    domainTab.setAttribute('aria-selected', String(isDomainTab));
+    applicationTab.classList.toggle('border-blue-600', !isDomainTab);
+    applicationTab.classList.toggle('text-blue-700', !isDomainTab);
+    applicationTab.classList.toggle('border-transparent', isDomainTab);
+    applicationTab.classList.toggle('text-gray-500', isDomainTab);
+    domainTab.classList.toggle('border-blue-600', isDomainTab);
+    domainTab.classList.toggle('text-blue-700', isDomainTab);
+    domainTab.classList.toggle('border-transparent', !isDomainTab);
+    domainTab.classList.toggle('text-gray-500', !isDomainTab);
+}
+
 
         /* MODAL PIC */
     function openPicModal() {

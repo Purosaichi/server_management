@@ -92,7 +92,7 @@
             </div>
             <div class="app-form-group">
                 <label for="next_due_date">Tanggal Berakhir</label>
-                <input type="date" id="next_due_date" name="next_due_date" value="{{ old('next_due_date', $billing->tanggal_jatuh_tempo ?? ($license->tanggal_kadaluarsa ?? '')) }}" readonly>
+                <input type="date" id="next_due_date" name="next_due_date" value="{{ old('next_due_date', $billing->tanggal_jatuh_tempo ?? ($license->tanggal_kadaluarsa ?? '')) }}">
             </div>
             <div class="app-form-group">
                 <label for="amount">Amount (Rp)</label>
@@ -160,6 +160,5 @@
 
     billingPeriodInput.addEventListener('input', updateBillingDueDate);
     billingStartDateInput.addEventListener('change', updateBillingDueDate);
-    updateBillingDueDate();
 </script>
 @endsection

@@ -2,7 +2,7 @@
 
 namespace Tests\Feature;
 
-use App\Models\Pengguna;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -10,11 +10,11 @@ class LoginTest extends TestCase
 {
     use RefreshDatabase;
 
-    private function createPengguna(): Pengguna
+    private function createUser(): User
     {
-        return Pengguna::query()->create([
+        return User::query()->create([
             'nama_pengguna' => 'Administrator',
-            'nama_login' => 'admin@kemendik.go.id',
+            'email' => 'admin@kemendik.go.id',
             'kata_sandi' => 'password',
             'status_pengguna' => 'Aktif',
         ]);
@@ -25,9 +25,9 @@ class LoginTest extends TestCase
         $this->get('/login')->assertOk()->assertSee('Masuk ke dashboard monitoring');
     }
 
-    public function test_login_reads_pengguna_from_database(): void
+    public function test_login_reads_users_from_database(): void
     {
-        $this->createPengguna();
+        $this->createUser();
 
         $this->from('/login')
             ->post('/login', [
@@ -40,7 +40,7 @@ class LoginTest extends TestCase
 
     public function test_logout_accepts_post_method(): void
     {
-        $this->createPengguna();
+        $this->createUser();
 
         $this->withSession(['user_id' => 1, 'user_name' => 'Administrator'])
             ->post('/logout')
@@ -65,7 +65,7 @@ class LoginTest extends TestCase
 
     public function test_login_rejects_wrong_password(): void
     {
-        $this->createPengguna();
+        $this->createUser();
 
         $this->from('/login')
             ->post('/login', [
