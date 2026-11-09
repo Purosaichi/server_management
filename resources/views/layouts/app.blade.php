@@ -23,8 +23,16 @@
         .sidebar-active { background: #2563eb; color: #fff; }
         .sidebar-link:hover { background: #f3f4f6; }
         .sidebar-submenu { display: none; }
-        .sidebar-dropdown:hover .sidebar-submenu,
-        .sidebar-dropdown:focus-within .sidebar-submenu { display: block; }
+        .sidebar-submenu.is-open { display: block; }
+        .sidebar-dropdown-row { display: flex; align-items: center; border-radius: 0.5rem; }
+        .sidebar-dropdown-row:not(.sidebar-active):hover { background: #f3f4f6; }
+        .sidebar-dropdown-link { flex: 1; min-width: 0; }
+        .sidebar-dropdown-row.sidebar-active .sidebar-dropdown-link { color: #fff; }
+        .sidebar-dropdown-toggle { display: flex; width: 2.5rem; height: 2.5rem; flex: 0 0 auto; align-items: center; justify-content: center; margin-right: 0.25rem; border: 0; border-radius: 0.5rem; background: transparent; color: inherit; cursor: pointer; }
+        .sidebar-dropdown-row:not(.sidebar-active) .sidebar-dropdown-toggle:hover { background: #e5e7eb; }
+        .sidebar-dropdown-row.sidebar-active .sidebar-dropdown-toggle:hover { background: rgba(255, 255, 255, 0.14); }
+        .sidebar-dropdown-toggle i { transition: transform 0.15s ease; }
+        .sidebar-dropdown-toggle[aria-expanded="true"] i { transform: rotate(180deg); }
     </style>
 </head>
 <body class="bg-gray-50 min-h-screen">
@@ -42,15 +50,17 @@
                 <div class="pt-2 space-y-2  ">
                     <p class="px-4 text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">Monitoring</p>
                     <div class="sidebar-dropdown">
-                        <a href="{{ route('aset.index') }}" aria-haspopup="true"
-                           class="flex items-center justify-between px-4 py-5 rounded-lg text-sm font-medium {{ request()->routeIs('aset.*', 'server.*', 'network-device.*') ? 'sidebar-active' : 'sidebar-link text-gray-500' }}">
-                            <span class="flex items-center">
+                           <div class="sidebar-dropdown-row {{ request()->routeIs('aset.*', 'server.*', 'network-device.*') ? 'sidebar-active' : '' }}">
+                            <a href="{{ route('aset.index') }}"
+                               class="sidebar-dropdown-link flex items-center px-4 py-5 rounded-lg text-sm font-medium {{ request()->routeIs('aset.*', 'server.*', 'network-device.*') ? 'text-white' : 'sidebar-link text-gray-500' }}">
                                 <i class="fas fa-boxes-stacked w-5"></i>
                                 <span class="ml-2">Aset</span>
-                            </span>
-                            <i class="fas fa-chevron-down text-xs" aria-hidden="true"></i>
-                        </a>
-                        <div class="sidebar-submenu ml-5 border-l border-gray-200 pl-3">
+                            </a>
+                            <button type="button" class="sidebar-dropdown-toggle" data-sidebar-toggle aria-expanded="false" aria-controls="asetSubmenu" aria-label="Buka submenu Aset">
+                                <i class="fas fa-chevron-down text-xs" aria-hidden="true"></i>
+                            </button>
+                        </div>
+                        <div id="asetSubmenu" class="sidebar-submenu ml-5 border-l border-gray-200 pl-3">
                             <a href="{{ route('server.index') }}"
                                class="mt-1 flex items-center rounded-lg px-4 py-3 text-sm font-medium {{ request()->routeIs('server.*') ? 'sidebar-active' : 'sidebar-link text-gray-500' }}">
                                 <i class="fas fa-server w-5" aria-hidden="true"></i>
@@ -74,15 +84,17 @@
                         </div>
                     </div>
                     <div class="sidebar-dropdown">
-                        <a href="{{ route('application.index') }}" aria-haspopup="true"
-                           class="flex items-center justify-between px-4 py-5 rounded-lg text-sm font-medium {{ request()->routeIs('application.*', 'domain.*') ? 'sidebar-active' : 'sidebar-link text-gray-500' }}">
-                            <span class="flex items-center">
+                           <div class="sidebar-dropdown-row {{ request()->routeIs('application.*', 'domain.*') ? 'sidebar-active' : '' }}">
+                            <a href="{{ route('application.index') }}"
+                               class="sidebar-dropdown-link flex items-center px-4 py-5 rounded-lg text-sm font-medium {{ request()->routeIs('application.*', 'domain.*') ? 'text-white' : 'sidebar-link text-gray-500' }}">
                                 <i class="fas fa-window-maximize w-5"></i>
                                 <span class="ml-2">Application</span>
-                            </span>
-                            <i class="fas fa-chevron-down text-xs" aria-hidden="true"></i>
-                        </a>
-                        <div class="sidebar-submenu ml-5 border-l border-gray-200 pl-3">
+                            </a>
+                            <button type="button" class="sidebar-dropdown-toggle" data-sidebar-toggle aria-expanded="false" aria-controls="applicationSubmenu" aria-label="Buka submenu Application">
+                                <i class="fas fa-chevron-down text-xs" aria-hidden="true"></i>
+                            </button>
+                        </div>
+                        <div id="applicationSubmenu" class="sidebar-submenu ml-5 border-l border-gray-200 pl-3">
                             <a href="{{ route('domain.domain') }}"
                                class="mt-1 flex items-center rounded-lg px-4 py-3 text-sm font-medium {{ request()->routeIs('domain.*') ? 'sidebar-active' : 'sidebar-link text-gray-500' }}">
                                 <i class="fas fa-globe w-5" aria-hidden="true"></i>
@@ -120,5 +132,17 @@
             </main>
         </div>
     </div>
+    <script>
+        document.querySelectorAll('[data-sidebar-toggle]').forEach(function(button) {
+            button.addEventListener('click', function() {
+                const submenu = document.getElementById(button.getAttribute('aria-controls'));
+                const isOpen = button.getAttribute('aria-expanded') === 'true';
+
+                button.setAttribute('aria-expanded', String(!isOpen));
+                button.setAttribute('aria-label', (isOpen ? 'Buka' : 'Tutup') + ' submenu ' + (button.getAttribute('aria-controls') === 'asetSubmenu' ? 'Aset' : 'Application'));
+                submenu.classList.toggle('is-open', !isOpen);
+            });
+        });
+    </script>
 </body>
 </html>

@@ -18,7 +18,9 @@ class AsetPageTest extends TestCase
             ->assertSee(route('network-device.router'))
             ->assertSee('Network Device')
             ->assertSee(route('aset.storage'))
-            ->assertSee('Storage');
+            ->assertSee('Storage')
+            ->assertSee('data-sidebar-toggle', false)
+            ->assertSee('aria-controls="asetSubmenu"', false);
     }
 
     public function test_asset_location_menu_opens_its_placeholder_page(): void
