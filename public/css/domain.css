@@ -40,6 +40,61 @@
     color: #6b7280;
 }
 
+.dmn-filter-bar {
+    display: flex;
+    align-items: end;
+    gap: 0.75rem;
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid #f3f4f6;
+}
+
+.dmn-filter-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.375rem;
+    color: #4b5563;
+    font-size: 0.8125rem;
+}
+
+.dmn-filter-field input,
+.dmn-filter-field select {
+    min-width: 12rem;
+    padding: 0.5rem 0.75rem;
+    border: 1px solid #d1d5db;
+    border-radius: 0.375rem;
+    color: #111827;
+    background: white;
+    font: inherit;
+}
+
+.dmn-filter-reset {
+    padding: 0.5rem 0.875rem;
+    border-radius: 0.375rem;
+    background: #f3f4f6;
+    color: #374151;
+    font-size: 0.875rem;
+    font-weight: 500;
+    text-decoration: none;
+}
+
+@media (max-width: 640px) {
+    .dmn-table-header {
+        align-items: flex-start;
+        gap: 0.75rem;
+        flex-direction: column;
+    }
+
+    .dmn-filter-bar {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .dmn-filter-field input,
+    .dmn-filter-field select {
+        min-width: 0;
+    }
+}
+
 .dmn-table-wrapper {
     overflow-x: auto;
 }

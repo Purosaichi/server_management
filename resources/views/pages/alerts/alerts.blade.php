@@ -88,6 +88,10 @@
                 </svg>
                 Clear
             </button>
+            <a href="{{ route('alerts.history') }}" class="alerts-history-button" title="Lihat alert yang sudah diarsipkan">
+                <i class="fas fa-clock-rotate-left" aria-hidden="true"></i>
+                History
+            </a>
         </div>
     </div>
     <div class="alerts-table-wrapper">
@@ -359,7 +363,7 @@
             <button type="button" class="alerts-modal-close" data-close-modal aria-label="Tutup">&times;</button>
             <div class="alerts-clear-modal-icon" aria-hidden="true">🗑️</div>
             <h2 id="confirm-title">Clear alert?</h2>
-            <p id="confirm-message">Alert yang dipilih akan dihapus permanen.</p>
+            <p id="confirm-message">Alert yang dipilih akan dipindahkan ke history.</p>
             <form id="clear-alert-form" method="POST" action="{{ route('alerts.clear') }}">
                 @csrf
                 <input type="hidden" name="_method" value="DELETE">
@@ -448,8 +452,8 @@
             clearForm.action = url;
             document.getElementById('confirm-title').textContent = all ? 'Clear semua alert?' : 'Clear alert?';
             document.getElementById('confirm-message').textContent = all
-                ? 'Semua alert dengan status Selesai akan dihapus permanen. Alert Aktif tetap tersimpan.'
-                : 'Alert ini akan dihapus permanen.';
+                ? 'Semua alert dengan status Selesai akan dipindahkan ke history. Alert Aktif tetap tersimpan.'
+                : 'Alert ini akan dipindahkan ke history.';
             openModal(confirmModal);
         }
 

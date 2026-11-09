@@ -75,6 +75,33 @@ class MaintenanceController extends Controller
         ]);
     }
 
+    public function history()
+    {
+        $maintenances = DB::table('maintenance')
+            ->leftJoin('server', 'server.id_server', '=', 'maintenance.id_server')
+            ->leftJoin('aplikasi', 'aplikasi.id_aplikasi', '=', 'maintenance.id_aplikasi')
+            ->leftJoin('pic', 'pic.id_pic', '=', 'maintenance.id_pic')
+            ->whereNotNull('maintenance.deleted_at')
+            ->orderByDesc('maintenance.deleted_at')
+            ->get([
+                'maintenance.id_maintenance',
+                'maintenance.kode_maintenance',
+                'maintenance.target_type',
+                'maintenance.jenis_maintenance',
+                'maintenance.jadwal_tanggal',
+                'maintenance.jam_mulai',
+                'maintenance.jam_selesai',
+                'maintenance.status',
+                'maintenance.catatan',
+                'maintenance.deleted_at',
+                'server.nama_server',
+                'aplikasi.nama_aplikasi',
+                'pic.nama_pic',
+            ]);
+
+        return view('pages.maintenance.history', compact('maintenances'));
+    }
+
     /**
      * Simpan maintenance baru
      */

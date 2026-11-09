@@ -364,6 +364,30 @@
     border-color: #fca5a5;
 }
 
+.mt-btn-history {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    padding: 0.375rem 0.75rem;
+    background-color: #eff6ff;
+    color: #1d4ed8;
+    border: 1px solid #bfdbfe;
+    border-radius: 0.5rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+    text-decoration: none;
+    transition: background-color 0.2s;
+}
+
+.mt-btn-history:hover {
+    background-color: #dbeafe;
+}
+
+.mt-btn-history i {
+    width: 0.875rem;
+    text-align: center;
+}
+
 .mt-btn-clear svg {
     width: 0.875rem;
     height: 0.875rem;

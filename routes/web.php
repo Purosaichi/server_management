@@ -62,6 +62,7 @@ Route::middleware(['auth.session'])->group(function () {
     Route::get('/licenses/{id}', [LicenseController::class, 'show'])->name('licenses.detail');
 
     Route::get('/maintenance', [MaintenanceController::class, 'index'])->name('maintenance.maintenance');
+    Route::get('/maintenance/history', [MaintenanceController::class, 'history'])->name('maintenance.history');
     Route::post('/maintenance', [MaintenanceController::class, 'store'])->name('maintenance.store');
     Route::delete('/maintenance/clear', [MaintenanceController::class, 'clear'])->name('maintenance.clear');
     Route::put('/maintenance/{id}', [MaintenanceController::class, 'update'])->name('maintenance.update');
@@ -70,6 +71,7 @@ Route::middleware(['auth.session'])->group(function () {
     Route::put('/alerts/{id}', [AlertController::class, 'update'])->name('alerts.update');
     Route::delete('/alerts/{id}', [AlertController::class, 'destroy'])->name('alerts.destroy');
     Route::delete('/alerts', [AlertController::class, 'clear'])->name('alerts.clear');
+    Route::get('/alerts/history', [AlertController::class, 'history'])->name('alerts.history');
 
     Route::prefix('network-device')->name('network-device.')->group(function () {
         Route::get('/router', [NetworkDeviceController::class, 'router'])->name('router');

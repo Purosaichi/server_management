@@ -12,20 +12,18 @@ class AlertController extends Controller
 {
     public function index()
     {
-        /* STATISTIK DARI VIEW */
-        $statsRaw = DB::table('vw_dashboard_stats')->first();
-
         $stats = [
-            'total'    => $statsRaw->alert_aktif ?? 0,
-            'critical' => $statsRaw->alert_critical ?? 0,
-            'warning'  => DB::table('alert')->where('level', 'Warning')->where('status', 'Aktif')->count(),
-            'info'     => DB::table('alert')->where('level', 'Info')->where('status', 'Aktif')->count(),
+            'total'    => DB::table('alert')->whereNull('deleted_at')->where('status', 'Aktif')->count(),
+            'critical' => DB::table('alert')->whereNull('deleted_at')->where('level', 'Critical')->where('status', 'Aktif')->count(),
+            'warning'  => DB::table('alert')->whereNull('deleted_at')->where('level', 'Warning')->where('status', 'Aktif')->count(),
+            'info'     => DB::table('alert')->whereNull('deleted_at')->where('level', 'Info')->where('status', 'Aktif')->count(),
         ];
 
-        /* AMBIL DATA ALERT DARI VIEW */
+        $activeAlertIds = DB::table('alert')->whereNull('deleted_at')->pluck('id_alert')->flip();
         $allAlerts = DB::table('vw_alert')
             ->orderBy('waktu_mulai', 'desc')
             ->get()
+            ->filter(fn ($row) => $activeAlertIds->has((int) ($row->id_alert ?? $row->id ?? 0)))
             ->map(function ($row) {
                 return [
                     'id'         => $row->id_alert ?? $row->id ?? null,
@@ -71,6 +69,34 @@ class AlertController extends Controller
         ));
     }
 
+    public function history()
+    {
+        $alerts = DB::table('alert')
+            ->leftJoin('server', 'server.id_server', '=', 'alert.id_server')
+            ->leftJoin('aplikasi', 'aplikasi.id_aplikasi', '=', 'alert.id_aplikasi')
+            ->leftJoin('domain', 'domain.id_domain', '=', 'alert.id_domain')
+            ->leftJoin('pic', 'pic.id_pic', '=', 'alert.id_pic')
+            ->whereNotNull('alert.deleted_at')
+            ->orderByDesc('alert.deleted_at')
+            ->get([
+                'alert.id_alert',
+                'alert.level',
+                'alert.deskripsi',
+                'alert.keterangan',
+                'alert.target_type',
+                'alert.waktu_mulai',
+                'alert.waktu_selesai',
+                'alert.status',
+                'alert.deleted_at',
+                'server.nama_server',
+                'aplikasi.nama_aplikasi',
+                'domain.nama_domain',
+                'pic.nama_pic',
+            ]);
+
+        return view('pages.alerts.history', compact('alerts'));
+    }
+
     public function store(Request $request)
     {
         DB::table('alert')->insert($this->alertPayload($request));
@@ -80,7 +106,7 @@ class AlertController extends Controller
 
     public function update(Request $request, int $id)
     {
-        abort_unless(DB::table('alert')->where('id_alert', $id)->exists(), 404);
+        abort_unless(DB::table('alert')->where('id_alert', $id)->whereNull('deleted_at')->exists(), 404);
 
         DB::table('alert')->where('id_alert', $id)->update($this->alertPayload($request, true));
 
@@ -89,18 +115,24 @@ class AlertController extends Controller
 
     public function destroy(int $id)
     {
-        $deleted = DB::table('alert')->where('id_alert', $id)->delete();
-        abort_unless($deleted, 404);
+        $archived = DB::table('alert')
+            ->where('id_alert', $id)
+            ->whereNull('deleted_at')
+            ->update(['deleted_at' => now()]);
+        abort_unless($archived, 404);
 
-        return redirect()->route('alerts.alerts')->with('success', 'Alert berhasil dihapus.');
+        return redirect()->route('alerts.alerts')->with('success', 'Alert berhasil diarsipkan.');
     }
 
     public function clear()
     {
-        $deleted = DB::table('alert')->where('status', 'Selesai')->delete();
+            $archived = DB::table('alert')
+                ->where('status', 'Selesai')
+                ->whereNull('deleted_at')
+                ->update(['deleted_at' => now()]);
 
         return redirect()->route('alerts.alerts')
-            ->with('success', "Berhasil menghapus {$deleted} alert berstatus Selesai.");
+                ->with('success', "Berhasil mengarsipkan {$archived} alert berstatus Selesai.");
     }
 
     private function alertPayload(Request $request, bool $allowInfo = false): array

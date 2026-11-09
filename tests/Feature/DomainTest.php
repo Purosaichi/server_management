@@ -20,9 +20,34 @@ class DomainTest extends TestCase
             ->assertSee('Daftar Domain');
     }
 
+    public function test_domain_list_can_search_by_name_and_filter_by_status(): void
+    {
+        Schema::create('domain', function (Blueprint $table) {
+            $table->increments('id_domain');
+            $table->string('nama_domain');
+            $table->string('status');
+            $table->timestamp('deleted_at')->nullable();
+        });
+        DB::table('domain')->insert([
+            ['nama_domain' => 'portal.example', 'status' => 'Aktif', 'deleted_at' => null],
+            ['nama_domain' => 'archive.example', 'status' => 'Tidak Aktif', 'deleted_at' => null],
+            ['nama_domain' => 'deleted.example', 'status' => 'Aktif', 'deleted_at' => now()],
+        ]);
+        DB::statement('CREATE VIEW vw_domain_detail AS SELECT id_domain, nama_domain, status AS status_domain, NULL AS nama_aplikasi, NULL AS nama_pic, NULL AS ssl_status, NULL AS tanggal_kadaluarsa FROM domain');
+
+        $this->withSession(['user_id' => 1, 'user_name' => 'Administrator'])
+            ->get('/domain?search=example&status=Aktif')
+            ->assertOk()
+            ->assertSee('portal.example')
+            ->assertDontSee('archive.example')
+            ->assertDontSee('deleted.example');
+    }
+
     public function test_domain_row_has_detail_url_for_double_click(): void
     {
         $html = view('pages.domain.domain', [
+            'search' => '',
+            'status' => '',
             'domains' => [
                 [
                     'id' => 42,
@@ -36,14 +61,16 @@ class DomainTest extends TestCase
             ],
         ])->render();
 
-        $this->assertStringContainsString('data-detail-url="/domain/42"', $html);
-        $this->assertStringNotContainsString('/domain/1', $html);
+        $this->assertStringContainsString('data-detail-url="'.route('domain.detail', 42).'"', $html);
+        $this->assertStringNotContainsString('data-detail-url="'.route('domain.detail', 1).'"', $html);
         $this->assertStringNotContainsString('Selengkapnya', $html);
     }
 
     public function test_domain_list_has_functional_edit_link_and_inert_delete_button(): void
     {
         $html = view('pages.domain.domain', [
+            'search' => '',
+            'status' => '',
             'domains' => [
                 [
                     'id' => 42,
@@ -57,9 +84,9 @@ class DomainTest extends TestCase
             ],
         ])->render();
 
-        $this->assertStringContainsString('href="/domain/42/edit"', $html);
+        $this->assertStringContainsString('href="'.route('domain.edit', 42).'"', $html);
         $this->assertStringContainsString('class="dmn-btn-delete"', $html);
-        $this->assertStringContainsString('data-delete-url="/domain/42"', $html);
+        $this->assertStringContainsString('data-delete-url="'.route('domain.destroy', 42).'"', $html);
         $this->assertStringContainsString('Konfirmasi Hapus', $html);
         $this->assertStringContainsString('Ya, Hapus', $html);
         $this->assertStringContainsString('name="_method" value="DELETE"', $html);

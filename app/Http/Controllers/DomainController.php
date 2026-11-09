@@ -12,14 +12,27 @@ use Illuminate\Support\Facades\DB;
 
 class DomainController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
+        $filters = $request->validate([
+            'search' => 'nullable|string|max:150',
+            'status' => 'nullable|in:Aktif,Tidak Aktif',
+        ]);
+        $search = trim($filters['search'] ?? '');
+        $status = $filters['status'] ?? '';
+
         try {
             $activeDomainIds = DB::table('domain')
                 ->whereNull('deleted_at')
                 ->select('id_domain');
 
             $domains = DomainDetail::whereIn('id_domain', $activeDomainIds)
+                ->when($search !== '', function ($query) use ($search) {
+                    $query->where('nama_domain', 'like', '%' . $search . '%');
+                })
+                ->when($status !== '', function ($query) use ($status) {
+                    $query->where('status_domain', $status);
+                })
                 ->orderBy('id_domain')
                 ->get()
                 ->map(function ($d) {
@@ -40,7 +53,7 @@ class DomainController extends Controller
             $domains = [];
         }
 
-        return view('pages.domain.domain', compact('domains'));
+        return view('pages.domain.domain', compact('domains', 'search', 'status'));
     }
 
     public function show(int $id)

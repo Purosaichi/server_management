@@ -85,7 +85,10 @@ class ApplicationTest extends TestCase
         $this->assertStringContainsString('name="search"', $html);
         $this->assertStringContainsString('value="Portal"', $html);
         $this->assertStringContainsString('name="status"', $html);
-        $this->assertStringContainsString("addEventListener('input'", $html);
+        $this->assertStringContainsString("field.addEventListener('keydown'", $html);
+        $this->assertStringContainsString("event.key !== 'Enter'", $html);
+        $this->assertStringNotContainsString("addEventListener('input'", $html);
+        $this->assertStringNotContainsString("addEventListener('change'", $html);
         $this->assertStringContainsString('requestSubmit()', $html);
         $this->assertStringNotContainsString('class="app-filter-submit"', $html);
     }

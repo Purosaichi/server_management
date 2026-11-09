@@ -21,6 +21,30 @@
             <a href="{{ route('domain.create') }}" class="dmn-btn-add"> + Tambah Domain</a>
         </div>    
     </div>
+    <form id="domainFilterForm" method="GET" action="{{ route('domain.domain') }}" class="dmn-filter-bar">
+        <label class="dmn-filter-field">
+            <span>Nama domain</span>
+            <input
+                type="search"
+                name="search"
+                id="domainSearch"
+                value="{{ $search }}"
+                placeholder="Cari nama domain..."
+                maxlength="150"
+            >
+        </label>
+        <label class="dmn-filter-field">
+            <span>Status</span>
+            <select name="status" id="domainStatus">
+                <option value="">Semua status</option>
+                <option value="Aktif" @selected($status === 'Aktif')>Aktif</option>
+                <option value="Tidak Aktif" @selected($status === 'Tidak Aktif')>Tidak Aktif</option>
+            </select>
+        </label>
+        @if($search !== '' || $status !== '')
+            <a href="{{ route('domain.domain') }}" class="dmn-filter-reset">Reset</a>
+        @endif
+    </form>
     <div class="dmn-table-wrapper">
         <table>
             <thead>
@@ -34,7 +58,7 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach($domains as $domain)
+                @forelse($domains as $domain)
                 <tr class="dmn-domain-row" data-detail-url="{{ route('domain.detail', $domain['id']) }}" tabindex="0" aria-label="Detail {{ $domain['domain'] }}">
                     <td><span class="dmn-name">{{ $domain['domain'] }}</span></td>
                     <td>{{ $domain['application'] }}</td>
@@ -66,7 +90,13 @@
                         </div>
                     </td>
                 </tr>
-                @endforeach
+                @empty
+                <tr>
+                    <td colspan="7" style="text-align: center; color: #9ca3af; padding: 2rem;">
+                        Tidak ada domain yang cocok dengan filter.
+                    </td>
+                </tr>
+                @endforelse
             </tbody>
         </table>
     </div>
@@ -99,6 +129,18 @@
 </footer>
 
 <script>
+    const domainFilterForm = document.getElementById('domainFilterForm');
+    const domainSearch = document.getElementById('domainSearch');
+    const domainStatus = document.getElementById('domainStatus');
+
+    [domainSearch, domainStatus].forEach(function(field) {
+        field.addEventListener('keydown', function(event) {
+            if (event.key !== 'Enter') return;
+            event.preventDefault();
+            domainFilterForm.requestSubmit();
+        });
+    });
+
     const domainDeleteModal = document.getElementById('domainDeleteModal');
     let domainDeleteTrigger = null;
 

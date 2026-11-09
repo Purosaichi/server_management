@@ -161,18 +161,13 @@
     const applicationFilterForm = document.getElementById('applicationFilterForm');
     const applicationSearch = document.getElementById('applicationSearch');
     const applicationStatus = applicationFilterForm.querySelector('select[name="status"]');
-    let applicationSearchTimeout;
 
-    applicationSearch.addEventListener('input', function() {
-        clearTimeout(applicationSearchTimeout);
-        applicationSearchTimeout = setTimeout(function() {
+    [applicationSearch, applicationStatus].forEach(function(field) {
+        field.addEventListener('keydown', function(event) {
+            if (event.key !== 'Enter') return;
+            event.preventDefault();
             applicationFilterForm.requestSubmit();
-        }, 350);
-    });
-
-    applicationStatus.addEventListener('change', function() {
-        clearTimeout(applicationSearchTimeout);
-        applicationFilterForm.requestSubmit();
+        });
     });
 
     function showDeleteModal(id, name) {

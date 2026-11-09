@@ -92,6 +92,10 @@
                 </svg>
                 Clear
             </button>
+            <a href="{{ route('maintenance.history') }}" class="mt-btn-history" title="Lihat maintenance yang sudah dihapus">
+                <i class="fas fa-clock-rotate-left" aria-hidden="true"></i>
+                History
+            </a>
         </div>
     </div>
     <div class="mt-table-wrapper">
