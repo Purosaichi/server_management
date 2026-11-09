@@ -39,8 +39,8 @@
                 <div class="pt-2 space-y-1">
                     <p class="px-4 text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">Monitoring</p>
                     <a href="{{ route('server.index') }}" class="flex items-center px-4 py-2 rounded-lg sidebar-link text-sm font-medium text-gray-500">
-                        <i class="fas fa-server w-5 text-gray-400"></i>
-                        <span class="ml-2">Server</span>
+                        <i class="fas fa-boxes-stacked w-5 text-gray-400"></i>
+                        <span class="ml-2">Aset</span>
                     </a>
                 </div>
             </nav>

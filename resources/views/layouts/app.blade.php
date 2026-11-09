@@ -42,8 +42,8 @@
                 <div class="pt-2 space-y-2  ">
                     <p class="px-4 text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">Monitoring</p>
                     <a href="{{ route('server.index') }}" class="flex items-center px-4 py-5 rounded-lg text-sm font-medium {{ request()->routeIs('server.*') ? 'sidebar-active' : 'sidebar-link text-gray-500' }}">
-                        <i class="fas fa-server w-5"></i>
-                        <span class="ml-2">Server</span>
+                        <i class="fas fa-boxes-stacked w-5"></i>
+                        <span class="ml-2">Aset</span>
                     </a>
                     <div class="sidebar-dropdown">
                         <a href="{{ route('application.index') }}" aria-haspopup="true"
