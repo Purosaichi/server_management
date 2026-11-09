@@ -41,10 +41,38 @@
                 </a>
                 <div class="pt-2 space-y-2  ">
                     <p class="px-4 text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">Monitoring</p>
-                    <a href="{{ route('server.index') }}" class="flex items-center px-4 py-5 rounded-lg text-sm font-medium {{ request()->routeIs('server.*') ? 'sidebar-active' : 'sidebar-link text-gray-500' }}">
-                        <i class="fas fa-boxes-stacked w-5"></i>
-                        <span class="ml-2">Aset</span>
-                    </a>
+                    <div class="sidebar-dropdown">
+                        <a href="{{ route('aset.index') }}" aria-haspopup="true"
+                           class="flex items-center justify-between px-4 py-5 rounded-lg text-sm font-medium {{ request()->routeIs('aset.*', 'server.*', 'network-device.*') ? 'sidebar-active' : 'sidebar-link text-gray-500' }}">
+                            <span class="flex items-center">
+                                <i class="fas fa-boxes-stacked w-5"></i>
+                                <span class="ml-2">Aset</span>
+                            </span>
+                            <i class="fas fa-chevron-down text-xs" aria-hidden="true"></i>
+                        </a>
+                        <div class="sidebar-submenu ml-5 border-l border-gray-200 pl-3">
+                            <a href="{{ route('server.index') }}"
+                               class="mt-1 flex items-center rounded-lg px-4 py-3 text-sm font-medium {{ request()->routeIs('server.*') ? 'sidebar-active' : 'sidebar-link text-gray-500' }}">
+                                <i class="fas fa-server w-5" aria-hidden="true"></i>
+                                <span class="ml-2">Server</span>
+                            </a>
+                            <a href="{{ route('network-device.router') }}"
+                               class="mt-1 flex items-center rounded-lg px-4 py-3 text-sm font-medium {{ request()->routeIs('network-device.*') ? 'sidebar-active' : 'sidebar-link text-gray-500' }}">
+                                <i class="fas fa-network-wired w-5" aria-hidden="true"></i>
+                                <span class="ml-2">Network Device</span>
+                            </a>
+                            <a href="{{ route('aset.lokasi') }}"
+                               class="mt-1 flex items-center rounded-lg px-4 py-3 text-sm font-medium {{ request()->routeIs('aset.lokasi') ? 'sidebar-active' : 'sidebar-link text-gray-500' }}">
+                                <i class="fas fa-location-dot w-5" aria-hidden="true"></i>
+                                <span class="ml-2">Lokasi Aset</span>
+                            </a>
+                            <a href="{{ route('aset.storage') }}"
+                               class="mt-1 flex items-center rounded-lg px-4 py-3 text-sm font-medium {{ request()->routeIs('aset.storage') ? 'sidebar-active' : 'sidebar-link text-gray-500' }}">
+                                <i class="fas fa-hard-drive w-5" aria-hidden="true"></i>
+                                <span class="ml-2">Storage</span>
+                            </a>
+                        </div>
+                    </div>
                     <div class="sidebar-dropdown">
                         <a href="{{ route('application.index') }}" aria-haspopup="true"
                            class="flex items-center justify-between px-4 py-5 rounded-lg text-sm font-medium {{ request()->routeIs('application.*', 'domain.*') ? 'sidebar-active' : 'sidebar-link text-gray-500' }}">
@@ -73,10 +101,6 @@
                     <a href="{{ route('alerts.alerts') }}" class="flex items-center px-4 py-5 rounded-lg text-sm font-medium {{ request()->routeIs('alerts.*') ? 'sidebar-active' : 'sidebar-link text-gray-500' }}">
                         <i class="fas fa-bell w-5"></i>
                         <span class="ml-2">Alerts</span>
-                    </a>
-                    <a href="{{ route('network-device.router') }}" class="flex items-center px-4 py-5 rounded-lg text-sm font-medium {{ request()->routeIs('network-device.*') ? 'sidebar-active' : 'sidebar-link text-gray-500' }}">
-                        <i class="fas fa-network-wired w-5"></i>
-                        <span class="ml-2">Network Device</span>
                     </a>
                 </div>
             </nav>

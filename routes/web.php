@@ -19,6 +19,9 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 Route::middleware(['auth.session'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::view('/aset', 'pages.aset.aset')->name('aset.index');
+    Route::view('/aset/lokasi', 'pages.aset.lokasi')->name('aset.lokasi');
+    Route::view('/aset/storage', 'pages.aset.storage')->name('aset.storage');
 
     Route::get('/server', [ServerController::class, 'index'])->name('server.index');
     Route::get('/server/create', [ServerController::class, 'create'])->name('server.create');
