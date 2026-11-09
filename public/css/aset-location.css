@@ -1,0 +1,85 @@
+.asset-location-page {
+    overflow: hidden;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.5rem;
+    background: #fff;
+}
+
+.asset-location-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    padding: 1rem 1.25rem;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.asset-location-title {
+    color: #111827;
+    font-size: 1.125rem;
+    font-weight: 600;
+}
+
+.asset-location-subtitle {
+    margin-top: 0.25rem;
+    color: #6b7280;
+    font-size: 0.875rem;
+}
+
+.asset-location-count {
+    color: #6b7280;
+    font-size: 0.875rem;
+}
+
+.asset-location-table-wrap {
+    overflow-x: auto;
+}
+
+.asset-location-table {
+    width: 100%;
+    min-width: 1200px;
+    border-collapse: collapse;
+    text-align: left;
+    white-space: nowrap;
+    font-size: 0.875rem;
+}
+
+.asset-location-table thead {
+    background: #f9fafb;
+}
+
+.asset-location-table th {
+    padding: 0.75rem 1rem;
+    color: #6b7280;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.asset-location-table td {
+    padding: 0.75rem 1rem;
+    border-top: 1px solid #f3f4f6;
+    color: #4b5563;
+}
+
+.asset-location-table tbody tr:hover {
+    background: #f9fafb;
+}
+
+.asset-location-table td.asset-location-id {
+    color: #111827;
+    font-weight: 600;
+}
+
+.asset-location-table td.asset-location-notes {
+    max-width: 18rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.asset-location-table td.asset-location-empty {
+    padding: 2.5rem 1rem;
+    color: #6b7280;
+    text-align: center;
+}

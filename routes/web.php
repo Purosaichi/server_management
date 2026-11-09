@@ -11,6 +11,7 @@ use App\Http\Controllers\AlertController;
 use App\Http\Controllers\DomainController;
 use App\Http\Controllers\LicenseController;
 use App\Http\Controllers\NetworkDeviceController;
+use App\Http\Controllers\AsetLocationController;
 
 Route::redirect('/', '/login');
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
@@ -20,7 +21,7 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::middleware(['auth.session'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::view('/aset', 'pages.aset.aset')->name('aset.index');
-    Route::view('/aset/lokasi', 'pages.aset.lokasi.lokasi')->name('aset.lokasi');
+    Route::get('/aset/lokasi', [AsetLocationController::class, 'index'])->name('aset.lokasi');
     Route::view('/aset/storage', 'pages.aset.storage.storage')->name('aset.storage');
 
     Route::get('/server', [ServerController::class, 'index'])->name('server.index');
