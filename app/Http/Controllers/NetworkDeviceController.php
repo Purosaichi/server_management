@@ -17,7 +17,7 @@ class NetworkDeviceController extends Controller
     {
         $routers = Router::orderBy('id_router')->get();
         
-        return view('pages.network-device.index', [
+        return view('pages.aset.Network-Device.index', [
             'activeTab' => 'router',
             'routers' => $routers,
             'switches' => collect(),
@@ -28,7 +28,7 @@ class NetworkDeviceController extends Controller
     {
         $switches = switchDevice::orderBy('id_switch')->get();
 
-        return view('pages.network-device.index', [
+        return view('pages.aset.Network-Device.index', [
             'activeTab' => 'switch',
             'routers' => collect(),
             'switches' => $switches,
@@ -37,7 +37,7 @@ class NetworkDeviceController extends Controller
 
     public function createRouter()
     {
-        return view('pages.network-device.router-create');
+        return view('pages.aset.Network-Device.router-create');
     }
 
     public function storeRouter(Request $request)
@@ -61,7 +61,7 @@ class NetworkDeviceController extends Controller
 
     public function createSwitch()
     {
-        return view('pages.network-device.switch-create');
+        return view('pages.aset.Network-Device.switch-create');
     }
 
     public function storeSwitch(Request $request)
@@ -91,14 +91,14 @@ class NetworkDeviceController extends Controller
     {
         $router = Router::find($id);
         abort_unless($router, 404);
-        return view('pages.network-device.router-detail', compact('router'));
+        return view('pages.aset.Network-Device.router-detail', compact('router'));
     }
 
     public function editRouter(int $id)
     {
         $router = Router::findOrFail($id);
 
-        return view('pages.network-device.router-edit', compact('router'));
+        return view('pages.aset.Network-Device.router-edit', compact('router'));
     }
 
     public function updateRouter(Request $request, int $id)
@@ -132,14 +132,14 @@ class NetworkDeviceController extends Controller
     {
         $switch = SwitchDevice::find($id);
         abort_unless($switch, 404);
-        return view('pages.network-device.switch-detail', compact('switch'));
+        return view('pages.aset.Network-Device.switch-detail', compact('switch'));
     }
 
     public function editSwitch(int $id)
     {
         $switch = SwitchDevice::findOrFail($id);
 
-        return view('pages.network-device.switch-edit', compact('switch'));
+        return view('pages.aset.Network-Device.switch-edit', compact('switch'));
     }
 
     public function updateSwitch(Request $request, int $id)

@@ -17,9 +17,25 @@ class NetworkDeviceRouteTest extends TestCase
         $this->assertSame('/network-device/switch/create', route('network-device.switch-create', [], false));
     }
 
+    public function test_router_page_renders_from_asset_view_folder(): void
+    {
+        Schema::create('router', function (Blueprint $table) {
+            $table->increments('id_router');
+        });
+        Schema::create('switch', function (Blueprint $table) {
+            $table->increments('id_switch');
+        });
+
+        $this->withSession(['user_id' => 1, 'user_name' => 'Administrator'])
+            ->get(route('network-device.router'))
+            ->assertOk()
+            ->assertSee('Network Device')
+            ->assertSee('Router');
+    }
+
     public function test_router_rows_open_their_detail_on_double_click(): void
     {
-        $html = view('pages.network-device.router', [
+        $html = view('pages.aset.Network-Device.router', [
             'routers' => collect([(object) [
                 'id_router' => 42,
                 'jenis_router' => 'Core',
@@ -43,7 +59,7 @@ class NetworkDeviceRouteTest extends TestCase
 
     public function test_switch_rows_open_their_detail_on_double_click(): void
     {
-        $html = view('pages.network-device.switch', [
+        $html = view('pages.aset.Network-Device.switch', [
             'switches' => collect([(object) [
                 'id_switch' => 24,
                 'jenis_switch' => 'Core',

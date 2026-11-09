@@ -21,6 +21,11 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::middleware(['auth.session'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::view('/aset', 'pages.aset.aset')->name('aset.index');
+    Route::get('/aset/lokasi/create', [AsetLocationController::class, 'create'])->name('aset.lokasi.create');
+    Route::post('/aset/lokasi', [AsetLocationController::class, 'store'])->name('aset.lokasi.store');
+    Route::get('/aset/data-center/create', [AsetLocationController::class, 'createDataCenter'])->name('aset.data-centers.create');
+    Route::post('/aset/data-center', [AsetLocationController::class, 'storeDataCenter'])->name('aset.data-centers.store');
+    Route::get('/aset/data-center', [AsetLocationController::class, 'dataCenters'])->name('aset.data-centers');
     Route::get('/aset/lokasi', [AsetLocationController::class, 'index'])->name('aset.lokasi');
     Route::view('/aset/storage', 'pages.aset.storage.storage')->name('aset.storage');
 

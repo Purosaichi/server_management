@@ -34,9 +34,9 @@
 
 <!-- Konten Berdasarkan Tab yang Aktif -->
 @if($activeTab === 'router')
-    @include('pages.network-device.router', ['routers' => $routers])
+    @include('pages.aset.Network-Device.router', ['routers' => $routers])
 @elseif($activeTab === 'switch')
-    @include('pages.network-device.switch', ['switches' => $switches])
+    @include('pages.aset.Network-Device.switch', ['switches' => $switches])
 @endif
 
 <div id="ndDeleteModal" class="nd-modal-overlay" style="display: none;" aria-hidden="true">

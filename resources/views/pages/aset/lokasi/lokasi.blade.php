@@ -7,59 +7,78 @@
 @section('content')
 <link rel="stylesheet" href="{{ asset('css/aset-location.css') }}">
 
+@if(session('success'))
+    <div class="asset-location-alert">{{ session('success') }}</div>
+@endif
+
 <div class="asset-location-page">
     <div class="asset-location-header">
-        <div>
-            <h1 class="asset-location-title">Lokasi Aset</h1>
-            <p class="asset-location-subtitle">Daftar lokasi penyimpanan dan penempatan aset</p>
+        <div class="asset-location-heading">
+            <span class="asset-location-mark" aria-hidden="true"><i class="fas fa-location-dot"></i></span>
+            <div>
+                <span class="asset-location-eyebrow">Inventaris Infrastruktur</span>
+                <h1 class="asset-location-title">Lokasi Aset</h1>
+                <p class="asset-location-subtitle">Daftar lokasi penyimpanan dan penempatan aset</p>
+            </div>
         </div>
-        <span class="asset-location-count">Total: {{ $locations->count() }} lokasi</span>
+        <div class="asset-location-header-actions">
+            <div class="asset-location-count" aria-label="Jumlah data">
+                <i class="fas fa-map-pin" aria-hidden="true"></i>
+                <strong>{{ $locations->count() }}</strong>
+                <span>lokasi terdaftar</span>
+            </div>
+            <a href="{{ route('aset.lokasi.create') }}" class="asset-location-add-button">
+                <i class="fas fa-plus" aria-hidden="true"></i>
+                Tambah Lokasi
+            </a>
+        </div>
     </div>
+
+    <nav class="asset-location-tabs" aria-label="Subhalaman Lokasi Aset">
+        <a href="{{ route('aset.lokasi') }}" class="active" aria-current="page">
+            <i class="fas fa-location-dot" aria-hidden="true"></i>
+            Lokasi Aset
+        </a>
+        <a href="{{ route('aset.data-centers') }}">
+            <i class="fas fa-server" aria-hidden="true"></i>
+            Data Center
+        </a>
+    </nav>
 
     <div class="asset-location-table-wrap">
         <table class="asset-location-table">
             <thead>
                 <tr>
-                    <th class="px-4 py-3">ID Lokasi</th>
-                    <th class="px-4 py-3">ID Aset</th>
-                    <th class="px-4 py-3">Data Center</th>
-                    <th class="px-4 py-3">Gedung</th>
-                    <th class="px-4 py-3">Lantai</th>
-                    <th class="px-4 py-3">Ruangan</th>
-                    <th class="px-4 py-3">Zona</th>
-                    <th class="px-4 py-3">Kode Rak</th>
-                    <th class="px-4 py-3">Nama Rak</th>
-                    <th class="px-4 py-3">Tinggi Rak</th>
-                    <th class="px-4 py-3">Posisi Rak</th>
-                    <th class="px-4 py-3">Tanggal Penempatan</th>
-                    <th class="px-4 py-3">Keterangan</th>
+                    <th>Data Center</th>
+                    <th>Gedung</th>
+                    <th>Lantai</th>
+                    <th>Ruangan</th>
+                    <th>Zona</th>
+                    <th>Kode Rak</th>
+                    <th>Nama Rak</th>
+                    <th>Tinggi Rak</th>
+                    <th>Posisi Rak</th>
+                    <th>Tanggal Penempatan</th>
+                    <th>Keterangan</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody class="divide-y divide-gray-100 text-gray-700">
                 @forelse($locations as $location)
-                    <tr>
-                        <td class="asset-location-id">{{ $location->id_lokasi_aset }}</td>
-                        <td>{{ $location->id_aset }}</td>
-                        <td>{{ $location->nama_data_center ?: '-' }}</td>
+                    <tr class="hover:bg-gray-50">
+                        <td class="asset-location-center">{{ $location->nama_data_center ?: '-' }}</td>
                         <td>{{ $location->nama_gedung ?: '-' }}</td>
                         <td>{{ $location->lantai ?: '-' }}</td>
                         <td>{{ $location->nama_ruangan ?: '-' }}</td>
-                        <td>{{ $location->zona ?: '-' }}</td>
-                        <td>{{ $location->kode_rak ?: '-' }}</td>
-                        <td>{{ $location->nama_rak ?: '-' }}</td>
+                        <td><span class="asset-location-zone">{{ $location->zona ?: '-' }}</span></td>
+                        <td><span class="asset-location-rack-code">{{ $location->kode_rak ?: '-' }}</span></td>
+                        <td class="asset-location-rack-name">{{ $location->nama_rak ?: '-' }}</td>
                         <td>{{ $location->tinggi_rak ?: '-' }}</td>
-                        <td>{{ $location->posisi_rak ?: '-' }}</td>
-                        <td>
-                            {{ $location->tanggal_penempatan ? \Carbon\Carbon::parse($location->tanggal_penempatan)->format('d M Y') : '-' }}
-                        </td>
+                        <td><span class="asset-location-position">{{ $location->posisi_rak ?: '-' }}</span></td>
+                        <td>{{ $location->tanggal_penempatan ? \Carbon\Carbon::parse($location->tanggal_penempatan)->format('d M Y') : '-' }}</td>
                         <td class="asset-location-notes" title="{{ $location->keterangan }}">{{ $location->keterangan ?: '-' }}</td>
                     </tr>
                 @empty
-                    <tr>
-                        <td colspan="13" class="asset-location-empty">
-                            Belum ada data lokasi aset.
-                        </td>
-                    </tr>
+                    <tr><td colspan="11" class="asset-location-empty">Belum ada data lokasi aset.</td></tr>
                 @endforelse
             </tbody>
         </table>
