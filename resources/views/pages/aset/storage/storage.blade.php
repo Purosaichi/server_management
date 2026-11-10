@@ -64,19 +64,8 @@
                     <th>Aset</th>
                     <th>Jenis Storage</th>
                     <th>Kapasitas Raw</th>
-                    <th>Kapasitas Terpakai</th>
-                    <th>Kapasitas Tersedia</th>
                     <th>Penggunaan</th>
-                    <th>Jenis Disk</th>
-                    <th>Jumlah Disk</th>
-                    <th>Tingkat RAID</th>
-                    <th>Pengendali</th>
-                    <th>Protokol</th>
-                    <th>Volume</th>
-                    <th>LUN</th>
-                    <th>Kapasitas Snapshot</th>
-                    <th>Status Replikasi</th>
-                    <th>IP Manajemen</th>
+                    <th>Aksi</th>
                 </tr>
             </thead>
             <tbody>
@@ -93,8 +82,6 @@
                         </td>
                         <td>{{ $storage->jenis_storage ?: '-' }}</td>
                         <td>{{ $storage->kapasitas_raw !== null ? number_format((float) $storage->kapasitas_raw, 0, ',', '.') : '-' }}</td>
-                        <td>{{ $storage->kapasitas_terpakai !== null ? number_format((float) $storage->kapasitas_terpakai, 0, ',', '.') : '-' }}</td>
-                        <td>{{ $storage->kapasitas_tersedia !== null ? number_format((float) $storage->kapasitas_tersedia, 0, ',', '.') : '-' }}</td>
                         <td>
                             @if($storage->persentase_penggunaan !== null)
                                 <div class="storage-usage" role="progressbar"
@@ -111,19 +98,15 @@
                                 -
                             @endif
                         </td>
-                        <td>{{ $storage->jenis_disk ?: '-' }}</td>
-                        <td>{{ $storage->jumlah_disk ?? '-' }}</td>
-                        <td>{{ $storage->tingkat_raid ?: '-' }}</td>
-                        <td>{{ $storage->jumlah_pengendali ?? '-' }}</td>
-                        <td>{{ $storage->protokol_storage ?: '-' }}</td>
-                        <td>{{ $storage->jumlah_volume ?? '-' }}</td>
-                        <td>{{ $storage->jumlah_lun ?? '-' }}</td>
-                        <td>{{ $storage->kapasitas_snapshot !== null ? number_format((float) $storage->kapasitas_snapshot, 0, ',', '.') : '-' }}</td>
-                        <td>{{ $storage->status_replikasi ?: '-' }}</td>
-                        <td>{{ $storage->alamat_ip_manajemen ?: '-' }}</td>
+                        <td>
+                            <a href="{{ route('aset.storage.detail', $storage->id_storage) }}" class="storage-detail-button">
+                                <i class="fas fa-eye" aria-hidden="true"></i>
+                                Detail
+                            </a>
+                        </td>
                     </tr>
                 @empty
-                    <tr><td colspan="17" class="storage-empty">Belum ada data storage.</td></tr>
+                    <tr><td colspan="6" class="storage-empty">Belum ada data storage.</td></tr>
                 @endforelse
             </tbody>
         </table>

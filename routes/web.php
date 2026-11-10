@@ -36,6 +36,7 @@ Route::middleware(['auth.session'])->group(function () {
     Route::get('/aset/data-center', [AsetLocationController::class, 'dataCenters'])->name('aset.data-centers');
     Route::get('/aset/lokasi', [AsetLocationController::class, 'index'])->name('aset.lokasi');
     Route::get('/aset/storage', [StorageController::class, 'index'])->name('aset.storage');
+    Route::get('/aset/storage/{id}', [StorageController::class, 'show'])->name('aset.storage.detail');
 
     Route::get('/server', [ServerController::class, 'index'])->name('server.index');
     Route::get('/server/create', [ServerController::class, 'create'])->name('server.create');

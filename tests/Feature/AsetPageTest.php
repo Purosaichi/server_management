@@ -456,15 +456,28 @@ class AsetPageTest extends TestCase
             ->assertSee('Storage Utama')
             ->assertSee('AST-001')
             ->assertSee('SAN')
-            ->assertSee('RAID 6')
-            ->assertSee('Fibre Channel')
-            ->assertSee('192.0.2.20')
             ->assertSee('45,00%')
             ->assertSee('10.000')
             ->assertSee('4.500')
             ->assertSee('5.500')
+            ->assertSee(route('aset.storage.detail', 1))
+            ->assertSee('Detail')
+            ->assertDontSee('RAID 6')
+            ->assertDontSee('Fibre Channel')
+            ->assertDontSee('192.0.2.20')
             ->assertDontSee('Storage Arsip')
             ->assertSee('Storage', false);
+
+        $this->withSession(['user_id' => 1, 'user_name' => 'Administrator'])
+            ->get(route('aset.storage.detail', 1))
+            ->assertOk()
+            ->assertSee('Detail Storage')
+            ->assertSee('Storage Utama')
+            ->assertSee('RAID 6')
+            ->assertSee('Fibre Channel')
+            ->assertSee('192.0.2.20')
+            ->assertSee('Kapasitas Snapshot')
+            ->assertSee(route('aset.storage'));
     }
 
     public function test_storage_page_works_when_deleted_at_column_is_missing(): void
