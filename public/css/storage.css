@@ -277,17 +277,241 @@
     height: 1rem;
 }
 
+.storage-detail-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem;
+    padding: 1.5rem;
+    border-bottom: 1px solid #e5e7eb;
+    background:
+        radial-gradient(ellipse at 90% 0%, rgba(191, 219, 254, 0.45), transparent 42%),
+        linear-gradient(110deg, #fff 0%, #f8fbff 100%);
+}
+
+.storage-detail-header .storage-mark {
+    width: 3.25rem;
+    height: 3.25rem;
+    font-size: 1.3rem;
+}
+
+.storage-detail-header .storage-title {
+    font-size: 1.5rem;
+}
+
+.storage-detail-header-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.storage-id-badge,
+.storage-type-badge {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2rem;
+    padding: 0.375rem 0.75rem;
+    border-radius: 999px;
+    font-size: 0.8125rem;
+    font-weight: 600;
+}
+
+.storage-id-badge {
+    background: #f1f5f9;
+    color: #475569;
+}
+
+.storage-type-badge {
+    background: #dbeafe;
+    color: #1d4ed8;
+}
+
+.storage-capacity-panel {
+    margin: 1.5rem;
+    padding: 1.5rem;
+    border: 1px solid #dbeafe;
+    border-radius: 0.875rem;
+    background: linear-gradient(135deg, #f8fbff 0%, #fff 72%);
+}
+
+.storage-capacity-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+    padding-bottom: 1.25rem;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.storage-section-eyebrow {
+    color: #2563eb;
+    font-size: 0.6875rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.storage-capacity-heading h2 {
+    margin-top: 0.25rem;
+    color: #111827;
+    font-size: 1.125rem;
+    font-weight: 700;
+}
+
+.storage-usage-ring {
+    display: flex;
+    width: 5.75rem;
+    height: 5.75rem;
+    flex: 0 0 auto;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background:
+        radial-gradient(closest-side, #fff 82%, transparent 84% 100%),
+        conic-gradient(var(--usage-color) var(--storage-usage), #e5e7eb 0);
+    color: #1f2937;
+}
+
+.storage-usage-ring span {
+    font-size: 1rem;
+    font-weight: 700;
+}
+
+.storage-usage-ring small {
+    margin-top: 0.1rem;
+    color: #6b7280;
+    font-size: 0.625rem;
+    text-transform: uppercase;
+}
+
+.storage-usage-ring.is-healthy {
+    --usage-color: #16a34a;
+}
+
+.storage-usage-ring.is-warning {
+    --usage-color: #f59e0b;
+}
+
+.storage-usage-ring.is-critical {
+    --usage-color: #dc2626;
+}
+
+.storage-no-usage {
+    color: #6b7280;
+    font-size: 0.8125rem;
+}
+
+.storage-capacity-stats {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem;
+    padding-top: 1.25rem;
+}
+
+.storage-capacity-stat {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+    gap: 0.75rem;
+    padding: 1rem;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.625rem;
+    background: #fff;
+}
+
+.storage-capacity-stat span {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #6b7280;
+    font-size: 0.8125rem;
+    font-weight: 500;
+}
+
+.storage-capacity-stat span i {
+    color: #2563eb;
+}
+
+.storage-capacity-stat strong {
+    overflow-wrap: anywhere;
+    color: #111827;
+    font-size: 1.375rem;
+    font-weight: 700;
+}
+
+.storage-capacity-stat.is-used {
+    border-color: #bfdbfe;
+}
+
+.storage-capacity-stat.is-used span i {
+    color: #2563eb;
+}
+
+.storage-capacity-stat.is-available span i {
+    color: #16a34a;
+}
+
+.storage-detail-sections {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: start;
+    gap: 1rem;
+    padding: 0 1.5rem 1.5rem;
+}
+
+.storage-detail-section {
+    min-width: 0;
+    overflow: hidden;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.75rem;
+    background: #fff;
+}
+
+.storage-detail-section > header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1rem 1.125rem;
+    border-bottom: 1px solid #f1f5f9;
+    background: #fbfdff;
+}
+
+.storage-detail-section-icon {
+    display: grid;
+    width: 2.25rem;
+    height: 2.25rem;
+    flex: 0 0 auto;
+    place-items: center;
+    border-radius: 0.5rem;
+    background: #eff6ff;
+    color: #2563eb;
+}
+
+.storage-detail-section > header h2 {
+    color: #1f2937;
+    font-size: 0.9375rem;
+    font-weight: 700;
+}
+
+.storage-detail-section > header p {
+    margin-top: 0.125rem;
+    color: #6b7280;
+    font-size: 0.75rem;
+}
+
 .storage-detail-grid {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 1rem;
-    padding: 1.5rem;
+    gap: 0.75rem;
+    padding: 1rem;
 }
 
 .storage-detail-item {
     min-width: 0;
-    padding: 1rem;
-    border: 1px solid #e5e7eb;
+    padding: 0.875rem;
+    border: 1px solid #f1f5f9;
     border-radius: 0.5rem;
     background: #fff;
 }
@@ -295,16 +519,29 @@
 .storage-detail-item dt {
     margin-bottom: 0.375rem;
     color: #6b7280;
-    font-size: 0.75rem;
+    font-size: 0.6875rem;
     font-weight: 600;
+    letter-spacing: 0.035em;
     text-transform: uppercase;
 }
 
 .storage-detail-item dd {
     overflow-wrap: anywhere;
     color: #1f2937;
-    font-size: 0.9375rem;
-    font-weight: 500;
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.storage-detail-item .storage-detail-monospace {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+.storage-detail-section-network {
+    grid-column: 1 / -1;
+}
+
+.storage-detail-section-network .storage-detail-grid {
+    grid-template-columns: minmax(0, 1fr);
 }
 
 @media (max-width: 640px) {
@@ -329,8 +566,31 @@
         padding: 1rem;
     }
 
+    .storage-detail-header {
+        align-items: flex-start;
+        flex-direction: column;
+        padding: 1.25rem 1rem;
+    }
+
+    .storage-capacity-panel {
+        margin: 1rem;
+        padding: 1rem;
+    }
+
+    .storage-capacity-stats {
+        grid-template-columns: 1fr;
+    }
+
+    .storage-detail-sections {
+        grid-template-columns: 1fr;
+        padding: 0 1rem 1rem;
+    }
+
+    .storage-detail-section-network {
+        grid-column: auto;
+    }
+
     .storage-detail-grid {
         grid-template-columns: 1fr;
-        padding: 1rem;
     }
 }

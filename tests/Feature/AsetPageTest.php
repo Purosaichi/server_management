@@ -412,8 +412,6 @@ class AsetPageTest extends TestCase
                 'jenis_storage' => 'SAN',
                 'kapasitas_raw' => 10000,
                 'kapasitas_terpakai' => 4500,
-                'kapasitas_tersedia' => 5500,
-                'persentase_penggunaan' => 45.00,
                 'jenis_disk' => 'SSD',
                 'jumlah_disk' => 24,
                 'tingkat_raid' => 'RAID 6',
@@ -432,8 +430,6 @@ class AsetPageTest extends TestCase
                 'jenis_storage' => 'NAS',
                 'kapasitas_raw' => 99999,
                 'kapasitas_terpakai' => null,
-                'kapasitas_tersedia' => null,
-                'persentase_penggunaan' => null,
                 'jenis_disk' => null,
                 'jumlah_disk' => null,
                 'tingkat_raid' => null,
@@ -476,6 +472,8 @@ class AsetPageTest extends TestCase
             ->assertSee('RAID 6')
             ->assertSee('Fibre Channel')
             ->assertSee('192.0.2.20')
+            ->assertSee('5.500')
+            ->assertSee('45,00%')
             ->assertSee('Kapasitas Snapshot')
             ->assertSee(route('aset.storage'));
     }
@@ -516,8 +514,6 @@ class AsetPageTest extends TestCase
             $table->string('jenis_storage', 50)->nullable();
             $table->integer('kapasitas_raw')->nullable();
             $table->integer('kapasitas_terpakai')->nullable();
-            $table->integer('kapasitas_tersedia')->nullable();
-            $table->decimal('persentase_penggunaan', 5, 2)->nullable();
             $table->string('jenis_disk', 50)->nullable();
             $table->integer('jumlah_disk')->nullable();
             $table->string('tingkat_raid', 10)->nullable();
