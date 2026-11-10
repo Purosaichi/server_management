@@ -21,6 +21,10 @@
     </a>
 </div>
 
+@if(session('success'))
+    <div class="storage-success-alert" role="status">{{ session('success') }}</div>
+@endif
+
 <div class="storage-page">
     <div class="storage-detail-header">
         <div class="storage-heading">

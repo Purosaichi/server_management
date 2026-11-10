@@ -23,6 +23,10 @@
                 <strong>{{ $storageCount }}</strong>
                 <span>perangkat</span>
             </div>
+            <a href="{{ route('aset.storage.create') }}" class="storage-add-button">
+                <i class="fas fa-plus" aria-hidden="true"></i>
+                Tambah Storage
+            </a>
         </div>
     </div>
 

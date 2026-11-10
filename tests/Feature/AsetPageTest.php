@@ -500,6 +500,79 @@ class AsetPageTest extends TestCase
             ->assertSee('SAN');
     }
 
+    public function test_storage_can_be_created_with_automatically_calculated_capacity(): void
+    {
+        $this->createStorageTables();
+        DB::table('aset')->insert([
+            'id_aset' => 1,
+            'kode_aset' => 'AST-001',
+            'nama_aset' => 'Storage Utama',
+        ]);
+
+        $this->withSession(['user_id' => 1, 'user_name' => 'Administrator'])
+            ->get(route('aset.storage.create'))
+            ->assertOk()
+            ->assertSee('Tambah Storage')
+            ->assertSee('AST-001 - Storage Utama')
+            ->assertSee('Kapasitas tersedia dan persentase penggunaan dihitung otomatis');
+
+        $this->withSession(['user_id' => 1, 'user_name' => 'Administrator'])
+            ->post(route('aset.storage.store'), [
+                'id_aset' => 1,
+                'jenis_storage' => 'SAN',
+                'kapasitas_raw' => 10000,
+                'kapasitas_terpakai' => 4500,
+                'jenis_disk' => 'SSD',
+                'jumlah_disk' => 24,
+                'tingkat_raid' => 'RAID 6',
+                'jumlah_pengendali' => 2,
+                'protokol_storage' => 'Fibre Channel',
+                'jumlah_volume' => 8,
+                'jumlah_lun' => 16,
+                'kapasitas_snapshot' => 1000,
+                'status_replikasi' => 'Aktif',
+                'alamat_ip_manajemen' => '192.0.2.20',
+            ])
+            ->assertRedirect(route('aset.storage.detail', 1))
+            ->assertSessionHas('success', 'Data storage berhasil ditambahkan.');
+
+        $this->assertDatabaseHas('storage', [
+            'id_storage' => 1,
+            'id_aset' => 1,
+            'kapasitas_raw' => 10000,
+            'kapasitas_terpakai' => 4500,
+            'jenis_storage' => 'SAN',
+        ]);
+
+        $this->withSession(['user_id' => 1, 'user_name' => 'Administrator'])
+            ->get(route('aset.storage.detail', 1))
+            ->assertOk()
+            ->assertSee('5.500')
+            ->assertSee('45,00%');
+    }
+
+    public function test_storage_cannot_be_created_if_used_capacity_exceeds_raw_capacity(): void
+    {
+        $this->createStorageTables();
+        DB::table('aset')->insert([
+            'id_aset' => 1,
+            'kode_aset' => 'AST-001',
+            'nama_aset' => 'Storage Utama',
+        ]);
+
+        $this->withSession(['user_id' => 1, 'user_name' => 'Administrator'])
+            ->from(route('aset.storage.create'))
+            ->post(route('aset.storage.store'), [
+                'id_aset' => 1,
+                'kapasitas_raw' => 100,
+                'kapasitas_terpakai' => 101,
+            ])
+            ->assertRedirect(route('aset.storage.create'))
+            ->assertSessionHasErrors('kapasitas_terpakai');
+
+        $this->assertDatabaseCount('storage', 0);
+    }
+
     private function createStorageTables(bool $withDeletedAt = true): void
     {
         Schema::create('aset', function (Blueprint $table) {
