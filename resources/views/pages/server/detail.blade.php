@@ -15,10 +15,6 @@
         </svg>
         Back
     </a>
-    <a href="{{ route('server.edit', $server['id']) }}" class="srv-btn-edit">
-        <i class="fas fa-pen" aria-hidden="true"></i>
-        Edit Server
-    </a>
 </div>
 
 <div class="header-card">

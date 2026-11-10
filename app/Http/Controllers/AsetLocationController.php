@@ -117,6 +117,20 @@ class AsetLocationController extends Controller
         return redirect()->route('aset.data-centers')->with('success', 'Data Center berhasil diperbarui.');
     }
 
+    public function destroyDataCenter(int $id)
+    {
+        DB::table('data_center')
+            ->where('id_data_center', $id)
+            ->whereNull('deleted_at')
+            ->firstOrFail();
+
+        DB::table('data_center')
+            ->where('id_data_center', $id)
+            ->update(['deleted_at' => now()]);
+
+        return redirect()->route('aset.data-centers')->with('success', 'Data Center berhasil dihapus.');
+    }
+
     public function create()
     {
         $assets = DB::table('aset')

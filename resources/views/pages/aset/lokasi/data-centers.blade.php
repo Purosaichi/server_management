@@ -68,6 +68,14 @@
                                 <i class="fas fa-pen" aria-hidden="true"></i>
                                 Edit
                             </a>
+                            <form action="{{ route('aset.data-centers.destroy', $dataCenter->id_data_center) }}" method="POST" class="asset-location-delete-form" onsubmit="return confirm('Yakin ingin menghapus Data Center ini?')">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="asset-location-delete-button">
+                                    <i class="fas fa-trash" aria-hidden="true"></i>
+                                    Hapus
+                                </button>
+                            </form>
                         </td>
                     </tr>
                 @empty

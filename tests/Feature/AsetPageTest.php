@@ -144,6 +144,7 @@ class AsetPageTest extends TestCase
             ->assertSee('Tambah Data Center')
             ->assertSee(route('aset.data-centers.create'))
             ->assertSee(route('aset.data-centers.edit', 1))
+            ->assertSee(route('aset.data-centers.destroy', 1))
             ->assertSee('Edit');
     }
 
@@ -216,6 +217,36 @@ class AsetPageTest extends TestCase
             'tipe_dc' => 'DRP',
             'keterangan' => 'Pusat data cadangan',
         ]);
+    }
+
+    public function test_data_center_can_be_soft_deleted(): void
+    {
+        $this->createDataCenterTable();
+        DB::table('data_center')->insert([
+            'id_data_center' => 1,
+            'nama_data_center' => 'DC Arsip',
+            'lokasi' => 'Bandung',
+            'deleted_at' => null,
+        ]);
+
+        $this->withSession(['user_id' => 1, 'user_name' => 'Administrator'])
+            ->delete(route('aset.data-centers.destroy', 1))
+            ->assertRedirect(route('aset.data-centers'))
+            ->assertSessionHas('success', 'Data Center berhasil dihapus.');
+
+        $this->assertDatabaseMissing('data_center', [
+            'id_data_center' => 1,
+            'deleted_at' => null,
+        ]);
+        $this->assertDatabaseHas('data_center', [
+            'id_data_center' => 1,
+            'nama_data_center' => 'DC Arsip',
+        ]);
+
+        $this->withSession(['user_id' => 1, 'user_name' => 'Administrator'])
+            ->get(route('aset.data-centers'))
+            ->assertOk()
+            ->assertDontSee('DC Arsip');
     }
 
     public function test_location_can_be_created_for_an_asset(): void
