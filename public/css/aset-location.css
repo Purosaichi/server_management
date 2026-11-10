@@ -193,6 +193,35 @@
     text-decoration: none;
 }
 
+.asset-location-back-wrapper {
+    margin-bottom: 1rem;
+}
+
+.asset-location-back-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.5rem;
+    background: #fff;
+    color: #374151;
+    font-size: 0.875rem;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.2s;
+}
+
+.asset-location-back-button:hover {
+    border-color: #d1d5db;
+    background: #f9fafb;
+}
+
+.asset-location-back-button svg {
+    width: 1rem;
+    height: 1rem;
+}
+
 .asset-location-form {
     padding: 1.5rem;
 }

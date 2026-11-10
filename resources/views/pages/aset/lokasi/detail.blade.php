@@ -7,15 +7,24 @@
 @section('content')
 <link rel="stylesheet" href="{{ asset('css/aset-location.css') }}">
 
+<div class="asset-location-back-wrapper">
+    <a href="{{ route('aset.lokasi') }}" class="asset-location-back-button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+        </svg>
+        Back
+    </a>
+</div>
+
 <div class="asset-location-form-page">
     <div class="asset-location-form-header">
         <div>
             <h1>Detail Lokasi Aset</h1>
             <p>{{ $location->nama_aset ?: 'Aset' }}{{ $location->kode_aset ? ' - ' . $location->kode_aset : '' }}</p>
         </div>
-        <a href="{{ route('aset.lokasi') }}" class="asset-location-back-link">
-            <i class="fas fa-arrow-left" aria-hidden="true"></i>
-            Kembali
+        <a href="{{ route('aset.lokasi.edit', $location->id_lokasi_aset) }}" class="asset-location-add-button">
+            <i class="fas fa-pen" aria-hidden="true"></i>
+            Edit Lokasi
         </a>
     </div>
 
@@ -66,11 +75,5 @@
         </div>
     </dl>
 
-    <div class="asset-location-form-actions">
-        <a href="{{ route('aset.lokasi.edit', $location->id_lokasi_aset) }}" class="asset-location-add-button">
-            <i class="fas fa-pen" aria-hidden="true"></i>
-            Edit Lokasi
-        </a>
-    </div>
 </div>
 @endsection
