@@ -58,7 +58,64 @@ class AsetPageTest extends TestCase
             ->assertSee('Data Center')
             ->assertSee('DC Utama')
             ->assertSee('Ruang Server')
-            ->assertSee('Lokasi utama');
+            ->assertDontSee('Lokasi utama')
+            ->assertDontSee('U10-U20')
+            ->assertSee(route('aset.lokasi.detail', 1))
+            ->assertSee(route('aset.lokasi.edit', 1))
+            ->assertSee('Detail')
+            ->assertSee('Edit');
+    }
+
+    public function test_asset_location_detail_displays_full_location_information(): void
+    {
+        $this->createLocationTable();
+        $this->createDataCenterTable();
+        Schema::create('aset', function (Blueprint $table) {
+            $table->increments('id_aset');
+            $table->string('kode_aset');
+            $table->string('nama_aset');
+        });
+        DB::table('aset')->insert([
+            'id_aset' => 17,
+            'kode_aset' => 'AST-017',
+            'nama_aset' => 'Server Utama',
+        ]);
+        DB::table('data_center')->insert([
+            'id_data_center' => 1,
+            'nama_data_center' => 'DC Utama',
+            'deleted_at' => null,
+        ]);
+        DB::table('lokasi_aset')->insert([
+            'id_lokasi_aset' => 1,
+            'id_aset' => 17,
+            'id_data_center' => 1,
+            'nama_gedung' => 'Gedung A',
+            'lantai' => '2',
+            'nama_ruangan' => 'Ruang Server',
+            'zona' => 'Utara',
+            'kode_rak' => 'RK-01',
+            'nama_rak' => 'Rak Utama',
+            'tinggi_rak' => 42,
+            'posisi_rak' => 'U10-U20',
+            'tanggal_penempatan' => '2026-11-01',
+            'keterangan' => 'Lokasi utama',
+            'deleted_at' => null,
+        ]);
+
+        $this->withSession(['user_id' => 1, 'user_name' => 'Administrator'])
+            ->get(route('aset.lokasi.detail', 1))
+            ->assertOk()
+            ->assertSee('AST-017')
+            ->assertSee('Server Utama')
+            ->assertSee('DC Utama')
+            ->assertSee('Gedung A')
+            ->assertSee('Ruang Server')
+            ->assertSee('RK-01')
+            ->assertSee('42U')
+            ->assertSee('U10-U20')
+            ->assertSee('1 Nov 2026')
+            ->assertSee('Lokasi utama')
+            ->assertSee(route('aset.lokasi.edit', 1));
     }
 
     public function test_asset_location_data_center_tab_displays_data_centers(): void
@@ -169,6 +226,69 @@ class AsetPageTest extends TestCase
             'kode_rak' => 'RK-01',
             'tinggi_rak' => 42,
             'keterangan' => 'Lokasi utama',
+        ]);
+    }
+
+    public function test_location_can_be_edited(): void
+    {
+        $this->createLocationTable();
+        $this->createDataCenterTable();
+        Schema::create('aset', function (Blueprint $table) {
+            $table->increments('id_aset');
+            $table->string('kode_aset');
+            $table->string('nama_aset');
+        });
+        DB::table('aset')->insert([
+            'id_aset' => 17,
+            'kode_aset' => 'AST-017',
+            'nama_aset' => 'Server Utama',
+        ]);
+        DB::table('data_center')->insert([
+            'id_data_center' => 1,
+            'nama_data_center' => 'DC Utama',
+            'lokasi' => 'Jakarta',
+            'deleted_at' => null,
+        ]);
+        DB::table('lokasi_aset')->insert([
+            'id_lokasi_aset' => 1,
+            'id_aset' => 17,
+            'id_data_center' => 1,
+            'nama_gedung' => 'Gedung A',
+            'zona' => 'Utara',
+            'deleted_at' => null,
+        ]);
+
+        $this->withSession(['user_id' => 1, 'user_name' => 'Administrator'])
+            ->get(route('aset.lokasi.edit', 1))
+            ->assertOk()
+            ->assertSee('Edit Lokasi Aset')
+            ->assertSee('AST-017 - Server Utama')
+            ->assertSee('value="Gedung A"', false)
+            ->assertSee('value="Utara"', false);
+
+        $this->withSession(['user_id' => 1, 'user_name' => 'Administrator'])
+            ->put(route('aset.lokasi.update', 1), [
+                'id_aset' => 17,
+                'id_data_center' => 1,
+                'nama_gedung' => 'Gedung B',
+                'lantai' => '3',
+                'nama_ruangan' => 'Ruang Baru',
+                'zona' => 'Selatan',
+                'kode_rak' => 'RK-02',
+                'nama_rak' => 'Rak Baru',
+                'tinggi_rak' => 42,
+                'posisi_rak' => 'U1-U42',
+                'tanggal_penempatan' => '2026-11-02',
+                'keterangan' => 'Lokasi diperbarui',
+            ])
+            ->assertRedirect(route('aset.lokasi'))
+            ->assertSessionHas('success', 'Lokasi aset berhasil diperbarui.');
+
+        $this->assertDatabaseHas('lokasi_aset', [
+            'id_lokasi_aset' => 1,
+            'nama_gedung' => 'Gedung B',
+            'zona' => 'Selatan',
+            'keterangan' => 'Lokasi diperbarui',
         ]);
     }
 

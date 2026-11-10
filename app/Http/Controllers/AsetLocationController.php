@@ -14,6 +14,28 @@ class AsetLocationController extends Controller
             ->whereNull('lokasi_aset.deleted_at')
             ->orderBy('lokasi_aset.id_lokasi_aset')
             ->get([
+                'lokasi_aset.id_lokasi_aset',
+                'data_center.nama_data_center',
+                'lokasi_aset.nama_gedung',
+                'lokasi_aset.nama_ruangan',
+                'lokasi_aset.zona',
+                'lokasi_aset.nama_rak',
+            ]);
+
+        return view('pages.aset.lokasi.lokasi', compact('locations'));
+    }
+
+    public function show(int $id)
+    {
+        $location = DB::table('lokasi_aset')
+            ->leftJoin('aset', 'aset.id_aset', '=', 'lokasi_aset.id_aset')
+            ->leftJoin('data_center', 'data_center.id_data_center', '=', 'lokasi_aset.id_data_center')
+            ->where('lokasi_aset.id_lokasi_aset', $id)
+            ->whereNull('lokasi_aset.deleted_at')
+            ->first([
+                'lokasi_aset.id_lokasi_aset',
+                'aset.kode_aset',
+                'aset.nama_aset',
                 'data_center.nama_data_center',
                 'lokasi_aset.nama_gedung',
                 'lokasi_aset.lantai',
@@ -27,7 +49,9 @@ class AsetLocationController extends Controller
                 'lokasi_aset.keterangan',
             ]);
 
-        return view('pages.aset.lokasi.lokasi', compact('locations'));
+        abort_if($location === null, 404);
+
+        return view('pages.aset.lokasi.detail', compact('location'));
     }
 
     public function dataCenters()
@@ -72,6 +96,23 @@ class AsetLocationController extends Controller
         return view('pages.aset.lokasi.create', compact('assets', 'dataCenters'));
     }
 
+    public function edit(int $id)
+    {
+        $location = DB::table('lokasi_aset')
+            ->where('id_lokasi_aset', $id)
+            ->whereNull('deleted_at')
+            ->firstOrFail();
+        $assets = DB::table('aset')
+            ->orderBy('nama_aset')
+            ->get(['id_aset', 'kode_aset', 'nama_aset']);
+        $dataCenters = DB::table('data_center')
+            ->whereNull('deleted_at')
+            ->orderBy('nama_data_center')
+            ->get(['id_data_center', 'nama_data_center', 'lokasi']);
+
+        return view('pages.aset.lokasi.edit', compact('location', 'assets', 'dataCenters'));
+    }
+
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -92,5 +133,37 @@ class AsetLocationController extends Controller
         DB::table('lokasi_aset')->insert($validated);
 
         return redirect()->route('aset.lokasi')->with('success', 'Lokasi aset berhasil ditambahkan.');
+    }
+
+    public function update(Request $request, int $id)
+    {
+        $validated = $request->validate([
+            'id_aset' => 'required|integer|exists:aset,id_aset',
+            'id_data_center' => 'nullable|integer|exists:data_center,id_data_center',
+            'nama_gedung' => 'nullable|string|max:200',
+            'lantai' => 'nullable|string|max:40',
+            'nama_ruangan' => 'nullable|string|max:200',
+            'zona' => 'nullable|string|max:100',
+            'kode_rak' => 'nullable|string|max:100',
+            'nama_rak' => 'nullable|string|max:200',
+            'tinggi_rak' => 'nullable|integer|min:0',
+            'posisi_rak' => 'nullable|string|max:100',
+            'tanggal_penempatan' => 'nullable|date',
+            'keterangan' => 'nullable|string|max:510',
+        ]);
+
+        $updated = DB::table('lokasi_aset')
+            ->where('id_lokasi_aset', $id)
+            ->whereNull('deleted_at')
+            ->update($validated);
+
+        if ($updated === 0 && ! DB::table('lokasi_aset')
+            ->where('id_lokasi_aset', $id)
+            ->whereNull('deleted_at')
+            ->exists()) {
+            abort(404);
+        }
+
+        return redirect()->route('aset.lokasi')->with('success', 'Lokasi aset berhasil diperbarui.');
     }
 }

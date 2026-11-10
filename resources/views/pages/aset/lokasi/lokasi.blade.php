@@ -51,15 +51,10 @@
                 <tr>
                     <th>Data Center</th>
                     <th>Gedung</th>
-                    <th>Lantai</th>
                     <th>Ruangan</th>
                     <th>Zona</th>
-                    <th>Kode Rak</th>
                     <th>Nama Rak</th>
-                    <th>Tinggi Rak</th>
-                    <th>Posisi Rak</th>
-                    <th>Tanggal Penempatan</th>
-                    <th>Keterangan</th>
+                    <th>Aksi</th>
                 </tr>
             </thead>
             <tbody class="divide-y divide-gray-100 text-gray-700">
@@ -67,18 +62,22 @@
                     <tr class="hover:bg-gray-50">
                         <td class="asset-location-center">{{ $location->nama_data_center ?: '-' }}</td>
                         <td>{{ $location->nama_gedung ?: '-' }}</td>
-                        <td>{{ $location->lantai ?: '-' }}</td>
                         <td>{{ $location->nama_ruangan ?: '-' }}</td>
                         <td><span class="asset-location-zone">{{ $location->zona ?: '-' }}</span></td>
-                        <td><span class="asset-location-rack-code">{{ $location->kode_rak ?: '-' }}</span></td>
                         <td class="asset-location-rack-name">{{ $location->nama_rak ?: '-' }}</td>
-                        <td>{{ $location->tinggi_rak ?: '-' }}</td>
-                        <td><span class="asset-location-position">{{ $location->posisi_rak ?: '-' }}</span></td>
-                        <td>{{ $location->tanggal_penempatan ? \Carbon\Carbon::parse($location->tanggal_penempatan)->format('d M Y') : '-' }}</td>
-                        <td class="asset-location-notes" title="{{ $location->keterangan }}">{{ $location->keterangan ?: '-' }}</td>
+                        <td>
+                            <a href="{{ route('aset.lokasi.detail', $location->id_lokasi_aset) }}" class="asset-location-detail-button">
+                                <i class="fas fa-eye" aria-hidden="true"></i>
+                                Detail
+                            </a>
+                            <a href="{{ route('aset.lokasi.edit', $location->id_lokasi_aset) }}" class="asset-location-edit-button">
+                                <i class="fas fa-pen" aria-hidden="true"></i>
+                                Edit
+                            </a>
+                        </td>
                     </tr>
                 @empty
-                    <tr><td colspan="11" class="asset-location-empty">Belum ada data lokasi aset.</td></tr>
+                    <tr><td colspan="6" class="asset-location-empty">Belum ada data lokasi aset.</td></tr>
                 @endforelse
             </tbody>
         </table>
