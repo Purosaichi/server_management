@@ -7,6 +7,10 @@
 @section('content')
 <link rel="stylesheet" href="{{ asset('css/storage.css') }}">
 
+@if(session('success'))
+    <div class="storage-success-alert" role="status">{{ session('success') }}</div>
+@endif
+
 <div class="storage-page">
     <div class="storage-header">
         <div class="storage-heading">
@@ -107,6 +111,14 @@
                                 <i class="fas fa-eye" aria-hidden="true"></i>
                                 Detail
                             </a>
+                            <form action="{{ route('aset.storage.destroy', $storage->id_storage) }}" method="POST" class="storage-delete-form" onsubmit="return confirm('Yakin ingin menghapus data storage ini?')">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="storage-delete-button">
+                                    <i class="fas fa-trash" aria-hidden="true"></i>
+                                    Hapus
+                                </button>
+                            </form>
                         </td>
                     </tr>
                 @empty

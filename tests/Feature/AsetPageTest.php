@@ -475,6 +475,8 @@ class AsetPageTest extends TestCase
             ->assertSee('5.500')
             ->assertSee('45,00%')
             ->assertSee('Kapasitas Snapshot')
+            ->assertSee(route('aset.storage.edit', 1))
+            ->assertSee('Edit Storage')
             ->assertSee(route('aset.storage'));
     }
 
@@ -498,6 +500,57 @@ class AsetPageTest extends TestCase
             ->assertOk()
             ->assertSee('Storage Utama')
             ->assertSee('SAN');
+    }
+
+    public function test_storage_can_be_soft_deleted_from_the_storage_page(): void
+    {
+        $this->createStorageTables();
+        DB::table('aset')->insert([
+            'id_aset' => 1,
+            'kode_aset' => 'AST-001',
+            'nama_aset' => 'Storage Utama',
+        ]);
+        DB::table('storage')->insert([
+            'id_storage' => 1,
+            'id_aset' => 1,
+            'jenis_storage' => 'SAN',
+            'kapasitas_raw' => 10000,
+            'kapasitas_terpakai' => 4500,
+            'deleted_at' => null,
+        ]);
+
+        $this->withSession(['user_id' => 1, 'user_name' => 'Administrator'])
+            ->get(route('aset.storage'))
+            ->assertOk()
+            ->assertSee(route('aset.storage.destroy', 1))
+            ->assertSee('Hapus');
+
+        $this->withSession(['user_id' => 1, 'user_name' => 'Administrator'])
+            ->get(route('aset.storage.detail', 1))
+            ->assertOk()
+            ->assertSee(route('aset.storage.destroy', 1))
+            ->assertSee('Hapus Storage');
+
+        $this->withSession(['user_id' => 1, 'user_name' => 'Administrator'])
+            ->delete(route('aset.storage.destroy', 1))
+            ->assertRedirect(route('aset.storage'))
+            ->assertSessionHas('success', 'Data storage berhasil dihapus.');
+
+        $this->assertDatabaseCount('storage', 1);
+        $this->assertDatabaseMissing('storage', [
+            'id_storage' => 1,
+            'deleted_at' => null,
+        ]);
+
+        $this->withSession(['user_id' => 1, 'user_name' => 'Administrator'])
+            ->get(route('aset.storage'))
+            ->assertOk()
+            ->assertDontSee('Storage Utama')
+            ->assertSee('Belum ada data storage.');
+
+        $this->withSession(['user_id' => 1, 'user_name' => 'Administrator'])
+            ->get(route('aset.storage.detail', 1))
+            ->assertNotFound();
     }
 
     public function test_storage_can_be_created_with_automatically_calculated_capacity(): void
@@ -571,6 +624,103 @@ class AsetPageTest extends TestCase
             ->assertSessionHasErrors('kapasitas_terpakai');
 
         $this->assertDatabaseCount('storage', 0);
+    }
+
+    public function test_storage_can_be_edited_and_capacities_are_recalculated(): void
+    {
+        $this->createStorageTables();
+        DB::table('aset')->insert([
+            'id_aset' => 1,
+            'kode_aset' => 'AST-001',
+            'nama_aset' => 'Storage Utama',
+        ]);
+        DB::table('storage')->insert([
+            'id_storage' => 1,
+            'id_aset' => 1,
+            'jenis_storage' => 'SAN',
+            'kapasitas_raw' => 10000,
+            'kapasitas_terpakai' => 4500,
+            'jenis_disk' => 'SSD',
+            'tingkat_raid' => 'RAID 6',
+            'deleted_at' => null,
+        ]);
+
+        $this->withSession(['user_id' => 1, 'user_name' => 'Administrator'])
+            ->get(route('aset.storage.edit', 1))
+            ->assertOk()
+            ->assertSee('Edit Storage')
+            ->assertSee('value="10000"', false)
+            ->assertSee('value="4500"', false)
+            ->assertSee('value="RAID 6"', false);
+
+        $this->withSession(['user_id' => 1, 'user_name' => 'Administrator'])
+            ->put(route('aset.storage.update', 1), [
+                'id_aset' => 1,
+                'jenis_storage' => 'NAS',
+                'kapasitas_raw' => 12000,
+                'kapasitas_terpakai' => 7000,
+                'jenis_disk' => 'HDD',
+                'jumlah_disk' => 12,
+                'tingkat_raid' => 'RAID 5',
+                'jumlah_pengendali' => 1,
+                'protokol_storage' => 'iSCSI',
+                'jumlah_volume' => 4,
+                'jumlah_lun' => 8,
+                'kapasitas_snapshot' => 500,
+                'status_replikasi' => 'Aktif',
+                'alamat_ip_manajemen' => '192.0.2.21',
+            ])
+            ->assertRedirect(route('aset.storage.detail', 1))
+            ->assertSessionHas('success', 'Data storage berhasil diperbarui.');
+
+        $this->assertDatabaseHas('storage', [
+            'id_storage' => 1,
+            'jenis_storage' => 'NAS',
+            'kapasitas_raw' => 12000,
+            'kapasitas_terpakai' => 7000,
+            'jenis_disk' => 'HDD',
+            'tingkat_raid' => 'RAID 5',
+        ]);
+
+        $this->withSession(['user_id' => 1, 'user_name' => 'Administrator'])
+            ->get(route('aset.storage.detail', 1))
+            ->assertOk()
+            ->assertSee('5.000')
+            ->assertSee('58,33%')
+            ->assertSee('RAID 5');
+    }
+
+    public function test_storage_update_rejects_used_capacity_above_raw_capacity(): void
+    {
+        $this->createStorageTables();
+        DB::table('aset')->insert([
+            'id_aset' => 1,
+            'kode_aset' => 'AST-001',
+            'nama_aset' => 'Storage Utama',
+        ]);
+        DB::table('storage')->insert([
+            'id_storage' => 1,
+            'id_aset' => 1,
+            'kapasitas_raw' => 100,
+            'kapasitas_terpakai' => 50,
+            'deleted_at' => null,
+        ]);
+
+        $this->withSession(['user_id' => 1, 'user_name' => 'Administrator'])
+            ->from(route('aset.storage.edit', 1))
+            ->put(route('aset.storage.update', 1), [
+                'id_aset' => 1,
+                'kapasitas_raw' => 100,
+                'kapasitas_terpakai' => 101,
+            ])
+            ->assertRedirect(route('aset.storage.edit', 1))
+            ->assertSessionHasErrors('kapasitas_terpakai');
+
+        $this->assertDatabaseHas('storage', [
+            'id_storage' => 1,
+            'kapasitas_raw' => 100,
+            'kapasitas_terpakai' => 50,
+        ]);
     }
 
     private function createStorageTables(bool $withDeletedAt = true): void

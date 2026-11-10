@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Validation\ValidationException;
 
 class StorageController extends Controller
 {
@@ -19,6 +20,63 @@ class StorageController extends Controller
     }
 
     public function store(Request $request)
+    {
+        $validated = $this->validateStorage($request);
+
+        $id = DB::table('storage')->insertGetId($validated);
+
+        return redirect()->route('aset.storage.detail', $id)
+            ->with('success', 'Data storage berhasil ditambahkan.');
+    }
+
+    public function edit(int $id)
+    {
+        $storage = $this->storageQuery()
+            ->where('storage.id_storage', $id)
+            ->firstOrFail();
+        $assets = DB::table('aset')
+            ->orderBy('nama_aset')
+            ->get(['id_aset', 'kode_aset', 'nama_aset']);
+
+        return view('pages.aset.storage.edit', compact('storage', 'assets'));
+    }
+
+    public function update(Request $request, int $id)
+    {
+        $this->storageQuery()
+            ->where('storage.id_storage', $id)
+            ->firstOrFail();
+
+        $validated = $this->validateStorage($request);
+        DB::table('storage')
+            ->where('id_storage', $id)
+            ->update($validated);
+
+        return redirect()->route('aset.storage.detail', $id)
+            ->with('success', 'Data storage berhasil diperbarui.');
+    }
+
+    public function destroy(int $id)
+    {
+        abort_unless(
+            Schema::hasColumn('storage', 'deleted_at'),
+            409,
+            'Kolom deleted_at belum tersedia. Jalankan migration terlebih dahulu.'
+        );
+
+        $this->storageQuery()
+            ->where('storage.id_storage', $id)
+            ->firstOrFail();
+
+        DB::table('storage')
+            ->where('id_storage', $id)
+            ->update(['deleted_at' => now()]);
+
+        return redirect()->route('aset.storage')
+            ->with('success', 'Data storage berhasil dihapus.');
+    }
+
+    private function validateStorage(Request $request): array
     {
         $validated = $request->validate([
             'id_aset' => 'required|integer|exists:aset,id_aset',
@@ -41,15 +99,12 @@ class StorageController extends Controller
             isset($validated['kapasitas_raw'], $validated['kapasitas_terpakai']) &&
             $validated['kapasitas_terpakai'] > $validated['kapasitas_raw']
         ) {
-            return back()
-                ->withErrors(['kapasitas_terpakai' => 'Kapasitas terpakai tidak boleh melebihi kapasitas raw.'])
-                ->withInput();
+            throw ValidationException::withMessages([
+                'kapasitas_terpakai' => 'Kapasitas terpakai tidak boleh melebihi kapasitas raw.',
+            ]);
         }
 
-        $id = DB::table('storage')->insertGetId($validated);
-
-        return redirect()->route('aset.storage.detail', $id)
-            ->with('success', 'Data storage berhasil ditambahkan.');
+        return $validated;
     }
 
     public function index()

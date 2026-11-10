@@ -38,6 +38,18 @@
         <div class="storage-detail-header-meta">
             <span class="storage-id-badge">Storage #{{ $storage->id_storage }}</span>
             <span class="storage-type-badge">{{ $storage->jenis_storage ?: 'Jenis tidak ditentukan' }}</span>
+            <a href="{{ route('aset.storage.edit', $storage->id_storage) }}" class="storage-add-button">
+                <i class="fas fa-pen" aria-hidden="true"></i>
+                Edit Storage
+            </a>
+            <form action="{{ route('aset.storage.destroy', $storage->id_storage) }}" method="POST" class="storage-delete-form" onsubmit="return confirm('Yakin ingin menghapus data storage ini?')">
+                @csrf
+                @method('DELETE')
+                <button type="submit" class="storage-delete-button">
+                    <i class="fas fa-trash" aria-hidden="true"></i>
+                    Hapus Storage
+                </button>
+            </form>
         </div>
     </div>
 

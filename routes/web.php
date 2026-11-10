@@ -36,6 +36,9 @@ Route::middleware(['auth.session'])->group(function () {
     Route::get('/aset/data-center', [AsetLocationController::class, 'dataCenters'])->name('aset.data-centers');
     Route::get('/aset/storage/create', [StorageController::class, 'create'])->name('aset.storage.create');
     Route::post('/aset/storage', [StorageController::class, 'store'])->name('aset.storage.store');
+    Route::get('/aset/storage/{id}/edit', [StorageController::class, 'edit'])->name('aset.storage.edit');
+    Route::put('/aset/storage/{id}', [StorageController::class, 'update'])->name('aset.storage.update');
+    Route::delete('/aset/storage/{id}', [StorageController::class, 'destroy'])->name('aset.storage.destroy');
     Route::get('/aset/lokasi', [AsetLocationController::class, 'index'])->name('aset.lokasi');
     Route::get('/aset/storage', [StorageController::class, 'index'])->name('aset.storage');
     Route::get('/aset/storage/{id}', [StorageController::class, 'show'])->name('aset.storage.detail');
