@@ -81,6 +81,11 @@
                                 <i class="fas fa-hard-drive w-5 text-gray-400" aria-hidden="true"></i>
                                 <span class="ml-2">Storage</span>
                             </a>
+                            <a href="{{ route('aset.penyedia') }}"
+                               class="mt-1 flex items-center rounded-lg px-4 py-3 text-sm font-medium {{ request()->routeIs('aset.penyedia') ? 'sidebar-active' : 'sidebar-link text-gray-500' }}">
+                                <i class="fas fa-user w-5 text-gray-400" aria-hidden="true"></i>
+                                <span class="ml-2">Penyedia</span>
+                            </a>
                         </div>
                     </div>
                 </div>

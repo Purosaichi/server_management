@@ -22,8 +22,45 @@ class AsetPageTest extends TestCase
             ->assertSee('Network Device')
             ->assertSee(route('aset.storage'))
             ->assertSee('Storage')
+            ->assertSee(route('aset.penyedia'))
+            ->assertSee('Penyedia')
             ->assertSee('data-sidebar-toggle', false)
             ->assertSee('aria-controls="asetSubmenu"', false);
+    }
+
+    public function test_provider_page_displays_records_from_the_provider_table(): void
+    {
+        Schema::create('penyedia', function (Blueprint $table) {
+            $table->increments('id_penyedia');
+            $table->string('nama_penyedia');
+            $table->text('alamat')->nullable();
+            $table->string('nomor_telepon')->nullable();
+            $table->string('alamat_email')->nullable();
+            $table->string('nama_kontak')->nullable();
+            $table->text('keterangan')->nullable();
+        });
+        DB::table('penyedia')->insert([
+            'id_penyedia' => 1,
+            'nama_penyedia' => 'PT Penyedia Utama',
+            'alamat' => 'Jl. Merdeka No. 10',
+            'nomor_telepon' => '021123456',
+            'alamat_email' => 'kontak@penyedia.test',
+            'nama_kontak' => 'Budi Santoso',
+            'keterangan' => 'Vendor perangkat server',
+        ]);
+
+        $this->withSession(['user_id' => 1, 'user_name' => 'Administrator'])
+            ->get(route('aset.penyedia'))
+            ->assertOk()
+            ->assertSee('PT Penyedia Utama')
+            ->assertSee('Jl. Merdeka No. 10')
+            ->assertSee('021123456')
+            ->assertSee('kontak@penyedia.test')
+            ->assertSee('Budi Santoso')
+            ->assertSee('Vendor perangkat server')
+            ->assertSee('Nama PIC')
+            ->assertSee(route('aset.penyedia'))
+            ->assertSee('sidebar-active', false);
     }
 
     public function test_asset_location_menu_displays_location_records(): void

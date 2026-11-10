@@ -13,6 +13,7 @@ use App\Http\Controllers\LicenseController;
 use App\Http\Controllers\NetworkDeviceController;
 use App\Http\Controllers\AsetLocationController;
 use App\Http\Controllers\StorageController;
+use App\Http\Controllers\PenyediaController;
 
 Route::redirect('/', '/login');
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
@@ -22,6 +23,7 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::middleware(['auth.session'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::view('/aset', 'pages.aset.aset')->name('aset.index');
+    Route::get('/aset/penyedia', [PenyediaController::class, 'index'])->name('aset.penyedia');
     Route::get('/aset/lokasi/create', [AsetLocationController::class, 'create'])->name('aset.lokasi.create');
     Route::post('/aset/lokasi', [AsetLocationController::class, 'store'])->name('aset.lokasi.store');
     Route::get('/aset/lokasi/{id}/edit', [AsetLocationController::class, 'edit'])->name('aset.lokasi.edit');
