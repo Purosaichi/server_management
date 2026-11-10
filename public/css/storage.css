@@ -1,0 +1,255 @@
+.storage-page {
+    overflow: hidden;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.5rem;
+    background: #fff;
+    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+}
+
+.storage-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem;
+    padding: 1.25rem 1.5rem;
+    border-bottom: 1px solid #e5e7eb;
+    background: linear-gradient(110deg, #fff 0%, #f8fbff 100%);
+}
+
+.storage-heading {
+    display: flex;
+    align-items: center;
+    gap: 0.875rem;
+}
+
+.storage-mark {
+    display: grid;
+    width: 2.75rem;
+    height: 2.75rem;
+    flex: 0 0 auto;
+    place-items: center;
+    border: 1px solid #bfdbfe;
+    border-radius: 0.625rem;
+    background: #eff6ff;
+    color: #1d4ed8;
+    font-size: 1.125rem;
+}
+
+.storage-eyebrow {
+    display: block;
+    margin-bottom: 0.125rem;
+    color: #2563eb;
+    font-size: 0.6875rem;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.storage-title {
+    color: #111827;
+    font-size: 1.25rem;
+    font-weight: 700;
+}
+
+.storage-subtitle {
+    margin-top: 0.25rem;
+    color: #6b7280;
+    font-size: 0.875rem;
+}
+
+.storage-header-actions {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+}
+
+.storage-count {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    border: 1px solid #dbeafe;
+    border-radius: 999px;
+    background: #eff6ff;
+    color: #1e40af;
+    font-size: 0.875rem;
+}
+
+.storage-count i {
+    color: #2563eb;
+}
+
+.storage-count strong {
+    font-size: 1rem;
+}
+
+.storage-count span {
+    color: #475569;
+}
+
+.storage-tabs {
+    display: flex;
+    gap: 1.5rem;
+    overflow-x: auto;
+    padding: 0 1.5rem;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.storage-tabs a {
+    display: inline-flex;
+    flex: 0 0 auto;
+    align-items: center;
+    gap: 0.5rem;
+    min-height: 3rem;
+    border-bottom: 2px solid transparent;
+    color: #6b7280;
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.storage-tabs a:hover {
+    color: #1d4ed8;
+}
+
+.storage-tabs a.active {
+    border-bottom-color: #2563eb;
+    color: #1d4ed8;
+}
+
+.storage-summary {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem;
+    padding: 1.25rem 1.5rem;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.storage-summary-card {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 1rem;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.5rem;
+    background: #fff;
+}
+
+.storage-summary-card span {
+    color: #6b7280;
+    font-size: 0.8125rem;
+}
+
+.storage-summary-card strong {
+    overflow-wrap: anywhere;
+    color: #1f2937;
+    font-size: 1.25rem;
+}
+
+.storage-table-wrap {
+    overflow-x: auto;
+}
+
+.storage-table {
+    width: 100%;
+    min-width: 1900px;
+    border-collapse: collapse;
+    text-align: left;
+    white-space: nowrap;
+    font-size: 0.875rem;
+}
+
+.storage-table thead {
+    background: #f9fafb;
+}
+
+.storage-table th {
+    padding: 0.875rem 1rem;
+    color: #6b7280;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.storage-table td {
+    padding: 0.875rem 1rem;
+    border-top: 1px solid #f3f4f6;
+    color: #4b5563;
+    vertical-align: middle;
+}
+
+.storage-table tbody tr:hover {
+    background: #f5f9ff;
+}
+
+.storage-asset-name,
+.storage-asset-code {
+    display: block;
+}
+
+.storage-asset-name {
+    color: #1f2937;
+    font-weight: 600;
+}
+
+.storage-asset-code {
+    margin-top: 0.2rem;
+    color: #6b7280;
+    font-size: 0.75rem;
+}
+
+.storage-usage {
+    display: flex;
+    min-width: 7rem;
+    flex-direction: column;
+    gap: 0.35rem;
+    color: #374151;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.storage-usage-track {
+    display: block;
+    height: 0.375rem;
+    overflow: hidden;
+    border-radius: 999px;
+    background: #e5e7eb;
+}
+
+.storage-usage-fill {
+    display: block;
+    height: 100%;
+    border-radius: inherit;
+    background: #2563eb;
+}
+
+.storage-empty {
+    padding: 3rem 1rem;
+    color: #64748b !important;
+    text-align: center;
+}
+
+@media (max-width: 640px) {
+    .storage-header {
+        align-items: flex-start;
+        flex-direction: column;
+        padding: 1rem;
+    }
+
+    .storage-header-actions {
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .storage-tabs {
+        gap: 1rem;
+        padding: 0 1rem;
+    }
+
+    .storage-summary {
+        grid-template-columns: 1fr;
+        padding: 1rem;
+    }
+}

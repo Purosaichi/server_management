@@ -12,6 +12,7 @@ use App\Http\Controllers\DomainController;
 use App\Http\Controllers\LicenseController;
 use App\Http\Controllers\NetworkDeviceController;
 use App\Http\Controllers\AsetLocationController;
+use App\Http\Controllers\StorageController;
 
 Route::redirect('/', '/login');
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
@@ -34,7 +35,7 @@ Route::middleware(['auth.session'])->group(function () {
     Route::delete('/aset/data-center/{id}', [AsetLocationController::class, 'destroyDataCenter'])->name('aset.data-centers.destroy');
     Route::get('/aset/data-center', [AsetLocationController::class, 'dataCenters'])->name('aset.data-centers');
     Route::get('/aset/lokasi', [AsetLocationController::class, 'index'])->name('aset.lokasi');
-    Route::view('/aset/storage', 'pages.aset.storage.storage')->name('aset.storage');
+    Route::get('/aset/storage', [StorageController::class, 'index'])->name('aset.storage');
 
     Route::get('/server', [ServerController::class, 'index'])->name('server.index');
     Route::get('/server/create', [ServerController::class, 'create'])->name('server.create');

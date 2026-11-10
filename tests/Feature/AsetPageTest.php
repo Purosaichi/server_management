@@ -398,13 +398,127 @@ class AsetPageTest extends TestCase
             ->assertDontSee('Gedung A');
     }
 
-    public function test_storage_menu_opens_its_placeholder_page(): void
+    public function test_storage_page_displays_storage_records_and_capacity_summary(): void
     {
+        $this->createStorageTables();
+        DB::table('aset')->insert([
+            ['id_aset' => 1, 'kode_aset' => 'AST-001', 'nama_aset' => 'Storage Utama'],
+            ['id_aset' => 2, 'kode_aset' => 'AST-002', 'nama_aset' => 'Storage Arsip'],
+        ]);
+        DB::table('storage')->insert([
+            [
+                'id_storage' => 1,
+                'id_aset' => 1,
+                'jenis_storage' => 'SAN',
+                'kapasitas_raw' => 10000,
+                'kapasitas_terpakai' => 4500,
+                'kapasitas_tersedia' => 5500,
+                'persentase_penggunaan' => 45.00,
+                'jenis_disk' => 'SSD',
+                'jumlah_disk' => 24,
+                'tingkat_raid' => 'RAID 6',
+                'jumlah_pengendali' => 2,
+                'protokol_storage' => 'Fibre Channel',
+                'jumlah_volume' => 8,
+                'jumlah_lun' => 16,
+                'kapasitas_snapshot' => 1000,
+                'status_replikasi' => 'Aktif',
+                'alamat_ip_manajemen' => '192.0.2.20',
+                'deleted_at' => null,
+            ],
+            [
+                'id_storage' => 2,
+                'id_aset' => 2,
+                'jenis_storage' => 'NAS',
+                'kapasitas_raw' => 99999,
+                'kapasitas_terpakai' => null,
+                'kapasitas_tersedia' => null,
+                'persentase_penggunaan' => null,
+                'jenis_disk' => null,
+                'jumlah_disk' => null,
+                'tingkat_raid' => null,
+                'jumlah_pengendali' => null,
+                'protokol_storage' => null,
+                'jumlah_volume' => null,
+                'jumlah_lun' => null,
+                'kapasitas_snapshot' => null,
+                'status_replikasi' => null,
+                'alamat_ip_manajemen' => null,
+                'deleted_at' => now(),
+            ],
+        ]);
+
         $this->withSession(['user_id' => 1, 'user_name' => 'Administrator'])
             ->get(route('aset.storage'))
             ->assertOk()
-            ->assertSee('Halaman Storage')
-            ->assertSee('Data storage aset akan ditampilkan di sini.');
+            ->assertSee('ID Storage')
+            ->assertSee('ID Aset: 1')
+            ->assertSee('Storage Utama')
+            ->assertSee('AST-001')
+            ->assertSee('SAN')
+            ->assertSee('RAID 6')
+            ->assertSee('Fibre Channel')
+            ->assertSee('192.0.2.20')
+            ->assertSee('45,00%')
+            ->assertSee('10.000')
+            ->assertSee('4.500')
+            ->assertSee('5.500')
+            ->assertDontSee('Storage Arsip')
+            ->assertSee('Storage', false);
+    }
+
+    public function test_storage_page_works_when_deleted_at_column_is_missing(): void
+    {
+        $this->createStorageTables(false);
+        DB::table('aset')->insert([
+            'id_aset' => 1,
+            'kode_aset' => 'AST-001',
+            'nama_aset' => 'Storage Utama',
+        ]);
+        DB::table('storage')->insert([
+            'id_storage' => 1,
+            'id_aset' => 1,
+            'jenis_storage' => 'SAN',
+            'kapasitas_raw' => 10000,
+        ]);
+
+        $this->withSession(['user_id' => 1, 'user_name' => 'Administrator'])
+            ->get(route('aset.storage'))
+            ->assertOk()
+            ->assertSee('Storage Utama')
+            ->assertSee('SAN');
+    }
+
+    private function createStorageTables(bool $withDeletedAt = true): void
+    {
+        Schema::create('aset', function (Blueprint $table) {
+            $table->increments('id_aset');
+            $table->string('kode_aset');
+            $table->string('nama_aset');
+        });
+
+        Schema::create('storage', function (Blueprint $table) use ($withDeletedAt) {
+            $table->increments('id_storage');
+            $table->unsignedInteger('id_aset');
+            $table->string('jenis_storage', 50)->nullable();
+            $table->integer('kapasitas_raw')->nullable();
+            $table->integer('kapasitas_terpakai')->nullable();
+            $table->integer('kapasitas_tersedia')->nullable();
+            $table->decimal('persentase_penggunaan', 5, 2)->nullable();
+            $table->string('jenis_disk', 50)->nullable();
+            $table->integer('jumlah_disk')->nullable();
+            $table->string('tingkat_raid', 10)->nullable();
+            $table->integer('jumlah_pengendali')->nullable();
+            $table->string('protokol_storage', 50)->nullable();
+            $table->integer('jumlah_volume')->nullable();
+            $table->integer('jumlah_lun')->nullable();
+            $table->integer('kapasitas_snapshot')->nullable();
+            $table->string('status_replikasi', 50)->nullable();
+            $table->string('alamat_ip_manajemen', 45)->nullable();
+            if ($withDeletedAt) {
+                $table->timestamp('deleted_at')->nullable();
+            }
+        });
     }
 
     private function createLocationTable(): void
