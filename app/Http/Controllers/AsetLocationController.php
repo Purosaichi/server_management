@@ -59,9 +59,19 @@ class AsetLocationController extends Controller
         $dataCenters = DB::table('data_center')
             ->whereNull('deleted_at')
             ->orderBy('nama_data_center')
-            ->get(['nama_data_center', 'lokasi', 'tipe_dc', 'keterangan']);
+            ->get(['id_data_center', 'nama_data_center', 'lokasi', 'tipe_dc', 'keterangan']);
 
         return view('pages.aset.lokasi.data-centers', compact('dataCenters'));
+    }
+
+    public function editDataCenter(int $id)
+    {
+        $dataCenter = DB::table('data_center')
+            ->where('id_data_center', $id)
+            ->whereNull('deleted_at')
+            ->firstOrFail();
+
+        return view('pages.aset.lokasi.data-centers-edit', compact('dataCenter'));
     }
 
     public function createDataCenter()
@@ -81,6 +91,30 @@ class AsetLocationController extends Controller
         DB::table('data_center')->insert($validated);
 
         return redirect()->route('aset.data-centers')->with('success', 'Data Center berhasil ditambahkan.');
+    }
+
+    public function updateDataCenter(Request $request, int $id)
+    {
+        $validated = $request->validate([
+            'nama_data_center' => 'required|string|max:200',
+            'lokasi' => 'nullable|string|max:300',
+            'tipe_dc' => 'nullable|in:Primary,DRP,Cloud',
+            'keterangan' => 'nullable|string|max:510',
+        ]);
+
+        $updated = DB::table('data_center')
+            ->where('id_data_center', $id)
+            ->whereNull('deleted_at')
+            ->update($validated);
+
+        if ($updated === 0 && ! DB::table('data_center')
+            ->where('id_data_center', $id)
+            ->whereNull('deleted_at')
+            ->exists()) {
+            abort(404);
+        }
+
+        return redirect()->route('aset.data-centers')->with('success', 'Data Center berhasil diperbarui.');
     }
 
     public function create()

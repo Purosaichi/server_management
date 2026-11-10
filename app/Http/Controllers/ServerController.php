@@ -146,11 +146,6 @@ class ServerController extends Controller
     /*form edit server*/
     public function edit(int $id)
     {
-        /* Ambil data server dari view + tabel server */
-        $serverView = ServerStatus::where('id_server', $id)->first();
-
-        abort_unless($serverView, 404);
-
         /* Ambil data teknis dari tabel server + aset */
         $serverDetail = DB::table('server')
             ->leftJoin('aset', 'aset.id_aset', '=', 'server.id_aset')
@@ -160,7 +155,7 @@ class ServerController extends Controller
                 'aset.nama_aset',
                 'aset.status_aset'
             )
-            ->first();
+            ->firstOrFail();
 
         /* Ambil data monitoring terbaru */
         $monitoring = DB::table('server_monitoring')
@@ -218,12 +213,11 @@ class ServerController extends Controller
             'storage_percent' => 'nullable|integer|min:0|max:100',
         ]);
 
+        $server = DB::table('server')->where('id_server', $id)->first();
+        abort_unless($server, 404);
+
         try {
             DB::beginTransaction();
-
-            /* Ambil id_aset */
-            $server = DB::table('server')->where('id_server', $id)->first();
-            abort_unless($server, 404);
 
             /* Update tabel aset */
             DB::table('aset')

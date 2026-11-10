@@ -44,6 +44,7 @@
                     <th>RAM</th>
                     <th>DISC</th>
                     <th>Up Time</th>
+                    <th>Aksi</th>
                 </tr>
             </thead>
             <tbody>

@@ -53,6 +53,7 @@
                     <th>Lokasi</th>
                     <th>Tipe</th>
                     <th>Keterangan</th>
+                    <th>Aksi</th>
                 </tr>
             </thead>
             <tbody class="divide-y divide-gray-100 text-gray-700">
@@ -62,9 +63,15 @@
                         <td>{{ $dataCenter->lokasi ?: '-' }}</td>
                         <td>{{ $dataCenter->tipe_dc ?: '-' }}</td>
                         <td class="asset-location-notes" title="{{ $dataCenter->keterangan }}">{{ $dataCenter->keterangan ?: '-' }}</td>
+                        <td>
+                            <a href="{{ route('aset.data-centers.edit', $dataCenter->id_data_center) }}" class="asset-location-edit-button">
+                                <i class="fas fa-pen" aria-hidden="true"></i>
+                                Edit
+                            </a>
+                        </td>
                     </tr>
                 @empty
-                    <tr><td colspan="4" class="asset-location-empty">Belum ada data center.</td></tr>
+                    <tr><td colspan="5" class="asset-location-empty">Belum ada data center.</td></tr>
                 @endforelse
             </tbody>
         </table>

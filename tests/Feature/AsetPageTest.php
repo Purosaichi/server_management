@@ -139,7 +139,9 @@ class AsetPageTest extends TestCase
             ->assertSee('Lokasi pemulihan bencana')
             ->assertSee('Lokasi Aset')
             ->assertSee('Tambah Data Center')
-            ->assertSee(route('aset.data-centers.create'));
+            ->assertSee(route('aset.data-centers.create'))
+            ->assertSee(route('aset.data-centers.edit', 1))
+            ->assertSee('Edit');
     }
 
     public function test_data_center_can_be_created(): void
@@ -171,6 +173,45 @@ class AsetPageTest extends TestCase
             'lokasi' => 'Bandung',
             'tipe_dc' => 'Primary',
             'keterangan' => 'Data center operasional baru',
+        ]);
+    }
+
+    public function test_data_center_can_be_edited(): void
+    {
+        $this->createDataCenterTable();
+        DB::table('data_center')->insert([
+            'id_data_center' => 1,
+            'nama_data_center' => 'DC Lama',
+            'lokasi' => 'Jakarta',
+            'tipe_dc' => 'Primary',
+            'keterangan' => 'Pusat data lama',
+            'deleted_at' => null,
+        ]);
+
+        $this->withSession(['user_id' => 1, 'user_name' => 'Administrator'])
+            ->get(route('aset.data-centers.edit', 1))
+            ->assertOk()
+            ->assertSee('Edit Data Center')
+            ->assertSee('value="DC Lama"', false)
+            ->assertSee('value="Jakarta"', false)
+            ->assertSee('Pusat data lama');
+
+        $this->withSession(['user_id' => 1, 'user_name' => 'Administrator'])
+            ->put(route('aset.data-centers.update', 1), [
+                'nama_data_center' => 'DC Baru',
+                'lokasi' => 'Bandung',
+                'tipe_dc' => 'DRP',
+                'keterangan' => 'Pusat data cadangan',
+            ])
+            ->assertRedirect(route('aset.data-centers'))
+            ->assertSessionHas('success', 'Data Center berhasil diperbarui.');
+
+        $this->assertDatabaseHas('data_center', [
+            'id_data_center' => 1,
+            'nama_data_center' => 'DC Baru',
+            'lokasi' => 'Bandung',
+            'tipe_dc' => 'DRP',
+            'keterangan' => 'Pusat data cadangan',
         ]);
     }
 
