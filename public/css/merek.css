@@ -1,0 +1,153 @@
+.merek-page {
+    overflow: hidden;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.5rem;
+    background: #fff;
+    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+}
+
+.merek-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem;
+    padding: 1.25rem 1.5rem;
+    border-bottom: 1px solid #e5e7eb;
+    background: linear-gradient(110deg, #fff 0%, #f8fbff 100%);
+}
+
+.merek-heading {
+    display: flex;
+    align-items: center;
+    gap: 0.875rem;
+}
+
+.merek-mark {
+    display: grid;
+    width: 2.75rem;
+    height: 2.75rem;
+    flex: 0 0 auto;
+    place-items: center;
+    border: 1px solid #bfdbfe;
+    border-radius: 0.625rem;
+    background: #eff6ff;
+    color: #1d4ed8;
+    font-size: 1.125rem;
+}
+
+.merek-eyebrow {
+    display: block;
+    margin-bottom: 0.125rem;
+    color: #2563eb;
+    font-size: 0.6875rem;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.merek-title {
+    color: #111827;
+    font-size: 1.25rem;
+    font-weight: 700;
+}
+
+.merek-subtitle {
+    margin-top: 0.25rem;
+    color: #6b7280;
+    font-size: 0.875rem;
+}
+
+.merek-header-actions {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+}
+
+.merek-count {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    border: 1px solid #dbeafe;
+    border-radius: 999px;
+    background: #eff6ff;
+    color: #1e40af;
+    font-size: 0.875rem;
+}
+
+.merek-count i {
+    color: #2563eb;
+}
+
+.merek-count strong {
+    font-size: 1rem;
+}
+
+.merek-count span {
+    color: #475569;
+}
+
+.merek-table-wrap {
+    overflow-x: auto;
+}
+
+.merek-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+    font-size: 0.875rem;
+}
+
+.merek-table thead {
+    background: #f9fafb;
+}
+
+.merek-table th {
+    padding: 0.875rem 1rem;
+    color: #6b7280;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.merek-table td {
+    padding: 0.875rem 1rem;
+    border-top: 1px solid #f3f4f6;
+    color: #4b5563;
+    transition: background-color 0.15s ease;
+}
+
+.merek-table tbody tr:hover {
+    background: #f5f9ff;
+}
+
+.merek-name {
+    color: #1f2937 !important;
+    font-weight: 600;
+}
+
+.merek-table td.merek-notes {
+    max-width: 24rem;
+    overflow: hidden;
+    color: #6b7280;
+    text-overflow: ellipsis;
+}
+
+.merek-table td.merek-empty {
+    padding: 3rem 1rem;
+    color: #64748b;
+    text-align: center;
+}
+
+@media (max-width: 640px) {
+    .merek-header {
+        align-items: flex-start;
+        flex-direction: column;
+        padding: 1rem;
+    }
+
+    .merek-header-actions {
+        width: 100%;
+    }
+}

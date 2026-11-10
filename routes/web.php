@@ -14,6 +14,7 @@ use App\Http\Controllers\NetworkDeviceController;
 use App\Http\Controllers\AsetLocationController;
 use App\Http\Controllers\StorageController;
 use App\Http\Controllers\PenyediaController;
+use App\Http\Controllers\MerekController;
 
 Route::redirect('/', '/login');
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
@@ -23,6 +24,12 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::middleware(['auth.session'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::view('/aset', 'pages.aset.aset')->name('aset.index');
+    Route::get('/aset/merek', [MerekController::class, 'index'])->name('aset.merek');
+    Route::get('/aset/penyedia/create', [PenyediaController::class, 'create'])->name('aset.penyedia.create');
+    Route::post('/aset/penyedia', [PenyediaController::class, 'store'])->name('aset.penyedia.store');
+    Route::get('/aset/penyedia/{id}/edit', [PenyediaController::class, 'edit'])->name('aset.penyedia.edit');
+    Route::put('/aset/penyedia/{id}', [PenyediaController::class, 'update'])->name('aset.penyedia.update');
+    Route::delete('/aset/penyedia/{id}', [PenyediaController::class, 'destroy'])->name('aset.penyedia.destroy');
     Route::get('/aset/penyedia', [PenyediaController::class, 'index'])->name('aset.penyedia');
     Route::get('/aset/lokasi/create', [AsetLocationController::class, 'create'])->name('aset.lokasi.create');
     Route::post('/aset/lokasi', [AsetLocationController::class, 'store'])->name('aset.lokasi.store');

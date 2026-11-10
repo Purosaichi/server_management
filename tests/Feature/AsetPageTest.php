@@ -24,21 +24,50 @@ class AsetPageTest extends TestCase
             ->assertSee('Storage')
             ->assertSee(route('aset.penyedia'))
             ->assertSee('Penyedia')
+            ->assertSee(route('aset.merek'))
+            ->assertSee('Merek')
             ->assertSee('data-sidebar-toggle', false)
             ->assertSee('aria-controls="asetSubmenu"', false);
     }
 
+    public function test_brand_page_displays_active_records(): void
+    {
+        Schema::create('merek', function (Blueprint $table) {
+            $table->increments('id_merek');
+            $table->string('nama_merek');
+            $table->text('keterangan')->nullable();
+            $table->timestamp('deleted_at')->nullable();
+        });
+        DB::table('merek')->insert([
+            [
+                'id_merek' => 1,
+                'nama_merek' => 'Dell',
+                'keterangan' => 'Perangkat server',
+                'deleted_at' => null,
+            ],
+            [
+                'id_merek' => 2,
+                'nama_merek' => 'Merek Terhapus',
+                'keterangan' => null,
+                'deleted_at' => now(),
+            ],
+        ]);
+
+        $this->withSession(['user_id' => 1, 'user_name' => 'Administrator'])
+            ->get(route('aset.merek'))
+            ->assertOk()
+            ->assertSee('Dell')
+            ->assertSee('Perangkat server')
+            ->assertDontSee('Merek Terhapus')
+            ->assertSee(asset('css/merek.css'))
+            ->assertDontSee(asset('css/aset-location.css'))
+            ->assertSee(route('aset.merek'))
+            ->assertSee('sidebar-active', false);
+    }
+
     public function test_provider_page_displays_records_from_the_provider_table(): void
     {
-        Schema::create('penyedia', function (Blueprint $table) {
-            $table->increments('id_penyedia');
-            $table->string('nama_penyedia');
-            $table->text('alamat')->nullable();
-            $table->string('nomor_telepon')->nullable();
-            $table->string('alamat_email')->nullable();
-            $table->string('nama_kontak')->nullable();
-            $table->text('keterangan')->nullable();
-        });
+        $this->createProviderTable();
         DB::table('penyedia')->insert([
             'id_penyedia' => 1,
             'nama_penyedia' => 'PT Penyedia Utama',
@@ -59,8 +88,143 @@ class AsetPageTest extends TestCase
             ->assertSee('Budi Santoso')
             ->assertSee('Vendor perangkat server')
             ->assertSee('Nama PIC')
+            ->assertSee(route('aset.penyedia.edit', 1))
+            ->assertSee(route('aset.penyedia.destroy', 1))
+            ->assertSee('Edit')
+            ->assertSee('Hapus')
             ->assertSee(route('aset.penyedia'))
             ->assertSee('sidebar-active', false);
+    }
+
+    public function test_provider_can_be_soft_deleted(): void
+    {
+        $this->createProviderTable();
+        DB::table('penyedia')->insert([
+            'id_penyedia' => 1,
+            'nama_penyedia' => 'PT Penyedia untuk Dihapus',
+            'alamat_email' => 'hapus@example.test',
+            'deleted_at' => null,
+        ]);
+
+        $this->withSession(['user_id' => 1, 'user_name' => 'Administrator'])
+            ->delete(route('aset.penyedia.destroy', 1))
+            ->assertRedirect(route('aset.penyedia'))
+            ->assertSessionHas('success', 'Data penyedia berhasil dihapus.');
+
+        $this->assertDatabaseCount('penyedia', 1);
+        $this->assertDatabaseMissing('penyedia', [
+            'id_penyedia' => 1,
+            'deleted_at' => null,
+        ]);
+
+        $this->withSession(['user_id' => 1, 'user_name' => 'Administrator'])
+            ->get(route('aset.penyedia'))
+            ->assertOk()
+            ->assertDontSee('PT Penyedia untuk Dihapus')
+            ->assertSee('Belum ada data penyedia.');
+
+        $this->withSession(['user_id' => 1, 'user_name' => 'Administrator'])
+            ->get(route('aset.penyedia.edit', 1))
+            ->assertNotFound();
+    }
+
+    public function test_provider_can_be_edited(): void
+    {
+        $this->createProviderTable();
+        DB::table('penyedia')->insert([
+            'id_penyedia' => 1,
+            'nama_penyedia' => 'PT Penyedia Lama',
+            'alamat' => 'Alamat Lama',
+            'nomor_telepon' => '021111111',
+            'alamat_email' => 'lama@example.test',
+            'nama_kontak' => 'Kontak Lama',
+            'keterangan' => 'Catatan lama',
+        ]);
+
+        $this->withSession(['user_id' => 1, 'user_name' => 'Administrator'])
+            ->get(route('aset.penyedia.edit', 1))
+            ->assertOk()
+            ->assertSee('Edit Penyedia')
+            ->assertSee('value="PT Penyedia Lama"', false)
+            ->assertSee('value="lama@example.test"', false)
+            ->assertSee('Alamat Lama')
+            ->assertSee(route('aset.penyedia.update', 1));
+
+        $this->withSession(['user_id' => 1, 'user_name' => 'Administrator'])
+            ->put(route('aset.penyedia.update', 1), [
+                'nama_penyedia' => 'PT Penyedia Baru',
+                'alamat' => 'Alamat Baru',
+                'nomor_telepon' => '021222222',
+                'alamat_email' => 'baru@example.test',
+                'nama_kontak' => 'Kontak Baru',
+                'keterangan' => 'Catatan baru',
+            ])
+            ->assertRedirect(route('aset.penyedia'))
+            ->assertSessionHas('success', 'Data penyedia berhasil diperbarui.');
+
+        $this->assertDatabaseHas('penyedia', [
+            'id_penyedia' => 1,
+            'nama_penyedia' => 'PT Penyedia Baru',
+            'alamat' => 'Alamat Baru',
+            'nomor_telepon' => '021222222',
+            'alamat_email' => 'baru@example.test',
+            'nama_kontak' => 'Kontak Baru',
+            'keterangan' => 'Catatan baru',
+        ]);
+    }
+
+    public function test_provider_can_be_created(): void
+    {
+        $this->createProviderTable();
+
+        $this->withSession(['user_id' => 1, 'user_name' => 'Administrator'])
+            ->get(route('aset.penyedia.create'))
+            ->assertOk()
+            ->assertSee('Tambah Penyedia')
+            ->assertSee(route('aset.penyedia.store'));
+
+        $this->withSession(['user_id' => 1, 'user_name' => 'Administrator'])
+            ->post(route('aset.penyedia.store'), [
+                'nama_penyedia' => 'PT Teknologi Nusantara',
+                'alamat' => 'Jl. Merdeka No. 20',
+                'nomor_telepon' => '021987654',
+                'alamat_email' => 'vendor@example.test',
+                'nama_kontak' => 'Siti Aminah',
+                'keterangan' => 'Penyedia perangkat jaringan',
+            ])
+            ->assertRedirect(route('aset.penyedia'))
+            ->assertSessionHas('success', 'Data penyedia berhasil ditambahkan.');
+
+        $this->assertDatabaseHas('penyedia', [
+            'nama_penyedia' => 'PT Teknologi Nusantara',
+            'alamat' => 'Jl. Merdeka No. 20',
+            'nomor_telepon' => '021987654',
+            'alamat_email' => 'vendor@example.test',
+            'nama_kontak' => 'Siti Aminah',
+            'keterangan' => 'Penyedia perangkat jaringan',
+        ]);
+
+        $this->withSession(['user_id' => 1, 'user_name' => 'Administrator'])
+            ->get(route('aset.penyedia'))
+            ->assertOk()
+            ->assertSee('PT Teknologi Nusantara')
+            ->assertSee('Data penyedia berhasil ditambahkan.');
+    }
+
+    public function test_provider_requires_a_name_and_valid_email(): void
+    {
+        $this->createProviderTable();
+
+        $this->withSession(['user_id' => 1, 'user_name' => 'Administrator'])
+            ->from(route('aset.penyedia.create'))
+            ->post(route('aset.penyedia.store'), [
+                'nama_penyedia' => '',
+                'alamat_email' => 'bukan-email',
+            ])
+            ->assertRedirect(route('aset.penyedia.create'))
+            ->assertSessionHasErrors(['nama_penyedia', 'alamat_email']);
+
+        $this->assertDatabaseCount('penyedia', 0);
     }
 
     public function test_asset_location_menu_displays_location_records(): void
@@ -787,6 +951,20 @@ class AsetPageTest extends TestCase
             if ($withDeletedAt) {
                 $table->timestamp('deleted_at')->nullable();
             }
+        });
+    }
+
+    private function createProviderTable(): void
+    {
+        Schema::create('penyedia', function (Blueprint $table) {
+            $table->increments('id_penyedia');
+            $table->string('nama_penyedia');
+            $table->text('alamat')->nullable();
+            $table->string('nomor_telepon')->nullable();
+            $table->string('alamat_email')->nullable();
+            $table->string('nama_kontak')->nullable();
+            $table->text('keterangan')->nullable();
+            $table->timestamp('deleted_at')->nullable();
         });
     }
 

@@ -7,6 +7,10 @@
 @section('content')
 <link rel="stylesheet" href="{{ asset('css/aset-location.css') }}">
 
+@if(session('success'))
+    <div class="asset-location-alert" role="status">{{ session('success') }}</div>
+@endif
+
 <div class="asset-location-page">
     <div class="asset-location-header">
         <div class="asset-location-heading">
@@ -17,10 +21,16 @@
                 <p class="asset-location-subtitle">Daftar perusahaan/vendor penyedia aset</p>
             </div>
         </div>
-        <div class="asset-location-count" aria-label="Jumlah penyedia">
-            <i class="fas fa-user" aria-hidden="true"></i>
-            <strong>{{ $providers->count() }}</strong>
-            <span>penyedia</span>
+        <div class="asset-location-header-actions">
+            <div class="asset-location-count" aria-label="Jumlah penyedia">
+                <i class="fas fa-user" aria-hidden="true"></i>
+                <strong>{{ $providers->count() }}</strong>
+                <span>penyedia</span>
+            </div>
+            <a href="{{ route('aset.penyedia.create') }}" class="asset-location-add-button">
+                <i class="fas fa-plus" aria-hidden="true"></i>
+                Tambah Penyedia
+            </a>
         </div>
     </div>
 
@@ -35,6 +45,7 @@
                     <th>Email</th>
                     <th>Nama PIC</th>
                     <th>Catatan</th>
+                    <th>Aksi</th>
                 </tr>
             </thead>
             <tbody class="divide-y divide-gray-100 text-gray-700">
@@ -47,9 +58,23 @@
                         <td>{{ $provider->alamat_email ?: '-' }}</td>
                         <td>{{ $provider->nama_kontak ?: '-' }}</td>
                         <td class="asset-location-notes" title="{{ $provider->keterangan }}">{{ $provider->keterangan ?: '-' }}</td>
+                        <td>
+                            <a href="{{ route('aset.penyedia.edit', $provider->id_penyedia) }}" class="asset-location-edit-button">
+                                <i class="fas fa-pen" aria-hidden="true"></i>
+                                Edit
+                            </a>
+                            <form action="{{ route('aset.penyedia.destroy', $provider->id_penyedia) }}" method="POST" class="asset-location-delete-form" onsubmit="return confirm('Yakin ingin menghapus data penyedia ini?')">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="asset-location-delete-button">
+                                    <i class="fas fa-trash" aria-hidden="true"></i>
+                                    Hapus
+                                </button>
+                            </form>
+                        </td>
                     </tr>
                 @empty
-                    <tr><td colspan="7" class="asset-location-empty">Belum ada data penyedia.</td></tr>
+                    <tr><td colspan="8" class="asset-location-empty">Belum ada data penyedia.</td></tr>
                 @endforelse
             </tbody>
         </table>
