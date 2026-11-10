@@ -7,6 +7,10 @@
 @section('content')
 <link rel="stylesheet" href="{{ asset('css/merek.css') }}">
 
+@if(session('success'))
+    <div class="merek-alert" role="status">{{ session('success') }}</div>
+@endif
+
 <div class="merek-page">
     <div class="merek-header">
         <div class="merek-heading">
@@ -23,6 +27,10 @@
                 <strong>{{ $brands->count() }}</strong>
                 <span>merek</span>
             </div>
+            <a href="{{ route('aset.merek.create') }}" class="merek-add-button">
+                <i class="fas fa-plus" aria-hidden="true"></i>
+                Tambah Merek
+            </a>
         </div>
     </div>
 

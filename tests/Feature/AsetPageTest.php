@@ -32,12 +32,7 @@ class AsetPageTest extends TestCase
 
     public function test_brand_page_displays_active_records(): void
     {
-        Schema::create('merek', function (Blueprint $table) {
-            $table->increments('id_merek');
-            $table->string('nama_merek');
-            $table->text('keterangan')->nullable();
-            $table->timestamp('deleted_at')->nullable();
-        });
+        $this->createBrandTable();
         DB::table('merek')->insert([
             [
                 'id_merek' => 1,
@@ -63,6 +58,54 @@ class AsetPageTest extends TestCase
             ->assertDontSee(asset('css/aset-location.css'))
             ->assertSee(route('aset.merek'))
             ->assertSee('sidebar-active', false);
+    }
+
+    public function test_brand_can_be_created(): void
+    {
+        $this->createBrandTable();
+
+        $this->withSession(['user_id' => 1, 'user_name' => 'Administrator'])
+            ->get(route('aset.merek.create'))
+            ->assertOk()
+            ->assertSee('Tambah Merek')
+            ->assertSee(route('aset.merek.store'))
+            ->assertSee(asset('css/merek.css'));
+
+        $this->withSession(['user_id' => 1, 'user_name' => 'Administrator'])
+            ->post(route('aset.merek.store'), [
+                'nama_merek' => 'Lenovo',
+                'keterangan' => 'Perangkat server dan jaringan',
+            ])
+            ->assertRedirect(route('aset.merek'))
+            ->assertSessionHas('success', 'Data merek berhasil ditambahkan.');
+
+        $this->assertDatabaseHas('merek', [
+            'nama_merek' => 'Lenovo',
+            'keterangan' => 'Perangkat server dan jaringan',
+            'deleted_at' => null,
+        ]);
+
+        $this->withSession(['user_id' => 1, 'user_name' => 'Administrator'])
+            ->get(route('aset.merek'))
+            ->assertOk()
+            ->assertSee('Lenovo')
+            ->assertSee('Data merek berhasil ditambahkan.');
+    }
+
+    public function test_brand_name_is_required(): void
+    {
+        $this->createBrandTable();
+
+        $this->withSession(['user_id' => 1, 'user_name' => 'Administrator'])
+            ->from(route('aset.merek.create'))
+            ->post(route('aset.merek.store'), [
+                'nama_merek' => '',
+                'keterangan' => 'Tanpa nama',
+            ])
+            ->assertRedirect(route('aset.merek.create'))
+            ->assertSessionHasErrors('nama_merek');
+
+        $this->assertDatabaseCount('merek', 0);
     }
 
     public function test_provider_page_displays_records_from_the_provider_table(): void
@@ -963,6 +1006,16 @@ class AsetPageTest extends TestCase
             $table->string('nomor_telepon')->nullable();
             $table->string('alamat_email')->nullable();
             $table->string('nama_kontak')->nullable();
+            $table->text('keterangan')->nullable();
+            $table->timestamp('deleted_at')->nullable();
+        });
+    }
+
+    private function createBrandTable(): void
+    {
+        Schema::create('merek', function (Blueprint $table) {
+            $table->increments('id_merek');
+            $table->string('nama_merek');
             $table->text('keterangan')->nullable();
             $table->timestamp('deleted_at')->nullable();
         });

@@ -64,6 +64,140 @@
     gap: 0.75rem;
 }
 
+.merek-add-button,
+.merek-back-button,
+.merek-cancel-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    min-height: 2.5rem;
+    padding: 0.5rem 0.875rem;
+    border-radius: 0.5rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.merek-add-button {
+    border: 1px solid #2563eb;
+    background: #2563eb;
+    color: #fff;
+}
+
+.merek-add-button:hover {
+    border-color: #1d4ed8;
+    background: #1d4ed8;
+}
+
+.merek-back-button,
+.merek-cancel-button {
+    border: 1px solid #e5e7eb;
+    background: #fff;
+    color: #374151;
+}
+
+.merek-back-button:hover,
+.merek-cancel-button:hover {
+    background: #f9fafb;
+}
+
+.merek-alert {
+    margin-bottom: 1rem;
+    padding: 0.75rem 1rem;
+    border: 1px solid #a7f3d0;
+    border-radius: 0.5rem;
+    background: #d1fae5;
+    color: #065f46;
+    font-size: 0.875rem;
+}
+
+.merek-alert-error {
+    border-color: #fecaca;
+    background: #fef2f2;
+    color: #b91c1c;
+}
+
+.merek-form-page {
+    overflow: hidden;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.5rem;
+    background: #fff;
+    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+}
+
+.merek-form-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem;
+    padding: 1.25rem 1.5rem;
+    border-bottom: 1px solid #e5e7eb;
+    background: linear-gradient(110deg, #fff 0%, #f8fbff 100%);
+}
+
+.merek-form-header h1 {
+    color: #111827;
+    font-size: 1.25rem;
+    font-weight: 700;
+}
+
+.merek-form-header p {
+    margin-top: 0.25rem;
+    color: #6b7280;
+    font-size: 0.875rem;
+}
+
+.merek-form {
+    display: grid;
+    gap: 1.25rem;
+    padding: 1.5rem;
+}
+
+.merek-field {
+    display: grid;
+    gap: 0.5rem;
+    color: #374151;
+    font-size: 0.875rem;
+    font-weight: 600;
+}
+
+.merek-field strong {
+    color: #dc2626;
+}
+
+.merek-field input,
+.merek-field textarea {
+    width: 100%;
+    border: 1px solid #d1d5db;
+    border-radius: 0.5rem;
+    background: #fff;
+    padding: 0.625rem 0.75rem;
+    color: #111827;
+    font: inherit;
+    font-weight: 400;
+}
+
+.merek-field input:focus,
+.merek-field textarea:focus {
+    border-color: #2563eb;
+    outline: 2px solid rgba(37, 99, 235, 0.15);
+}
+
+.merek-field textarea {
+    resize: vertical;
+}
+
+.merek-form-actions {
+    display: flex;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    padding-top: 0.25rem;
+}
+
 .merek-count {
     display: inline-flex;
     align-items: center;

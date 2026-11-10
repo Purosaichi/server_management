@@ -24,6 +24,8 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::middleware(['auth.session'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::view('/aset', 'pages.aset.aset')->name('aset.index');
+    Route::get('/aset/merek/create', [MerekController::class, 'create'])->name('aset.merek.create');
+    Route::post('/aset/merek', [MerekController::class, 'store'])->name('aset.merek.store');
     Route::get('/aset/merek', [MerekController::class, 'index'])->name('aset.merek');
     Route::get('/aset/penyedia/create', [PenyediaController::class, 'create'])->name('aset.penyedia.create');
     Route::post('/aset/penyedia', [PenyediaController::class, 'store'])->name('aset.penyedia.store');
