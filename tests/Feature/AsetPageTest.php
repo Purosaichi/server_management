@@ -63,7 +63,9 @@ class AsetPageTest extends TestCase
             ->assertSee(route('aset.lokasi.detail', 1))
             ->assertSee(route('aset.lokasi.edit', 1))
             ->assertSee('Detail')
-            ->assertSee('Edit');
+            ->assertSee('Edit')
+            ->assertSee(route('aset.lokasi.destroy', 1))
+            ->assertSee('Hapus');
     }
 
     public function test_asset_location_detail_displays_full_location_information(): void
@@ -331,6 +333,37 @@ class AsetPageTest extends TestCase
             'zona' => 'Selatan',
             'keterangan' => 'Lokasi diperbarui',
         ]);
+    }
+
+    public function test_location_can_be_soft_deleted(): void
+    {
+        $this->createLocationTable();
+        $this->createDataCenterTable();
+        DB::table('lokasi_aset')->insert([
+            'id_lokasi_aset' => 1,
+            'id_aset' => 17,
+            'nama_gedung' => 'Gedung A',
+            'deleted_at' => null,
+        ]);
+
+        $this->withSession(['user_id' => 1, 'user_name' => 'Administrator'])
+            ->delete(route('aset.lokasi.destroy', 1))
+            ->assertRedirect(route('aset.lokasi'))
+            ->assertSessionHas('success', 'Lokasi aset berhasil dihapus.');
+
+        $this->assertDatabaseMissing('lokasi_aset', [
+            'id_lokasi_aset' => 1,
+            'deleted_at' => null,
+        ]);
+        $this->assertDatabaseHas('lokasi_aset', [
+            'id_lokasi_aset' => 1,
+            'nama_gedung' => 'Gedung A',
+        ]);
+
+        $this->withSession(['user_id' => 1, 'user_name' => 'Administrator'])
+            ->get(route('aset.lokasi'))
+            ->assertOk()
+            ->assertDontSee('Gedung A');
     }
 
     public function test_storage_menu_opens_its_placeholder_page(): void

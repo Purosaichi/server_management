@@ -200,4 +200,18 @@ class AsetLocationController extends Controller
 
         return redirect()->route('aset.lokasi')->with('success', 'Lokasi aset berhasil diperbarui.');
     }
+
+    public function destroy(int $id)
+    {
+        $location = DB::table('lokasi_aset')
+            ->where('id_lokasi_aset', $id)
+            ->whereNull('deleted_at')
+            ->firstOrFail();
+
+        DB::table('lokasi_aset')
+            ->where('id_lokasi_aset', $location->id_lokasi_aset)
+            ->update(['deleted_at' => now()]);
+
+        return redirect()->route('aset.lokasi')->with('success', 'Lokasi aset berhasil dihapus.');
+    }
 }

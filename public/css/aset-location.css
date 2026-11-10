@@ -376,6 +376,30 @@
     background: #dbeafe;
 }
 
+.asset-location-delete-form {
+    display: inline;
+}
+
+.asset-location-delete-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    margin-left: 0.375rem;
+    padding: 0.375rem 0.625rem;
+    border: 0;
+    border-radius: 0.375rem;
+    background: #fee2e2;
+    color: #991b1b;
+    font: inherit;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.asset-location-delete-button:hover {
+    background: #fecaca;
+}
+
 .asset-location-detail-button {
     display: inline-flex;
     align-items: center;

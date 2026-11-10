@@ -74,6 +74,14 @@
                                 <i class="fas fa-pen" aria-hidden="true"></i>
                                 Edit
                             </a>
+                            <form action="{{ route('aset.lokasi.destroy', $location->id_lokasi_aset) }}" method="POST" class="asset-location-delete-form" onsubmit="return confirm('Yakin ingin menghapus lokasi aset ini?')">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="asset-location-delete-button">
+                                    <i class="fas fa-trash" aria-hidden="true"></i>
+                                    Hapus
+                                </button>
+                            </form>
                         </td>
                     </tr>
                 @empty
