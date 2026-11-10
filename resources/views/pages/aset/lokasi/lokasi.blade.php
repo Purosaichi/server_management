@@ -59,17 +59,16 @@
             </thead>
             <tbody class="divide-y divide-gray-100 text-gray-700">
                 @forelse($locations as $location)
-                    <tr class="hover:bg-gray-50">
+                    <tr class="asset-location-row hover:bg-gray-50"
+                        data-detail-url="{{ route('aset.lokasi.detail', $location->id_lokasi_aset) }}"
+                        title="Klik dua kali untuk melihat detail"
+                        ondblclick="if (!event.target.closest('a, button, form')) window.location.href = this.dataset.detailUrl">
                         <td class="asset-location-center">{{ $location->nama_data_center ?: '-' }}</td>
                         <td>{{ $location->nama_gedung ?: '-' }}</td>
                         <td>{{ $location->nama_ruangan ?: '-' }}</td>
                         <td><span class="asset-location-zone">{{ $location->zona ?: '-' }}</span></td>
                         <td class="asset-location-rack-name">{{ $location->nama_rak ?: '-' }}</td>
                         <td>
-                            <a href="{{ route('aset.lokasi.detail', $location->id_lokasi_aset) }}" class="asset-location-detail-button">
-                                <i class="fas fa-eye" aria-hidden="true"></i>
-                                Detail
-                            </a>
                             <a href="{{ route('aset.lokasi.edit', $location->id_lokasi_aset) }}" class="asset-location-edit-button">
                                 <i class="fas fa-pen" aria-hidden="true"></i>
                                 Edit

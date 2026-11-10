@@ -60,9 +60,10 @@ class AsetPageTest extends TestCase
             ->assertSee('Ruang Server')
             ->assertDontSee('Lokasi utama')
             ->assertDontSee('U10-U20')
-            ->assertSee(route('aset.lokasi.detail', 1))
+            ->assertSee('data-detail-url="' . route('aset.lokasi.detail', 1) . '"', false)
+            ->assertSee('ondblclick=', false)
             ->assertSee(route('aset.lokasi.edit', 1))
-            ->assertSee('Detail')
+            ->assertDontSee('asset-location-detail-button')
             ->assertSee('Edit')
             ->assertSee(route('aset.lokasi.destroy', 1))
             ->assertSee('Hapus');
