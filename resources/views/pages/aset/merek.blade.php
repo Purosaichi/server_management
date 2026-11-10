@@ -41,6 +41,7 @@
                     <th>ID Merek</th>
                     <th>Nama Merek</th>
                     <th>Keterangan</th>
+                    <th>Aksi</th>
                 </tr>
             </thead>
             <tbody class="divide-y divide-gray-100 text-gray-700">
@@ -49,9 +50,23 @@
                         <td>{{ $brand->id_merek }}</td>
                         <td class="merek-name">{{ $brand->nama_merek }}</td>
                         <td class="merek-notes" title="{{ $brand->keterangan }}">{{ $brand->keterangan ?: '-' }}</td>
+                        <td class="merek-actions">
+                            <a href="{{ route('aset.merek.edit', $brand->id_merek) }}" class="merek-edit-button">
+                                <i class="fas fa-pen" aria-hidden="true"></i>
+                                Edit
+                            </a>
+                            <form action="{{ route('aset.merek.destroy', $brand->id_merek) }}" method="POST" class="merek-delete-form" onsubmit="return confirm('Yakin ingin menghapus data merek ini?')">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="merek-delete-button">
+                                    <i class="fas fa-trash" aria-hidden="true"></i>
+                                    Hapus
+                                </button>
+                            </form>
+                        </td>
                     </tr>
                 @empty
-                    <tr><td colspan="3" class="merek-empty">Belum ada data merek.</td></tr>
+                    <tr><td colspan="4" class="merek-empty">Belum ada data merek.</td></tr>
                 @endforelse
             </tbody>
         </table>

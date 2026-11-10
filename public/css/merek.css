@@ -245,6 +245,14 @@
     text-transform: uppercase;
 }
 
+.merek-table td:last-child {
+    text-align: right;
+}
+
+.merek-table th:last-child {
+    text-align: right;
+}
+
 .merek-table td {
     padding: 0.875rem 1rem;
     border-top: 1px solid #f3f4f6;
@@ -259,6 +267,48 @@
 .merek-name {
     color: #1f2937 !important;
     font-weight: 600;
+}
+
+.merek-actions {
+    white-space: nowrap;
+}
+
+.merek-edit-button,
+.merek-delete-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    margin: 0.125rem;
+    padding: 0.375rem 0.625rem;
+    border: 0;
+    border-radius: 0.375rem;
+    font: inherit;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.merek-edit-button {
+    background: #eff6ff;
+    color: #1d4ed8;
+}
+
+.merek-edit-button:hover {
+    background: #dbeafe;
+}
+
+.merek-delete-form {
+    display: inline;
+}
+
+.merek-delete-button {
+    background: #fee2e2;
+    color: #b91c1c;
+}
+
+.merek-delete-button:hover {
+    background: #fecaca;
 }
 
 .merek-table td.merek-notes {

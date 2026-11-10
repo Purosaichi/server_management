@@ -54,10 +54,81 @@ class AsetPageTest extends TestCase
             ->assertSee('Dell')
             ->assertSee('Perangkat server')
             ->assertDontSee('Merek Terhapus')
+            ->assertSee(route('aset.merek.edit', 1))
+            ->assertSee(route('aset.merek.destroy', 1))
+            ->assertSee('Edit')
+            ->assertSee('Hapus')
             ->assertSee(asset('css/merek.css'))
             ->assertDontSee(asset('css/aset-location.css'))
             ->assertSee(route('aset.merek'))
             ->assertSee('sidebar-active', false);
+    }
+
+    public function test_brand_can_be_edited(): void
+    {
+        $this->createBrandTable();
+        DB::table('merek')->insert([
+            'id_merek' => 1,
+            'nama_merek' => 'Nama Lama',
+            'keterangan' => 'Keterangan lama',
+            'deleted_at' => null,
+        ]);
+
+        $this->withSession(['user_id' => 1, 'user_name' => 'Administrator'])
+            ->get(route('aset.merek.edit', 1))
+            ->assertOk()
+            ->assertSee('Edit Merek')
+            ->assertSee('value="Nama Lama"', false)
+            ->assertSee('Keterangan lama')
+            ->assertSee(route('aset.merek.update', 1))
+            ->assertSee(asset('css/merek.css'));
+
+        $this->withSession(['user_id' => 1, 'user_name' => 'Administrator'])
+            ->put(route('aset.merek.update', 1), [
+                'nama_merek' => 'Nama Baru',
+                'keterangan' => 'Keterangan baru',
+            ])
+            ->assertRedirect(route('aset.merek'))
+            ->assertSessionHas('success', 'Data merek berhasil diperbarui.');
+
+        $this->assertDatabaseHas('merek', [
+            'id_merek' => 1,
+            'nama_merek' => 'Nama Baru',
+            'keterangan' => 'Keterangan baru',
+            'deleted_at' => null,
+        ]);
+    }
+
+    public function test_brand_can_be_soft_deleted(): void
+    {
+        $this->createBrandTable();
+        DB::table('merek')->insert([
+            'id_merek' => 1,
+            'nama_merek' => 'Merek untuk Dihapus',
+            'keterangan' => null,
+            'deleted_at' => null,
+        ]);
+
+        $this->withSession(['user_id' => 1, 'user_name' => 'Administrator'])
+            ->delete(route('aset.merek.destroy', 1))
+            ->assertRedirect(route('aset.merek'))
+            ->assertSessionHas('success', 'Data merek berhasil dihapus.');
+
+        $this->assertDatabaseCount('merek', 1);
+        $this->assertDatabaseMissing('merek', [
+            'id_merek' => 1,
+            'deleted_at' => null,
+        ]);
+
+        $this->withSession(['user_id' => 1, 'user_name' => 'Administrator'])
+            ->get(route('aset.merek'))
+            ->assertOk()
+            ->assertDontSee('Merek untuk Dihapus')
+            ->assertSee('Belum ada data merek.');
+
+        $this->withSession(['user_id' => 1, 'user_name' => 'Administrator'])
+            ->get(route('aset.merek.edit', 1))
+            ->assertNotFound();
     }
 
     public function test_brand_can_be_created(): void
