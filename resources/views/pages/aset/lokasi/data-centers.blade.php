@@ -43,10 +43,6 @@
             <i class="fas fa-server" aria-hidden="true"></i>
             Data Center
         </a>
-        <a href="{{ route('aset.storage') }}">
-            <i class="fas fa-hard-drive" aria-hidden="true"></i>
-            Storage
-        </a>
     </nav>
 
     <div class="asset-location-table-wrap">
