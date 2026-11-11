@@ -26,8 +26,69 @@ class AsetPageTest extends TestCase
             ->assertSee('Penyedia')
             ->assertSee(route('aset.merek'))
             ->assertSee('Merek')
+            ->assertSee(route('aset.garansi'))
+            ->assertSee('Garansi')
             ->assertSee('data-sidebar-toggle', false)
             ->assertSee('aria-controls="asetSubmenu"', false);
+    }
+
+    public function test_warranty_page_displays_warranty_records(): void
+    {
+        Schema::create('garansi', function (Blueprint $table) {
+            $table->increments('id_garansi');
+            $table->unsignedInteger('id_aset');
+            $table->string('nomor_garansi')->nullable();
+            $table->date('tanggal_mulai')->nullable();
+            $table->date('tanggal_berakhir')->nullable();
+            $table->string('tingkat_layanan')->nullable();
+            $table->string('tingkat_sla')->nullable();
+            $table->string('status_garansi')->nullable();
+            $table->string('keterangan')->nullable();
+            $table->unsignedInteger('id_server')->nullable();
+        });
+        Schema::create('aset', function (Blueprint $table) {
+            $table->increments('id_aset');
+            $table->string('nama_aset');
+        });
+        Schema::create('server', function (Blueprint $table) {
+            $table->increments('id_server');
+            $table->unsignedInteger('id_aset');
+            $table->string('nama_server');
+        });
+
+        DB::table('aset')->insert([
+            'id_aset' => 1,
+            'nama_aset' => 'Aset Server Utama',
+        ]);
+        DB::table('server')->insert([
+            'id_server' => 1,
+            'id_aset' => 1,
+            'nama_server' => 'Server Utama',
+        ]);
+        DB::table('garansi')->insert([
+            'id_garansi' => 1,
+            'id_aset' => 1,
+            'id_server' => 1,
+            'nomor_garansi' => 'GAR-001',
+            'tanggal_mulai' => '2025-01-01',
+            'tanggal_berakhir' => '2028-01-01',
+            'tingkat_layanan' => 'On-site',
+            'tingkat_sla' => '24x7',
+            'status_garansi' => 'Aktif',
+            'keterangan' => 'Garansi vendor',
+        ]);
+
+        $this->withSession(['user_id' => 1, 'user_name' => 'Administrator'])
+            ->get(route('aset.garansi'))
+            ->assertOk()
+            ->assertSee('Daftar masa garansi aset dan server')
+            ->assertSee('GAR-001')
+            ->assertSee('Server Utama')
+            ->assertSee('01/01/2028')
+            ->assertSee('On-site')
+            ->assertSee('24x7')
+            ->assertSee('Garansi vendor')
+            ->assertSee('sidebar-active', false);
     }
 
     public function test_brand_page_displays_active_records(): void

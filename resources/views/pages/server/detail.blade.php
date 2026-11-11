@@ -87,7 +87,7 @@
         
         <!-- /* KOLOM 1 */ -->
         <div class="column">
-            <div class="card">
+            <div class="card" style="position: relative;">
                 <h3 class="card-title">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <circle cx="12" cy="12" r="10"/>
@@ -205,7 +205,7 @@
         
         <!-- /* KOLOM 2 */ -->
         <div class="column">
-            <div class="card">
+            <div class="card" style="position: relative;">
                 <h3 class="card-title">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <circle cx="12" cy="12" r="10"/>
@@ -213,14 +213,18 @@
                     </svg>
                     Informasi Dasar
                 </h3>
+                <button type="button" class="edit-network-btn" onclick="openBasicInfoModal()" title="Edit Informasi Dasar">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
+                    </svg>
+                </button>
                 <div class="info-list">
                     <div class="info-row"><span class="info-label">Server Type</span><span class="info-value">{{ $server['server_type'] }}</span></div>
                     <div class="info-row"><span class="info-label">Server Role</span><span class="info-value">{{ $server['server_role'] }}</span></div>
-                    <div class="info-row"><span class="info-label">Manufacture</span><span class="info-value">{{ $server['manufacture'] }}</span></div>
+                    <div class="info-row"><span class="info-label">Merek</span><span class="info-value">{{ $server['manufacture'] }}</span></div>
                     <div class="info-row"><span class="info-label">Model</span><span class="info-value">{{ $server['model'] }}</span></div>
                     <div class="info-row"><span class="info-label">Serial Number</span><span class="info-value">{{ $server['serial_number'] }}</span></div>
                     <div class="info-row"><span class="info-label">Purchase Date</span><span class="info-value">{{ $server['purchase_date'] }}</span></div>
-                    <div class="info-row"><span class="info-label">Warranty</span><span class="info-value">{{ $server['warranty'] }}</span></div>
                     <div class="info-row"><span class="info-label">Status</span><span class="info-value">{{ $server['server_status'] }}</span></div>
                 </div>
             </div>
@@ -419,6 +423,84 @@
 </div>
 
 <!-- /* MODAL INFORMASI JARINGAN */ -->
+<div id="basicInfoModal" class="modal-overlay" style="display: {{ $errors->basicInfo->any() ? 'flex' : 'none' }};">
+    <div class="modal-box" style="max-width: 640px;">
+        <h3 class="modal-title">Edit Informasi Dasar</h3>
+
+        @if($errors->basicInfo->any())
+            <div class="server-form-errors" role="alert">
+                <ul>
+                    @foreach($errors->basicInfo->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
+        <form method="POST" action="{{ route('server.update-basic-info', $server['id']) }}">
+            @csrf
+            @method('PUT')
+
+            <div class="modal-form-row">
+                <div class="modal-form-group">
+                    <label for="basic_server_type">Server Type</label>
+                    <select name="jenis_server" id="basic_server_type" required>
+                        <option value="Physical" {{ old('jenis_server', $server['server_type']) === 'Physical' ? 'selected' : '' }}>Physical</option>
+                        <option value="Virtual" {{ old('jenis_server', $server['server_type']) === 'Virtual' ? 'selected' : '' }}>Virtual</option>
+                    </select>
+                </div>
+                <div class="modal-form-group">
+                    <label for="basic_server_role">Server Role</label>
+                    <input type="text" name="server_role" id="basic_server_role" maxlength="255"
+                           value="{{ old('server_role', $server['server_role'] === '-' ? '' : $server['server_role']) }}">
+                </div>
+            </div>
+            <div class="modal-form-row">
+                <div class="modal-form-group">
+                    <label for="basic_brand">Merek</label>
+                    <select name="id_merek" id="basic_brand">
+                        <option value="">-- Tidak dipilih --</option>
+                        @foreach($brands as $brandId => $brandName)
+                            <option value="{{ $brandId }}" {{ (string) old('id_merek', $server['brand_id']) === (string) $brandId ? 'selected' : '' }}>
+                                {{ $brandName }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="modal-form-group">
+                    <label for="basic_model">Model</label>
+                    <input type="text" name="model" id="basic_model" maxlength="255"
+                           value="{{ old('model', $server['model_input']) }}">
+                </div>
+            </div>
+            <div class="modal-form-row">
+                <div class="modal-form-group">
+                    <label for="basic_serial_number">Serial Number</label>
+                    <input type="text" name="nomor_seri" id="basic_serial_number" maxlength="100"
+                           value="{{ old('nomor_seri', $server['serial_number_input']) }}">
+                </div>
+                <div class="modal-form-group">
+                    <label for="basic_status">Status</label>
+                    <select name="status_monitoring" id="basic_status" required>
+                        <option value="Online" {{ old('status_monitoring', $server['server_status']) === 'Online' ? 'selected' : '' }}>Online</option>
+                        <option value="Offline" {{ old('status_monitoring', $server['server_status']) === 'Offline' ? 'selected' : '' }}>Offline</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-form-group">
+                <label for="basic_purchase_date">Purchase Date</label>
+                <input type="date" name="tanggal_pengadaan" id="basic_purchase_date"
+                       value="{{ old('tanggal_pengadaan', $server['purchase_date_input']) }}">
+            </div>
+
+            <div class="modal-actions">
+                <button type="button" class="modal-btn-cancel" onclick="closeBasicInfoModal()">Batal</button>
+                <button type="submit" class="modal-btn-submit">Simpan</button>
+            </div>
+        </form>
+    </div>
+</div>
+
 <div id="networkModal" class="modal-overlay" style="display: none;">
     <div class="modal-box">
         <h3 class="modal-title">Edit Informasi Jaringan</h3>
@@ -539,6 +621,18 @@
 
 <script>
 
+    function openBasicInfoModal() {
+        document.getElementById('basicInfoModal').style.display = 'flex';
+    }
+
+    function closeBasicInfoModal() {
+        document.getElementById('basicInfoModal').style.display = 'none';
+    }
+
+    document.getElementById('basicInfoModal').addEventListener('click', function(e) {
+        if (e.target === this) closeBasicInfoModal();
+    });
+
     /* MODAL NETWORK */
     function openNetworkModal() {
         document.getElementById('networkModal').style.display = 'flex';
@@ -553,7 +647,10 @@
     });
 
     document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape') closeNetworkModal();
+        if (e.key === 'Escape') {
+            closeBasicInfoModal();
+            closeNetworkModal();
+        }
     });
     /* MODAL CATATAN */
     function openNoteModal() {

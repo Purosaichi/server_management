@@ -15,6 +15,7 @@ use App\Http\Controllers\AsetLocationController;
 use App\Http\Controllers\StorageController;
 use App\Http\Controllers\PenyediaController;
 use App\Http\Controllers\MerekController;
+use App\Http\Controllers\WarrantyController;
 
 Route::redirect('/', '/login');
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
@@ -30,6 +31,7 @@ Route::middleware(['auth.session'])->group(function () {
     Route::put('/aset/merek/{id}', [MerekController::class, 'update'])->name('aset.merek.update');
     Route::delete('/aset/merek/{id}', [MerekController::class, 'destroy'])->name('aset.merek.destroy');
     Route::get('/aset/merek', [MerekController::class, 'index'])->name('aset.merek');
+    Route::get('/aset/garansi', [WarrantyController::class, 'index'])->name('aset.garansi');
     Route::get('/aset/penyedia/create', [PenyediaController::class, 'create'])->name('aset.penyedia.create');
     Route::post('/aset/penyedia', [PenyediaController::class, 'store'])->name('aset.penyedia.store');
     Route::get('/aset/penyedia/{id}/edit', [PenyediaController::class, 'edit'])->name('aset.penyedia.edit');
@@ -62,6 +64,7 @@ Route::middleware(['auth.session'])->group(function () {
     Route::post('/server', [ServerController::class, 'store'])->name('server.store');
     Route::get('/server/{id}/edit', [ServerController::class, 'edit'])->name('server.edit');
     Route::put('/server/{id}', [ServerController::class, 'update'])->name('server.update');
+    Route::put('/server/{id}/basic-info', [ServerController::class, 'updateBasicInfo'])->name('server.update-basic-info');
     Route::put('/server/{id}/network', [ServerController::class, 'updateNetwork'])->name('server.update-network');
     Route::delete('/server/{id}', [ServerController::class, 'destroy'])->name('server.destroy');
     Route::get('/server/{id}', [ServerController::class, 'show'])->name('server.detail');

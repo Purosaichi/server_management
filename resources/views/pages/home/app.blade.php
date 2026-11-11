@@ -91,6 +91,11 @@
                                 <i class="fas fa-tag w-5 text-gray-400" aria-hidden="true"></i>
                                 <span class="ml-2">Merek</span>
                             </a>
+                            <a href="{{ route('aset.garansi') }}"
+                               class="mt-1 flex items-center rounded-lg px-4 py-3 text-sm font-medium {{ request()->routeIs('aset.garansi') ? 'sidebar-active' : 'sidebar-link text-gray-500' }}">
+                                <i class="fas fa-shield-halved w-5 text-gray-400" aria-hidden="true"></i>
+                                <span class="ml-2">Garansi</span>
+                            </a>
                         </div>
                     </div>
                 </div>

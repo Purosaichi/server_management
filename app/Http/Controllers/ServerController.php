@@ -24,8 +24,45 @@ class ServerController extends Controller
 
     abort_unless($server, 404);
 
+    $assetDetails = DB::table('server')
+        ->leftJoin('aset', 'aset.id_aset', '=', 'server.id_aset')
+        ->leftJoin('merek', 'merek.id_merek', '=', 'aset.id_merek')
+        ->where('server.id_server', $id)
+        ->whereNull('server.deleted_at')
+        ->select(
+            'server.jenis_server',
+            'server.server_role',
+            'aset.id_merek',
+            'aset.id_aset',
+            'aset.model',
+            'aset.nomor_seri',
+            'aset.tanggal_pengadaan',
+            'merek.nama_merek'
+        )
+        ->first();
+
+    abort_unless($assetDetails, 404);
+
+    $server['server_type'] = $assetDetails->jenis_server ?: '-';
+    $server['server_role'] = $assetDetails->server_role ?: '-';
+    $server['brand'] = $assetDetails->nama_merek ?: '-';
+    $server['brand_id'] = $assetDetails->id_merek;
+    $server['model'] = $assetDetails->model ?: '-';
+    $server['model_input'] = $assetDetails->model ?? '';
+    $server['serial_number'] = $assetDetails->nomor_seri ?: '-';
+    $server['serial_number_input'] = $assetDetails->nomor_seri ?? '';
+    $server['purchase_date_input'] = $assetDetails->tanggal_pengadaan
+        ? Carbon::parse($assetDetails->tanggal_pengadaan)->format('Y-m-d')
+        : '';
+    $server['purchase_date'] = $assetDetails->tanggal_pengadaan
+        ? Carbon::parse($assetDetails->tanggal_pengadaan)->locale('id')->translatedFormat('d F Y')
+        : '-';
     $server = array_merge($server, $this->serverDetails($server));
     $pics = DB::table('pic')->orderBy('nama_pic')->pluck('nama_pic', 'id_pic');
+    $brands = DB::table('merek')
+        ->whereNull('deleted_at')
+        ->orderBy('nama_merek')
+        ->pluck('nama_merek', 'id_merek');
     
     $applications = DB::table('aplikasi')
         ->where('id_server', $id)
@@ -56,7 +93,7 @@ class ServerController extends Controller
         )
         ->first();
 
-    return view('pages.server.detail', compact('server', 'pics', 'applications', 'latestNote'));
+    return view('pages.server.detail', compact('server', 'pics', 'applications', 'latestNote', 'brands'));
 }
 
     /*form tambah server*/
@@ -270,6 +307,76 @@ class ServerController extends Controller
         }
     }
 
+    public function updateBasicInfo(Request $request, int $id)
+    {
+        $validator = \Illuminate\Support\Facades\Validator::make($request->all(), [
+            'jenis_server' => 'required|in:Physical,Virtual',
+            'server_role' => 'nullable|string|max:255',
+            'id_merek' => 'nullable|exists:merek,id_merek',
+            'model' => 'nullable|string|max:255',
+            'nomor_seri' => 'nullable|string|max:100',
+            'tanggal_pengadaan' => 'nullable|date',
+            'status_monitoring' => 'required|in:Online,Offline',
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()
+                ->withErrors($validator, 'basicInfo')
+                ->withInput();
+        }
+
+        $server = DB::table('server')->where('id_server', $id)->first();
+        abort_unless($server, 404);
+
+        try {
+            DB::beginTransaction();
+
+            DB::table('server')
+                ->where('id_server', $id)
+                ->update([
+                    'jenis_server' => $request->jenis_server,
+                    'server_role' => $request->server_role,
+                ]);
+
+            DB::table('aset')
+                ->where('id_aset', $server->id_aset)
+                ->update([
+                    'id_merek' => $request->id_merek ?: null,
+                    'model' => $request->model,
+                    'nomor_seri' => $request->nomor_seri,
+                    'tanggal_pengadaan' => $request->tanggal_pengadaan,
+                ]);
+
+            $latestMonitoring = DB::table('server_monitoring')
+                ->where('id_server', $id)
+                ->orderByDesc('dicatat_pada')
+                ->first();
+
+            DB::table('server_monitoring')->insert([
+                'id_server' => $id,
+                'status' => $request->status_monitoring,
+                'cpu_percent' => $latestMonitoring->cpu_percent ?? 0,
+                'memory_percent' => $latestMonitoring->memory_percent ?? 0,
+                'storage_percent' => $latestMonitoring->storage_percent ?? 0,
+                'uptime_detik' => $request->status_monitoring === 'Online'
+                    ? ($latestMonitoring->uptime_detik ?? 3600)
+                    : 0,
+                'dicatat_pada' => now(),
+            ]);
+
+            DB::commit();
+
+            return redirect()->route('server.detail', $id)
+                ->with('success', 'Informasi dasar server berhasil diperbarui.');
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            return redirect()->back()
+                ->with('error', 'Gagal memperbarui informasi dasar server: ' . $e->getMessage())
+                ->withInput();
+        }
+    }
+
     /*soft delete */
     public function destroy(int $id)
     {
@@ -342,13 +449,13 @@ class ServerController extends Controller
         'storage_percent' => $isOffline ? 0 : (int) str_replace('%', '', $server['disk']),
         'storage_detail' => $isOffline ? '-' : '85 TB / 100 TB',
 
-        'server_type' => 'Physical',
-        'server_role' => 'Application & Database Server',
-        'manufacture' => $isOffline ? '-' : 'Dell Inc.',
-        'model' => $isOffline ? '-' : 'PowerEdge R7625',
-        'serial_number' => $isOffline ? '-' : 'DELLR7625-8F3K' . $server['id'],
-        'purchase_date' => '15 Januari 2025',
-        'warranty' => 'Hingga 15 Januari 2028',
+        'server_type' => $server['server_type'] ?? '-',
+        'server_role' => $server['server_role'] ?? '-',
+        'manufacture' => $server['brand'],
+        'model' => $server['model'] ?? '-',
+        'serial_number' => $server['serial_number'] ?? '-',
+        'purchase_date' => $server['purchase_date'] ?? '-',
+        'warranty' => $server['warranty'] ?? '-',
         'server_status' => $server['status'],
 
         'cpu_spec' => $isOffline ? '-' : 'AMD EPYC 9655 (96 Core/192 Thread)',
