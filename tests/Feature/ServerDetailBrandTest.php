@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use Tests\TestCase;
@@ -29,6 +30,7 @@ class ServerDetailBrandTest extends TestCase
             $table->string('network_speed')->nullable();
             $table->string('network_usage_down')->nullable();
             $table->string('network_usage_up')->nullable();
+            $table->dateTime('pengecekan_terakhir')->nullable();
         });
 
         Schema::create('server', function (Blueprint $table) {
@@ -128,6 +130,7 @@ class ServerDetailBrandTest extends TestCase
             'memory_percent' => 30,
             'storage_percent' => 40,
             'uptime_detik' => 3600,
+            'pengecekan_terakhir' => '2026-11-11 04:46:45',
         ]);
         DB::table('server_monitoring')->insert([
             'id_server' => 1,
@@ -142,13 +145,20 @@ class ServerDetailBrandTest extends TestCase
 
     public function test_server_detail_displays_the_brand_linked_to_its_asset(): void
     {
-        $this->withSession(['user_id' => 1, 'user_name' => 'Administrator'])
-            ->get(route('server.detail', 1))
-            ->assertOk()
-            ->assertSee('Merek')
-            ->assertSee('Lenovo')
-            ->assertSee('title="Edit Informasi Dasar"', false)
-            ->assertSee('onclick="openBasicInfoModal()"', false);
+        Carbon::setTestNow('2026-11-11 05:00:00');
+        try {
+            $this->withSession(['user_id' => 1, 'user_name' => 'Administrator'])
+                ->get(route('server.detail', 1))
+                ->assertOk()
+                ->assertSee('Merek')
+                ->assertSee('Lenovo')
+                ->assertSee('11 November 2026, 04:46:45')
+                ->assertSee('yang lalu')
+                ->assertSee('title="Edit Informasi Dasar"', false)
+                ->assertSee('onclick="openBasicInfoModal()"', false);
+        } finally {
+            Carbon::setTestNow();
+        }
     }
 
     public function test_server_detail_basic_information_can_be_updated(): void

@@ -38,7 +38,6 @@
         <table class="asset-location-table">
             <thead>
                 <tr>
-                    <th>ID Garansi</th>
                     <th>Nomor Garansi</th>
                     <th>Aset / Server</th>
                     <th>Tanggal Mulai</th>
@@ -47,12 +46,12 @@
                     <th>Tingkat SLA</th>
                     <th>Status</th>
                     <th>Keterangan</th>
+                    <th>Aksi</th>
                 </tr>
             </thead>
             <tbody class="divide-y divide-gray-100 text-gray-700">
                 @forelse($warranties as $warranty)
                     <tr class="hover:bg-gray-50">
-                        <td>{{ $warranty->id_garansi }}</td>
                         <td>{{ $warranty->nomor_garansi ?: '-' }}</td>
                         <td>{{ $warranty->nama_server_by_id ?: ($warranty->nama_server_by_asset ?: ($warranty->nama_aset ?: '-')) }}</td>
                         <td>{{ $warranty->tanggal_mulai ? \Carbon\Carbon::parse($warranty->tanggal_mulai)->format('d/m/Y') : '-' }}</td>
@@ -65,6 +64,22 @@
                             </span>
                         </td>
                         <td>{{ $warranty->keterangan ?: '-' }}</td>
+                        <td>
+                            <a href="{{ route('aset.garansi.edit', $warranty->id_garansi) }}" class="asset-location-edit-button">
+                                <i class="fas fa-pen" aria-hidden="true"></i>
+                                Edit
+                            </a>
+                            <form action="{{ route('aset.garansi.destroy', $warranty->id_garansi) }}" method="POST"
+                                class="asset-location-delete-form"
+                                onsubmit="return confirm('Yakin ingin menghapus data garansi ini?')">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="asset-location-delete-button">
+                                    <i class="fas fa-trash" aria-hidden="true"></i>
+                                    Hapus
+                                </button>
+                            </form>
+                        </td>
                     </tr>
                 @empty
                     <tr><td colspan="9" class="asset-location-empty">Belum ada data garansi.</td></tr>

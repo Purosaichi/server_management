@@ -34,6 +34,9 @@ Route::middleware(['auth.session'])->group(function () {
     Route::get('/aset/garansi/create', [WarrantyController::class, 'create'])->name('aset.garansi.create');
     Route::get('/aset/garansi', [WarrantyController::class, 'index'])->name('aset.garansi');
     Route::post('/aset/garansi', [WarrantyController::class, 'store'])->name('aset.garansi.store');
+    Route::get('/aset/garansi/{id}/edit', [WarrantyController::class, 'edit'])->name('aset.garansi.edit');
+    Route::put('/aset/garansi/{id}', [WarrantyController::class, 'update'])->name('aset.garansi.update');
+    Route::delete('/aset/garansi/{id}', [WarrantyController::class, 'destroy'])->name('aset.garansi.destroy');
     Route::get('/aset/penyedia/create', [PenyediaController::class, 'create'])->name('aset.penyedia.create');
     Route::post('/aset/penyedia', [PenyediaController::class, 'store'])->name('aset.penyedia.store');
     Route::get('/aset/penyedia/{id}/edit', [PenyediaController::class, 'edit'])->name('aset.penyedia.edit');

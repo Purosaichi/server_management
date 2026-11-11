@@ -403,6 +403,8 @@ class ServerController extends Controller
     $networkData = DB::table('vw_server_status')
         ->where('id_server', $server['id'])
         ->first();
+    $lastCheckAt = $networkData->pengecekan_terakhir ?? null;
+    $lastCheck = $lastCheckAt ? Carbon::parse($lastCheckAt)->locale('id') : null;
 
     $maintenanceHistory = DB::table('vw_maintenance')
         ->where('target_type', 'Server')
@@ -439,8 +441,8 @@ class ServerController extends Controller
         'uptime_since' => $isOffline ? '-' : '15 Juli 2026, 12:00',
         'os' => $isOffline ? '-' : 'Windows Server 2025 Standard',
         'status_monitoring' => $isOffline ? 'Tidak Aktif' : 'Aktif',
-        'last_check' => $isOffline ? '-' : '13 Agustus 2026, 09:20:15',
-        'last_check_note' => $isOffline ? '-' : '(2 Hari yang lalu)',
+        'last_check' => $lastCheck?->translatedFormat('d F Y, H:i:s') ?? '-',
+        'last_check_note' => $lastCheck ? '(' . $lastCheck->diffForHumans() . ')' : '-',
 
         'cpu_percent' => $isOffline ? 0 : (int) str_replace('%', '', $server['cpu']),
         'cpu_detail' => $isOffline ? '-' : '2 Core (4.2 GHz)',

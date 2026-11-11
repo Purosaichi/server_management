@@ -86,6 +86,8 @@ class AsetPageTest extends TestCase
                 ->assertSee('warranty-status-ended', false)
                 ->assertSee('<span class="warranty-status-badge warranty-status-active">', false)
                 ->assertSee('<span class="warranty-status-badge warranty-status-ended">', false)
+                ->assertSee(route('aset.garansi.destroy', 1))
+                ->assertSee('Yakin ingin menghapus data garansi ini?')
                 ->assertSee(route('aset.garansi.create'))
                 ->assertDontSee('Tambah Data Garansi')
                 ->assertSee('sidebar-active', false);
@@ -120,6 +122,140 @@ class AsetPageTest extends TestCase
         }
     }
 
+    public function test_warranty_edit_page_displays_existing_values(): void
+    {
+        $this->createWarrantyTables();
+        DB::table('aset')->insert([
+            'id_aset' => 1,
+            'nama_aset' => 'Aset Server',
+        ]);
+        DB::table('garansi')->insert([
+            'id_garansi' => 1,
+            'id_aset' => 1,
+            'nomor_garansi' => 'GAR-EDIT',
+            'tanggal_mulai' => '2025-01-01',
+            'tanggal_berakhir' => '2028-01-01',
+            'tingkat_layanan' => 'On-site',
+            'tingkat_sla' => '24x7',
+            'keterangan' => 'Garansi vendor',
+        ]);
+
+        $this->withSession(['user_id' => 1, 'user_name' => 'Administrator'])
+            ->get(route('aset.garansi.edit', 1))
+            ->assertOk()
+            ->assertSee('Edit Data Garansi')
+            ->assertSee('Aset Server')
+            ->assertSee('GAR-EDIT')
+            ->assertSee('value="2025-01-01"', false)
+            ->assertSee('value="2028-01-01"', false)
+            ->assertSee(route('aset.garansi.update', 1));
+    }
+
+    public function test_warranty_can_be_updated_and_status_is_recalculated(): void
+    {
+        $this->createWarrantyTables();
+        DB::table('aset')->insert([
+            'id_aset' => 1,
+            'nama_aset' => 'Aset Server',
+        ]);
+        DB::table('garansi')->insert([
+            'id_garansi' => 1,
+            'id_aset' => 1,
+            'nomor_garansi' => 'GAR-OLD',
+            'tanggal_berakhir' => '2028-01-01',
+            'status_garansi' => 'Aktif',
+        ]);
+
+        Carbon::setTestNow('2026-11-11 12:00:00');
+        try {
+            $this->withSession(['user_id' => 1, 'user_name' => 'Administrator'])
+                ->put(route('aset.garansi.update', 1), [
+                    'id_aset' => 1,
+                    'nomor_garansi' => 'GAR-UPDATED',
+                    'tanggal_mulai' => '2025-01-01',
+                    'tanggal_berakhir' => '2026-11-10',
+                    'tingkat_layanan' => 'On-site',
+                    'tingkat_sla' => '24x7',
+                    'status_garansi' => 'Manual',
+                    'keterangan' => 'Data diperbarui',
+                ])
+                ->assertRedirect(route('aset.garansi'))
+                ->assertSessionHas('success', 'Data garansi berhasil diperbarui.');
+
+            $this->assertDatabaseHas('garansi', [
+                'id_garansi' => 1,
+                'id_aset' => 1,
+                'nomor_garansi' => 'GAR-UPDATED',
+                'tanggal_berakhir' => '2026-11-10',
+                'status_garansi' => 'Berakhir',
+                'keterangan' => 'Data diperbarui',
+            ]);
+        } finally {
+            Carbon::setTestNow();
+        }
+    }
+
+    public function test_warranty_can_be_deleted(): void
+    {
+        $this->createWarrantyTables();
+        DB::table('aset')->insert([
+            'id_aset' => 1,
+            'nama_aset' => 'Aset Server',
+        ]);
+        DB::table('garansi')->insert([
+            'id_garansi' => 1,
+            'id_aset' => 1,
+            'nomor_garansi' => 'GAR-DELETE',
+        ]);
+
+        $this->withSession(['user_id' => 1, 'user_name' => 'Administrator'])
+            ->delete(route('aset.garansi.destroy', 1))
+            ->assertRedirect(route('aset.garansi'))
+            ->assertSessionHas('success', 'Data garansi berhasil dihapus.');
+
+        $this->assertDatabaseMissing('garansi', [
+            'id_garansi' => 1,
+        ]);
+    }
+
+    public function test_reassigned_warranty_releases_its_previous_server_for_the_dropdown(): void
+    {
+        $this->createWarrantyTables();
+        DB::table('aset')->insert([
+            ['id_aset' => 1, 'nama_aset' => 'Aset Server Pertama'],
+            ['id_aset' => 2, 'nama_aset' => 'Aset Server Kedua'],
+        ]);
+        DB::table('server')->insert([
+            ['id_server' => 1, 'id_aset' => 1, 'nama_server' => 'Server Pertama'],
+            ['id_server' => 2, 'id_aset' => 2, 'nama_server' => 'Server Kedua'],
+        ]);
+        DB::table('garansi')->insert([
+            'id_garansi' => 1,
+            'id_aset' => 1,
+            'id_server' => 1,
+            'nomor_garansi' => 'GAR-OLD',
+        ]);
+
+        $this->withSession(['user_id' => 1, 'user_name' => 'Administrator'])
+            ->put(route('aset.garansi.update', 1), [
+                'id_aset' => 2,
+                'nomor_garansi' => 'GAR-REASSIGNED',
+            ])
+            ->assertRedirect(route('aset.garansi'));
+
+        $this->assertDatabaseHas('garansi', [
+            'id_garansi' => 1,
+            'id_aset' => 2,
+            'id_server' => null,
+        ]);
+
+        $this->withSession(['user_id' => 1, 'user_name' => 'Administrator'])
+            ->get(route('aset.garansi.create'))
+            ->assertOk()
+            ->assertSee('Aset Server Pertama')
+            ->assertDontSee('Aset Server Kedua');
+    }
+
     public function test_warranty_create_page_displays_the_add_form_separately(): void
     {
         $this->createWarrantyTables();
@@ -147,6 +283,7 @@ class AsetPageTest extends TestCase
             ->assertDontSee('Aset Server Bergaransi')
             ->assertDontSee('Server Bergaransi')
             ->assertSee('Aset Server Tersedia')
+            ->assertDontSee('Aset Server Tersedia (Server Tersedia)')
             ->assertDontSee('Server (opsional)')
             ->assertSee(route('aset.garansi.store'))
             ->assertSee(route('aset.garansi'));
