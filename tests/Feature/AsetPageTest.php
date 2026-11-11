@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use Tests\TestCase;
@@ -34,27 +35,7 @@ class AsetPageTest extends TestCase
 
     public function test_warranty_page_displays_warranty_records(): void
     {
-        Schema::create('garansi', function (Blueprint $table) {
-            $table->increments('id_garansi');
-            $table->unsignedInteger('id_aset');
-            $table->string('nomor_garansi')->nullable();
-            $table->date('tanggal_mulai')->nullable();
-            $table->date('tanggal_berakhir')->nullable();
-            $table->string('tingkat_layanan')->nullable();
-            $table->string('tingkat_sla')->nullable();
-            $table->string('status_garansi')->nullable();
-            $table->string('keterangan')->nullable();
-            $table->unsignedInteger('id_server')->nullable();
-        });
-        Schema::create('aset', function (Blueprint $table) {
-            $table->increments('id_aset');
-            $table->string('nama_aset');
-        });
-        Schema::create('server', function (Blueprint $table) {
-            $table->increments('id_server');
-            $table->unsignedInteger('id_aset');
-            $table->string('nama_server');
-        });
+        $this->createWarrantyTables();
 
         DB::table('aset')->insert([
             'id_aset' => 1,
@@ -77,18 +58,220 @@ class AsetPageTest extends TestCase
             'status_garansi' => 'Aktif',
             'keterangan' => 'Garansi vendor',
         ]);
+        DB::table('aset')->insert([
+            'id_aset' => 2,
+            'nama_aset' => 'Aset Server Lama',
+        ]);
+        DB::table('garansi')->insert([
+            'id_garansi' => 2,
+            'id_aset' => 2,
+            'nomor_garansi' => 'GAR-002',
+            'tanggal_berakhir' => '2026-11-10',
+            'status_garansi' => 'Aktif',
+        ]);
+
+        Carbon::setTestNow('2026-11-11 12:00:00');
+        try {
+            $this->withSession(['user_id' => 1, 'user_name' => 'Administrator'])
+                ->get(route('aset.garansi'))
+                ->assertOk()
+                ->assertSee('Daftar masa garansi aset dan server')
+                ->assertSee('GAR-001')
+                ->assertSee('Server Utama')
+                ->assertSee('01/01/2028')
+                ->assertSee('On-site')
+                ->assertSee('24x7')
+                ->assertSee('Garansi vendor')
+                ->assertSee('warranty-status-active', false)
+                ->assertSee('warranty-status-ended', false)
+                ->assertSee('<span class="warranty-status-badge warranty-status-active">', false)
+                ->assertSee('<span class="warranty-status-badge warranty-status-ended">', false)
+                ->assertSee(route('aset.garansi.create'))
+                ->assertDontSee('Tambah Data Garansi')
+                ->assertSee('sidebar-active', false);
+        } finally {
+            Carbon::setTestNow();
+        }
+    }
+
+    public function test_warranty_is_active_through_its_end_date(): void
+    {
+        $this->createWarrantyTables();
+        DB::table('aset')->insert([
+            'id_aset' => 1,
+            'nama_aset' => 'Aset Server',
+        ]);
+        DB::table('garansi')->insert([
+            'id_garansi' => 1,
+            'id_aset' => 1,
+            'tanggal_berakhir' => '2026-11-11',
+            'status_garansi' => 'Berakhir',
+        ]);
+
+        Carbon::setTestNow('2026-11-11 12:00:00');
+        try {
+            $this->withSession(['user_id' => 1, 'user_name' => 'Administrator'])
+                ->get(route('aset.garansi'))
+                ->assertOk()
+                ->assertSee('<span class="warranty-status-badge warranty-status-active">', false)
+                ->assertDontSee('<span class="warranty-status-badge warranty-status-ended">', false);
+        } finally {
+            Carbon::setTestNow();
+        }
+    }
+
+    public function test_warranty_create_page_displays_the_add_form_separately(): void
+    {
+        $this->createWarrantyTables();
+        DB::table('aset')->insert([
+            ['id_aset' => 1, 'nama_aset' => 'Aset Server Bergaransi'],
+            ['id_aset' => 2, 'nama_aset' => 'Aset Server Tersedia'],
+        ]);
+        DB::table('server')->insert([
+            ['id_server' => 1, 'id_aset' => 1, 'nama_server' => 'Server Bergaransi'],
+            ['id_server' => 2, 'id_aset' => 2, 'nama_server' => 'Server Tersedia'],
+        ]);
+        DB::table('garansi')->insert([
+            'id_garansi' => 1,
+            'id_aset' => 1,
+            'id_server' => 1,
+            'nomor_garansi' => 'GAR-001',
+        ]);
 
         $this->withSession(['user_id' => 1, 'user_name' => 'Administrator'])
-            ->get(route('aset.garansi'))
+            ->get(route('aset.garansi.create'))
             ->assertOk()
-            ->assertSee('Daftar masa garansi aset dan server')
-            ->assertSee('GAR-001')
-            ->assertSee('Server Utama')
-            ->assertSee('01/01/2028')
-            ->assertSee('On-site')
-            ->assertSee('24x7')
-            ->assertSee('Garansi vendor')
-            ->assertSee('sidebar-active', false);
+            ->assertSee('Tambah Data Garansi')
+            ->assertSee('Status garansi ditentukan otomatis berdasarkan tanggal berakhir.')
+            ->assertDontSee('Status Garansi')
+            ->assertDontSee('Aset Server Bergaransi')
+            ->assertDontSee('Server Bergaransi')
+            ->assertSee('Aset Server Tersedia')
+            ->assertDontSee('Server (opsional)')
+            ->assertSee(route('aset.garansi.store'))
+            ->assertSee(route('aset.garansi'));
+    }
+
+    public function test_warranty_can_be_created_from_the_warranty_page(): void
+    {
+        $this->createWarrantyTables();
+        DB::table('aset')->insert([
+            'id_aset' => 1,
+            'nama_aset' => 'Aset Server Utama',
+        ]);
+        DB::table('server')->insert([
+            'id_server' => 1,
+            'id_aset' => 1,
+            'nama_server' => 'Server Utama',
+        ]);
+
+        $this->withSession(['user_id' => 1, 'user_name' => 'Administrator'])
+            ->from(route('aset.garansi.create'))
+            ->post(route('aset.garansi.store'), [
+                'id_aset' => 1,
+                'nomor_garansi' => 'GAR-002',
+                'tanggal_mulai' => '2025-01-01',
+                'tanggal_berakhir' => '2028-01-01',
+                'tingkat_layanan' => 'On-site',
+                'tingkat_sla' => '24x7',
+                'status_garansi' => 'Manual',
+                'keterangan' => 'Garansi server utama',
+            ])
+            ->assertRedirect(route('aset.garansi'))
+            ->assertSessionHas('success', 'Data garansi berhasil ditambahkan.');
+
+        $this->assertDatabaseHas('garansi', [
+            'id_aset' => 1,
+            'nomor_garansi' => 'GAR-002',
+            'tanggal_mulai' => '2025-01-01',
+            'tanggal_berakhir' => '2028-01-01',
+            'tingkat_layanan' => 'On-site',
+            'tingkat_sla' => '24x7',
+            'status_garansi' => 'Aktif',
+            'keterangan' => 'Garansi server utama',
+        ]);
+    }
+
+    public function test_warranty_cannot_be_added_twice_for_the_same_asset(): void
+    {
+        $this->createWarrantyTables();
+        DB::table('aset')->insert([
+            'id_aset' => 1,
+            'nama_aset' => 'Aset Bergaransi',
+        ]);
+        DB::table('garansi')->insert([
+            'id_garansi' => 1,
+            'id_aset' => 1,
+            'nomor_garansi' => 'GAR-001',
+        ]);
+
+        $this->withSession(['user_id' => 1, 'user_name' => 'Administrator'])
+            ->from(route('aset.garansi.create'))
+            ->post(route('aset.garansi.store'), [
+                'id_aset' => 1,
+                'nomor_garansi' => 'GAR-DUPLICATE',
+            ])
+            ->assertRedirect(route('aset.garansi.create'))
+            ->assertSessionHasErrors('id_aset');
+
+        $this->assertDatabaseCount('garansi', 1);
+    }
+
+    public function test_expired_warranty_is_saved_with_ended_status(): void
+    {
+        $this->createWarrantyTables();
+        DB::table('aset')->insert([
+            'id_aset' => 1,
+            'nama_aset' => 'Aset Server',
+        ]);
+
+        Carbon::setTestNow('2026-11-11 12:00:00');
+        try {
+            $this->withSession(['user_id' => 1, 'user_name' => 'Administrator'])
+                ->post(route('aset.garansi.store'), [
+                    'id_aset' => 1,
+                    'tanggal_berakhir' => '2026-11-10',
+                ])
+                ->assertRedirect(route('aset.garansi'));
+
+            $this->assertDatabaseHas('garansi', [
+                'id_aset' => 1,
+                'status_garansi' => 'Berakhir',
+            ]);
+        } finally {
+            Carbon::setTestNow();
+        }
+    }
+
+    public function test_warranty_cannot_be_added_for_a_server_that_already_has_one(): void
+    {
+        $this->createWarrantyTables();
+        DB::table('aset')->insert([
+            ['id_aset' => 1, 'nama_aset' => 'Aset Server Bergaransi'],
+            ['id_aset' => 2, 'nama_aset' => 'Aset Tercatat Garansi'],
+        ]);
+        DB::table('server')->insert([
+            'id_server' => 1,
+            'id_aset' => 1,
+            'nama_server' => 'Server Bergaransi',
+        ]);
+        DB::table('garansi')->insert([
+            'id_garansi' => 1,
+            'id_aset' => 2,
+            'id_server' => 1,
+            'nomor_garansi' => 'GAR-001',
+        ]);
+
+        $this->withSession(['user_id' => 1, 'user_name' => 'Administrator'])
+            ->from(route('aset.garansi.create'))
+            ->post(route('aset.garansi.store'), [
+                'id_aset' => 1,
+                'nomor_garansi' => 'GAR-DUPLICATE',
+            ])
+            ->assertRedirect(route('aset.garansi.create'))
+            ->assertSessionHasErrors('id_aset');
+
+        $this->assertDatabaseCount('garansi', 1);
     }
 
     public function test_brand_page_displays_active_records(): void
@@ -1150,6 +1333,31 @@ class AsetPageTest extends TestCase
             $table->string('nama_merek');
             $table->text('keterangan')->nullable();
             $table->timestamp('deleted_at')->nullable();
+        });
+    }
+
+    private function createWarrantyTables(): void
+    {
+        Schema::create('garansi', function (Blueprint $table) {
+            $table->increments('id_garansi');
+            $table->unsignedInteger('id_aset');
+            $table->string('nomor_garansi')->nullable();
+            $table->date('tanggal_mulai')->nullable();
+            $table->date('tanggal_berakhir')->nullable();
+            $table->string('tingkat_layanan')->nullable();
+            $table->string('tingkat_sla')->nullable();
+            $table->string('status_garansi')->nullable();
+            $table->string('keterangan')->nullable();
+            $table->unsignedInteger('id_server')->nullable();
+        });
+        Schema::create('aset', function (Blueprint $table) {
+            $table->increments('id_aset');
+            $table->string('nama_aset');
+        });
+        Schema::create('server', function (Blueprint $table) {
+            $table->increments('id_server');
+            $table->unsignedInteger('id_aset');
+            $table->string('nama_server');
         });
     }
 

@@ -7,6 +7,10 @@
 @section('content')
 <link rel="stylesheet" href="{{ asset('css/aset-location.css') }}">
 
+@if(session('success'))
+    <div class="asset-location-alert" role="status">{{ session('success') }}</div>
+@endif
+
 <div class="asset-location-page">
     <div class="asset-location-header">
         <div class="asset-location-heading">
@@ -23,6 +27,10 @@
                 <strong>{{ $warranties->count() }}</strong>
                 <span>garansi</span>
             </div>
+            <a href="{{ route('aset.garansi.create') }}" class="asset-location-add-button">
+                <i class="fas fa-plus" aria-hidden="true"></i>
+                Tambah Garansi
+            </a>
         </div>
     </div>
 
@@ -51,7 +59,11 @@
                         <td>{{ $warranty->tanggal_berakhir ? \Carbon\Carbon::parse($warranty->tanggal_berakhir)->format('d/m/Y') : '-' }}</td>
                         <td>{{ $warranty->tingkat_layanan ?: '-' }}</td>
                         <td>{{ $warranty->tingkat_sla ?: '-' }}</td>
-                        <td>{{ $warranty->status_garansi ?: '-' }}</td>
+                        <td>
+                            <span class="warranty-status-badge {{ $warranty->status_garansi === 'Aktif' ? 'warranty-status-active' : 'warranty-status-ended' }}">
+                                {{ $warranty->status_garansi }}
+                            </span>
+                        </td>
                         <td>{{ $warranty->keterangan ?: '-' }}</td>
                     </tr>
                 @empty
@@ -61,4 +73,5 @@
         </table>
     </div>
 </div>
+
 @endsection

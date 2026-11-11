@@ -341,6 +341,25 @@
     background: #f5f9ff;
 }
 
+.warranty-status-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.25rem 0.625rem;
+    border-radius: 0.25rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+}
+
+.warranty-status-active {
+    background-color: #d1fae5;
+    color: #065f46;
+}
+
+.warranty-status-ended {
+    background-color: #fee2e2;
+    color: #991b1b;
+}
+
 .asset-location-id,
 .asset-location-rack-code,
 .asset-location-position {
