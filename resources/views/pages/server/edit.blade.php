@@ -77,10 +77,15 @@
             </div>
 
             <div class="srv-form-group">
-                <label for="lokasi_rack">Lokasi Rack</label>
-                <input type="text" name="lokasi_rack" id="lokasi_rack" 
-                       value="{{ old('lokasi_rack', $server->lokasi_rack) }}" 
-                       placeholder="Contoh: Data Center, Rack A04">
+                <label for="lokasi_aset_id">Lokasi Aset</label>
+                <select name="lokasi_aset_id" id="lokasi_aset_id">
+                    <option value="">-- Pilih Lokasi Aset --</option>
+                    @foreach($locations as $location)
+                        <option value="{{ $location->id_lokasi_aset }}" @selected(old('lokasi_aset_id', $server->id_lokasi_aset) == $location->id_lokasi_aset)>
+                            {{ $location->label }}
+                        </option>
+                    @endforeach
+                </select>
             </div>
 
             <div class="srv-form-group">

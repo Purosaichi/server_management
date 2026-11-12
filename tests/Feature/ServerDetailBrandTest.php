@@ -38,6 +38,7 @@ class ServerDetailBrandTest extends TestCase
             $table->unsignedInteger('id_aset');
             $table->string('jenis_server')->nullable();
             $table->string('server_role')->nullable();
+            $table->string('lokasi_rack')->nullable();
             $table->timestamp('deleted_at')->nullable();
         });
 
@@ -52,6 +53,24 @@ class ServerDetailBrandTest extends TestCase
         Schema::create('merek', function (Blueprint $table) {
             $table->increments('id_merek');
             $table->string('nama_merek');
+            $table->timestamp('deleted_at')->nullable();
+        });
+
+        Schema::create('data_center', function (Blueprint $table) {
+            $table->increments('id_data_center');
+            $table->string('nama_data_center');
+        });
+
+        Schema::create('lokasi_aset', function (Blueprint $table) {
+            $table->increments('id_lokasi_aset');
+            $table->unsignedInteger('id_aset');
+            $table->unsignedInteger('id_data_center')->nullable();
+            $table->string('nama_gedung')->nullable();
+            $table->string('lantai')->nullable();
+            $table->string('nama_ruangan')->nullable();
+            $table->string('zona')->nullable();
+            $table->string('kode_rak')->nullable();
+            $table->string('nama_rak')->nullable();
             $table->timestamp('deleted_at')->nullable();
         });
 
@@ -115,6 +134,17 @@ class ServerDetailBrandTest extends TestCase
             'id_aset' => 1,
             'id_merek' => 1,
         ]);
+        DB::table('data_center')->insert([
+            'id_data_center' => 1,
+            'nama_data_center' => 'Data Center Baru',
+        ]);
+        DB::table('lokasi_aset')->insert([
+            'id_lokasi_aset' => 1,
+            'id_aset' => 1,
+            'id_data_center' => 1,
+            'nama_gedung' => 'Gedung B',
+            'nama_rak' => 'Rack B02',
+        ]);
         DB::table('server')->insert([
             'id_server' => 1,
             'id_aset' => 1,
@@ -154,6 +184,7 @@ class ServerDetailBrandTest extends TestCase
                 ->assertSee('Lenovo')
                 ->assertSee('11 November 2026, 04:46:45')
                 ->assertSee('yang lalu')
+                ->assertSee('Data Center Baru - Gedung B - Rack B02')
                 ->assertSee('title="Edit Informasi Dasar"', false)
                 ->assertSee('onclick="openBasicInfoModal()"', false);
         } finally {
