@@ -1,0 +1,110 @@
+.srv-delete-form {
+    display: inline;
+}
+
+.delete-confirm-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    background: rgb(0 0 0 / 50%);
+}
+
+.delete-confirm-overlay[hidden] {
+    display: none;
+}
+
+.delete-confirm-dialog {
+    width: min(100%, 26.25rem);
+    padding: 2rem;
+    border-radius: 0.75rem;
+    background: #fff;
+    text-align: center;
+    box-shadow: 0 20px 25px -5px rgb(0 0 0 / 10%);
+    animation: delete-confirm-fade-in 0.2s ease-out;
+}
+
+.delete-confirm-icon {
+    margin-bottom: 0.5rem;
+    font-size: 3rem;
+}
+
+.delete-confirm-title {
+    margin-bottom: 0.75rem;
+    color: #111827;
+    font-size: 1.25rem;
+    font-weight: 700;
+}
+
+.delete-confirm-message {
+    margin-bottom: 0.5rem;
+    color: #4b5563;
+    font-size: 0.9375rem;
+    line-height: 1.5;
+}
+
+.delete-confirm-warning {
+    margin-bottom: 1.5rem;
+    padding: 0.5rem 0.75rem;
+    border-radius: 0.375rem;
+    background: #fef3c7;
+    color: #d97706;
+    font-size: 0.8125rem;
+}
+
+.delete-confirm-actions {
+    display: flex;
+    justify-content: center;
+    gap: 0.75rem;
+}
+
+.delete-confirm-cancel,
+.delete-confirm-submit {
+    padding: 0.5rem 1.25rem;
+    border: 0;
+    border-radius: 0.5rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.delete-confirm-cancel {
+    border: 1px solid #d1d5db;
+    background: #fff;
+    color: #374151;
+}
+
+.delete-confirm-cancel:hover {
+    background: #f9fafb;
+}
+
+.delete-confirm-submit {
+    background: #dc2626;
+    color: #fff;
+}
+
+.delete-confirm-submit:hover {
+    background: #b91c1c;
+}
+
+@keyframes delete-confirm-fade-in {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .delete-confirm-dialog {
+        animation: none;
+    }
+}

@@ -42,7 +42,7 @@
                 <i class="fas fa-pen" aria-hidden="true"></i>
                 Edit Storage
             </a>
-            <form action="{{ route('aset.storage.destroy', $storage->id_storage) }}" method="POST" class="storage-delete-form" onsubmit="return confirm('Yakin ingin menghapus data storage ini?')">
+            <form action="{{ route('aset.storage.destroy', $storage->id_storage) }}" method="POST" class="storage-delete-form" data-delete-confirm data-delete-name="storage {{ $storage->nama_aset ?: '#' . $storage->id_storage }}">
                 @csrf
                 @method('DELETE')
                 <button type="submit" class="storage-delete-button">
@@ -169,4 +169,5 @@
         </section>
     </div>
 </div>
+@include('components.delete-confirm-modal')
 @endsection

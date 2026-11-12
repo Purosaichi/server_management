@@ -54,6 +54,62 @@ class AsetLocationController extends Controller
         return view('pages.aset.lokasi.detail', compact('location'));
     }
 
+    public function serversAtLocation(int $id)
+    {
+        $location = DB::table('lokasi_aset')
+            ->leftJoin('data_center', 'data_center.id_data_center', '=', 'lokasi_aset.id_data_center')
+            ->where('lokasi_aset.id_lokasi_aset', $id)
+            ->whereNull('lokasi_aset.deleted_at')
+            ->first([
+                'lokasi_aset.id_lokasi_aset',
+                'lokasi_aset.id_data_center',
+                'lokasi_aset.nama_gedung',
+                'lokasi_aset.lantai',
+                'lokasi_aset.nama_ruangan',
+                'lokasi_aset.zona',
+                'lokasi_aset.kode_rak',
+                'lokasi_aset.nama_rak',
+                'data_center.nama_data_center',
+            ]);
+
+        abort_if($location === null, 404);
+
+        $matchingLocations = DB::table('lokasi_aset as matching_location')
+            ->whereNull('matching_location.deleted_at');
+        foreach ([
+            'id_data_center',
+            'nama_gedung',
+            'lantai',
+            'nama_ruangan',
+            'zona',
+            'kode_rak',
+            'nama_rak',
+        ] as $field) {
+            $column = 'matching_location.' . $field;
+            $location->$field === null
+                ? $matchingLocations->whereNull($column)
+                : $matchingLocations->where($column, $location->$field);
+        }
+
+        $assetIds = $matchingLocations->pluck('matching_location.id_aset')->unique();
+        $servers = DB::table('server')
+            ->join('aset', 'aset.id_aset', '=', 'server.id_aset')
+            ->whereIn('aset.id_aset', $assetIds)
+            ->whereNull('server.deleted_at')
+            ->orderBy('server.nama_server')
+            ->get([
+                'server.id_server',
+                'server.nama_server',
+                'server.hostname',
+                'server.alamat_ip_produksi',
+                'aset.kode_aset',
+            ])
+            ->unique('id_server')
+            ->values();
+
+        return view('pages.aset.lokasi.servers', compact('location', 'servers'));
+    }
+
     public function dataCenters()
     {
         $dataCenters = DB::table('data_center')

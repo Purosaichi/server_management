@@ -68,7 +68,7 @@
                                 <i class="fas fa-pen" aria-hidden="true"></i>
                                 Edit
                             </a>
-                            <form action="{{ route('aset.data-centers.destroy', $dataCenter->id_data_center) }}" method="POST" class="asset-location-delete-form" onsubmit="return confirm('Yakin ingin menghapus Data Center ini?')">
+                            <form action="{{ route('aset.data-centers.destroy', $dataCenter->id_data_center) }}" method="POST" class="asset-location-delete-form" data-delete-confirm data-delete-name="Data Center {{ $dataCenter->nama_data_center }}">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="asset-location-delete-button">
@@ -85,4 +85,5 @@
         </table>
     </div>
 </div>
+@include('components.delete-confirm-modal')
 @endsection

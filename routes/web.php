@@ -45,6 +45,7 @@ Route::middleware(['auth.session'])->group(function () {
     Route::get('/aset/penyedia', [PenyediaController::class, 'index'])->name('aset.penyedia');
     Route::get('/aset/lokasi/create', [AsetLocationController::class, 'create'])->name('aset.lokasi.create');
     Route::post('/aset/lokasi', [AsetLocationController::class, 'store'])->name('aset.lokasi.store');
+    Route::get('/aset/lokasi/{id}/servers', [AsetLocationController::class, 'serversAtLocation'])->name('aset.lokasi.servers');
     Route::get('/aset/lokasi/{id}/edit', [AsetLocationController::class, 'edit'])->name('aset.lokasi.edit');
     Route::put('/aset/lokasi/{id}', [AsetLocationController::class, 'update'])->name('aset.lokasi.update');
     Route::delete('/aset/lokasi/{id}', [AsetLocationController::class, 'destroy'])->name('aset.lokasi.destroy');

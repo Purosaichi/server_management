@@ -63,7 +63,7 @@
                                 <i class="fas fa-pen" aria-hidden="true"></i>
                                 Edit
                             </a>
-                            <form action="{{ route('aset.penyedia.destroy', $provider->id_penyedia) }}" method="POST" class="asset-location-delete-form" onsubmit="return confirm('Yakin ingin menghapus data penyedia ini?')">
+                            <form action="{{ route('aset.penyedia.destroy', $provider->id_penyedia) }}" method="POST" class="asset-location-delete-form" data-delete-confirm data-delete-name="penyedia {{ $provider->nama_penyedia }}">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="asset-location-delete-button">
@@ -80,4 +80,5 @@
         </table>
     </div>
 </div>
+@include('components.delete-confirm-modal')
 @endsection

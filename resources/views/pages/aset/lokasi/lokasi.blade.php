@@ -73,7 +73,7 @@
                                 <i class="fas fa-pen" aria-hidden="true"></i>
                                 Edit
                             </a>
-                            <form action="{{ route('aset.lokasi.destroy', $location->id_lokasi_aset) }}" method="POST" class="asset-location-delete-form" onsubmit="return confirm('Yakin ingin menghapus lokasi aset ini?')">
+                            <form action="{{ route('aset.lokasi.destroy', $location->id_lokasi_aset) }}" method="POST" class="asset-location-delete-form" data-delete-confirm data-delete-name="lokasi aset {{ $location->nama_rak ?: $location->nama_ruangan ?: '#' . $location->id_lokasi_aset }}">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="asset-location-delete-button">
@@ -90,4 +90,5 @@
         </table>
     </div>
 </div>
+@include('components.delete-confirm-modal')
 @endsection

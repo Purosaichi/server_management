@@ -55,7 +55,7 @@
                                 <i class="fas fa-pen" aria-hidden="true"></i>
                                 Edit
                             </a>
-                            <form action="{{ route('aset.merek.destroy', $brand->id_merek) }}" method="POST" class="merek-delete-form" onsubmit="return confirm('Yakin ingin menghapus data merek ini?')">
+                            <form action="{{ route('aset.merek.destroy', $brand->id_merek) }}" method="POST" class="merek-delete-form" data-delete-confirm data-delete-name="merek {{ $brand->nama_merek }}">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="merek-delete-button">
@@ -72,4 +72,5 @@
         </table>
     </div>
 </div>
+@include('components.delete-confirm-modal')
 @endsection

@@ -87,7 +87,8 @@ class AsetPageTest extends TestCase
                 ->assertSee('<span class="warranty-status-badge warranty-status-active">', false)
                 ->assertSee('<span class="warranty-status-badge warranty-status-ended">', false)
                 ->assertSee(route('aset.garansi.destroy', 1))
-                ->assertSee('Yakin ingin menghapus data garansi ini?')
+                ->assertSee('data-delete-confirm', false)
+                ->assertSee('Konfirmasi Hapus')
                 ->assertSee(route('aset.garansi.create'))
                 ->assertDontSee('Tambah Data Garansi')
                 ->assertSee('sidebar-active', false);
@@ -815,6 +816,89 @@ class AsetPageTest extends TestCase
             ->assertSee('1 Nov 2026')
             ->assertSee('Lokasi utama')
             ->assertSee(route('aset.lokasi.edit', 1));
+    }
+
+    public function test_asset_location_subpage_lists_servers_at_the_same_physical_location(): void
+    {
+        $this->createLocationTable();
+        $this->createDataCenterTable();
+        Schema::create('aset', function (Blueprint $table) {
+            $table->increments('id_aset');
+            $table->string('kode_aset')->nullable();
+            $table->string('nama_aset');
+        });
+        Schema::create('server', function (Blueprint $table) {
+            $table->increments('id_server');
+            $table->unsignedInteger('id_aset');
+            $table->string('nama_server');
+            $table->string('hostname')->nullable();
+            $table->string('alamat_ip_produksi')->nullable();
+            $table->timestamp('deleted_at')->nullable();
+        });
+
+        DB::table('data_center')->insert([
+            'id_data_center' => 1,
+            'nama_data_center' => 'DC Utama',
+        ]);
+        DB::table('aset')->insert([
+            ['id_aset' => 17, 'kode_aset' => 'AST-017', 'nama_aset' => 'Server Pertama'],
+            ['id_aset' => 18, 'kode_aset' => 'AST-018', 'nama_aset' => 'Server Kedua'],
+            ['id_aset' => 19, 'kode_aset' => 'AST-019', 'nama_aset' => 'Server Ruangan Lain'],
+        ]);
+        DB::table('server')->insert([
+            ['id_server' => 1, 'id_aset' => 17, 'nama_server' => 'SVR-001', 'hostname' => 'svr-001.local', 'alamat_ip_produksi' => '192.0.2.1'],
+            ['id_server' => 2, 'id_aset' => 18, 'nama_server' => 'SVR-002', 'hostname' => 'svr-002.local', 'alamat_ip_produksi' => '192.0.2.2'],
+            ['id_server' => 3, 'id_aset' => 19, 'nama_server' => 'SVR-003', 'hostname' => 'svr-003.local', 'alamat_ip_produksi' => '192.0.2.3'],
+        ]);
+        DB::table('lokasi_aset')->insert([
+            [
+                'id_lokasi_aset' => 1,
+                'id_aset' => 17,
+                'id_data_center' => 1,
+                'nama_gedung' => 'Gedung A',
+                'lantai' => '2',
+                'nama_ruangan' => 'Ruang Server',
+                'zona' => 'Utara',
+                'kode_rak' => 'RK-01',
+                'nama_rak' => 'Rak Utama',
+            ],
+            [
+                'id_lokasi_aset' => 2,
+                'id_aset' => 18,
+                'id_data_center' => 1,
+                'nama_gedung' => 'Gedung A',
+                'lantai' => '2',
+                'nama_ruangan' => 'Ruang Server',
+                'zona' => 'Utara',
+                'kode_rak' => 'RK-01',
+                'nama_rak' => 'Rak Utama',
+            ],
+            [
+                'id_lokasi_aset' => 3,
+                'id_aset' => 19,
+                'id_data_center' => 1,
+                'nama_gedung' => 'Gedung A',
+                'lantai' => '2',
+                'nama_ruangan' => 'Ruang Server',
+                'zona' => 'Utara',
+                'kode_rak' => 'RK-02',
+                'nama_rak' => 'Rak Lain',
+            ],
+        ]);
+
+        $this->withSession(['user_id' => 1, 'user_name' => 'Administrator'])
+            ->get(route('aset.lokasi.servers', 1))
+            ->assertOk()
+            ->assertSee('Rak Utama')
+            ->assertSee('SVR-001')
+            ->assertSee('SVR-002')
+            ->assertSee('svr-001.local')
+            ->assertDontSee('SVR-003')
+            ->assertSee(route('server.detail', 1));
+
+        $this->withSession(['user_id' => 1, 'user_name' => 'Administrator'])
+            ->get(route('aset.lokasi.detail', 1))
+            ->assertSee(route('aset.lokasi.servers', 1));
     }
 
     public function test_asset_location_data_center_tab_displays_data_centers(): void

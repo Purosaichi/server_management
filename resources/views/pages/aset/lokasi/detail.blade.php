@@ -22,10 +22,16 @@
             <h1>Detail Lokasi Aset</h1>
             <p>{{ $location->nama_aset ?: 'Aset' }}{{ $location->kode_aset ? ' - ' . $location->kode_aset : '' }}</p>
         </div>
-        <a href="{{ route('aset.lokasi.edit', $location->id_lokasi_aset) }}" class="asset-location-add-button">
-            <i class="fas fa-pen" aria-hidden="true"></i>
-            Edit Lokasi
-        </a>
+        <div class="asset-location-header-actions">
+            <a href="{{ route('aset.lokasi.servers', $location->id_lokasi_aset) }}" class="asset-location-add-button">
+                <i class="fas fa-server" aria-hidden="true"></i>
+                Lihat Server di Lokasi Ini
+            </a>
+            <a href="{{ route('aset.lokasi.edit', $location->id_lokasi_aset) }}" class="asset-location-add-button">
+                <i class="fas fa-pen" aria-hidden="true"></i>
+                Edit Lokasi
+            </a>
+        </div>
     </div>
 
     <dl class="asset-location-detail-grid">

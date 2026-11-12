@@ -71,7 +71,8 @@
                             </a>
                             <form action="{{ route('aset.garansi.destroy', $warranty->id_garansi) }}" method="POST"
                                 class="asset-location-delete-form"
-                                onsubmit="return confirm('Yakin ingin menghapus data garansi ini?')">
+                                data-delete-confirm
+                                data-delete-name="garansi {{ $warranty->nomor_garansi ?: '#' . $warranty->id_garansi }}">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="asset-location-delete-button">
@@ -89,4 +90,5 @@
     </div>
 </div>
 
+@include('components.delete-confirm-modal')
 @endsection

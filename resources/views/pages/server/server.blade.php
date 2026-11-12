@@ -68,10 +68,11 @@
                         <a href="{{ route('server.edit', $server['id']) }}" class="srv-btn-edit">
                             Edit
                         </a>
-                        <button type="button" class="srv-btn-delete" 
-                                onclick="showDeleteModal({{ $server['id'] }}, '{{ $server['name'] }}')">
-                            Hapus
-                        </button>
+                        <form action="{{ route('server.destroy', $server['id']) }}" method="POST" class="srv-delete-form" data-delete-confirm data-delete-name="server {{ $server['name'] }}">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="srv-btn-delete">Hapus</button>
+                        </form>
                     </td>
                 </tr>
                 @empty
@@ -86,56 +87,10 @@
     </div>
 </div>
 
-<!-- /* MODAL KONFIRMASI HAPUS */ -->
-<div id="deleteModal" class="srv-modal-overlay" style="display: none;">
-    <div class="srv-modal">
-        <div class="srv-modal-icon">⚠️</div>
-        <h3 class="srv-modal-title">Konfirmasi Hapus</h3>
-        <p class="srv-modal-text">
-            Apakah Anda yakin ingin menghapus server <strong id="deleteServerName"></strong>?
-        </p>
-        <div class="srv-modal-actions">
-            <button type="button" class="srv-btn-cancel" onclick="closeDeleteModal()">
-                Batal
-            </button>
-            <form id="deleteForm" method="POST" style="display: inline;">
-                @csrf
-                @method('DELETE')
-                <button type="submit" class="srv-btn-delete-confirm">
-                    Ya, Hapus
-                </button>
-            </form>
-        </div>
-    </div>
-</div>
+@include('components.delete-confirm-modal')
 
 <footer class="footer">
     <p>&copy; 2026 Direktorat Jenderal Guru, Tenaga Kependidikan dan Pendidikan Guru - Kemendikdasmen</p>
 </footer>
 
-<script>
-    function showDeleteModal(id, name) {
-        document.getElementById('deleteServerName').textContent = name;
-        document.getElementById('deleteForm').action = '/server/' + id;
-        document.getElementById('deleteModal').style.display = 'flex';
-    }
-
-    function closeDeleteModal() {
-        document.getElementById('deleteModal').style.display = 'none';
-    }
-
-    /* Tutup modal kalo klik di luar */
-    document.getElementById('deleteModal').addEventListener('click', function(e) {
-        if (e.target === this) {
-            closeDeleteModal();
-        }
-    });
-
-    /* Tutup modal kalo tekan ESC */
-    document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape') {
-            closeDeleteModal();
-        }
-    });
-</script>
 @endsection
