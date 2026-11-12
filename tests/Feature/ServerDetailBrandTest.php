@@ -48,6 +48,7 @@ class ServerDetailBrandTest extends TestCase
             $table->string('model')->nullable();
             $table->string('nomor_seri')->nullable();
             $table->date('tanggal_pengadaan')->nullable();
+            $table->unsignedInteger('id_lokasi_aset')->nullable();
         });
 
         Schema::create('merek', function (Blueprint $table) {
@@ -63,7 +64,7 @@ class ServerDetailBrandTest extends TestCase
 
         Schema::create('lokasi_aset', function (Blueprint $table) {
             $table->increments('id_lokasi_aset');
-            $table->unsignedInteger('id_aset');
+            $table->unsignedInteger('id_aset')->nullable();
             $table->unsignedInteger('id_data_center')->nullable();
             $table->string('nama_gedung')->nullable();
             $table->string('lantai')->nullable();
@@ -133,6 +134,7 @@ class ServerDetailBrandTest extends TestCase
         DB::table('aset')->insert([
             'id_aset' => 1,
             'id_merek' => 1,
+            'id_lokasi_aset' => 1,
         ]);
         DB::table('data_center')->insert([
             'id_data_center' => 1,
@@ -140,7 +142,7 @@ class ServerDetailBrandTest extends TestCase
         ]);
         DB::table('lokasi_aset')->insert([
             'id_lokasi_aset' => 1,
-            'id_aset' => 1,
+            'id_aset' => null,
             'id_data_center' => 1,
             'nama_gedung' => 'Gedung B',
             'nama_rak' => 'Rack B02',
@@ -150,6 +152,7 @@ class ServerDetailBrandTest extends TestCase
             'id_aset' => 1,
             'jenis_server' => 'Physical',
             'server_role' => 'Application Server',
+            'lokasi_rack' => 'Data Center Lama, Rack Lama',
         ]);
         DB::table('vw_server_status')->insert([
             'id_server' => 1,
@@ -190,6 +193,34 @@ class ServerDetailBrandTest extends TestCase
         } finally {
             Carbon::setTestNow();
         }
+    }
+
+    public function test_server_location_is_empty_after_its_asset_location_is_deleted(): void
+    {
+        $this->withSession(['user_id' => 1, 'user_name' => 'Administrator'])
+            ->delete(route('aset.lokasi.destroy', 1))
+            ->assertRedirect(route('aset.lokasi'))
+            ->assertSessionHas('success', 'Lokasi aset berhasil dihapus.');
+
+        $this->assertDatabaseHas('server', [
+            'id_server' => 1,
+            'lokasi_rack' => null,
+        ]);
+        $this->assertDatabaseHas('aset', [
+            'id_aset' => 1,
+            'id_lokasi_aset' => null,
+        ]);
+        $this->assertDatabaseHas('lokasi_aset', [
+            'id_lokasi_aset' => 1,
+        ]);
+        $this->assertNotNull(DB::table('lokasi_aset')->where('id_lokasi_aset', 1)->value('deleted_at'));
+
+        $this->withSession(['user_id' => 1, 'user_name' => 'Administrator'])
+            ->get(route('server.detail', 1))
+            ->assertOk()
+            ->assertDontSee('Data Center Baru - Gedung B - Rack B02')
+            ->assertDontSee('Data Center Lama, Rack Lama')
+            ->assertSee('<span class="info-value">-</span>', false);
     }
 
     public function test_server_detail_basic_information_can_be_updated(): void

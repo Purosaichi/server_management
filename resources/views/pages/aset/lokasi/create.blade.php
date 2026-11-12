@@ -11,7 +11,7 @@
     <div class="asset-location-form-header">
         <div>
             <h1>Tambah Lokasi Aset</h1>
-            <p>Lengkapi informasi aset dan penempatannya.</p>
+            <p>Tambahkan lokasi fisik yang dapat dipilih saat mendaftarkan aset atau server.</p>
         </div>
         <a href="{{ route('aset.lokasi') }}" class="asset-location-back-link">
             <i class="fas fa-arrow-left" aria-hidden="true"></i>
@@ -28,17 +28,6 @@
     <form action="{{ route('aset.lokasi.store') }}" method="POST" class="asset-location-form">
         @csrf
         <div class="asset-location-form-grid">
-            <label class="asset-location-field">
-                <span>Aset <strong>*</strong></span>
-                <select name="id_aset" required>
-                    <option value="">Pilih aset</option>
-                    @foreach($assets as $asset)
-                        <option value="{{ $asset->id_aset }}" @selected(old('id_aset') == $asset->id_aset)>
-                            {{ $asset->kode_aset }} - {{ $asset->nama_aset }}
-                        </option>
-                    @endforeach
-                </select>
-            </label>
             <label class="asset-location-field">
                 <span>Data Center</span>
                 <select name="id_data_center">

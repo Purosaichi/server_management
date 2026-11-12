@@ -50,10 +50,25 @@ class LicenseController extends Controller
             ->orderByDesc('lisensi_aset.id_lisensi_aset')
             ->first([
                 'aset.nama_aset',
+                'aset.id_lokasi_aset',
                 'server.hostname',
                 'server.alamat_ip_produksi',
-                'server.lokasi_rack',
             ]);
+        $assetLocation = $asset?->id_lokasi_aset
+            ? DB::table('lokasi_aset')
+                ->leftJoin('data_center', 'data_center.id_data_center', '=', 'lokasi_aset.id_data_center')
+                ->where('lokasi_aset.id_lokasi_aset', $asset->id_lokasi_aset)
+                ->whereNull('lokasi_aset.deleted_at')
+                ->first([
+                    'data_center.nama_data_center',
+                    'lokasi_aset.nama_gedung',
+                    'lokasi_aset.lantai',
+                    'lokasi_aset.nama_ruangan',
+                    'lokasi_aset.zona',
+                    'lokasi_aset.kode_rak',
+                    'lokasi_aset.nama_rak',
+                ])
+            : null;
         $payments = DB::table('tagihan')
             ->where('id_lisensi', $id)
             ->orderByDesc('id_tagihan')
@@ -111,7 +126,17 @@ class LicenseController extends Controller
             'asset_name'     => $asset->nama_aset ?? '-',
             'hostname'       => $asset->hostname ?? '-',
             'ip_address'     => $asset->alamat_ip_produksi ?? '-',
-            'location'       => $asset->lokasi_rack ?? '-',
+            'location'       => $assetLocation
+                ? (collect([
+                    $assetLocation->nama_data_center,
+                    $assetLocation->nama_gedung,
+                    $assetLocation->lantai,
+                    $assetLocation->nama_ruangan,
+                    $assetLocation->zona,
+                    $assetLocation->kode_rak,
+                    $assetLocation->nama_rak,
+                ])->filter()->implode(' - ') ?: '-')
+                : '-',
             'pic'            => '-',
         ];
 

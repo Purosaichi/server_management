@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\ServerStatus;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 
@@ -34,9 +33,9 @@ class ServerController extends Controller
         ->select(
             'server.jenis_server',
             'server.server_role',
-            'server.lokasi_rack',
             'aset.id_merek',
             'aset.id_aset',
+            'aset.id_lokasi_aset',
             'aset.model',
             'aset.nomor_seri',
             'aset.tanggal_pengadaan',
@@ -63,7 +62,7 @@ class ServerController extends Controller
     $server = array_merge($server, $this->serverDetails($server));
     $assetLocation = DB::table('lokasi_aset')
         ->leftJoin('data_center', 'data_center.id_data_center', '=', 'lokasi_aset.id_data_center')
-        ->where('lokasi_aset.id_aset', $assetDetails->id_aset)
+        ->where('lokasi_aset.id_lokasi_aset', $assetDetails->id_lokasi_aset)
         ->whereNull('lokasi_aset.deleted_at')
         ->orderBy('lokasi_aset.id_lokasi_aset')
         ->first([
@@ -77,7 +76,7 @@ class ServerController extends Controller
         ]);
     $server['location'] = $assetLocation
         ? ($this->formatLocationLabel($assetLocation) ?: '-')
-        : ($assetDetails->lokasi_rack ?: '-');
+        : '-';
     $pics = DB::table('pic')->orderBy('nama_pic')->pluck('nama_pic', 'id_pic');
     $brands = DB::table('merek')
         ->whereNull('deleted_at')
@@ -160,6 +159,7 @@ class ServerController extends Controller
                 'tanggal_pengadaan' => now()->format('Y-m-d'),
                 'tahun_pengadaan' => date('Y'),
                 'keterangan' => 'Server baru ditambahkan via web',
+                'id_lokasi_aset' => $request->integer('lokasi_aset_id') ?: null,
             ]);
 
             $idServer = DB::table('server')->insertGetId([
@@ -178,13 +178,6 @@ class ServerController extends Controller
                 'jenis_penyimpanan' => $request->jenis_penyimpanan,
                 'lokasi_rack' => null,
             ]);
-
-            $location = $this->saveAssetLocation($idAset, $request->integer('lokasi_aset_id') ?: null);
-            if ($location) {
-                DB::table('server')
-                    ->where('id_server', $idServer)
-                    ->update(['lokasi_rack' => $this->rackLabel($location)]);
-            }
 
             DB::table('server_monitoring')->insert([
                 'id_server' => $idServer,
@@ -219,7 +212,8 @@ class ServerController extends Controller
             ->select(
                 'server.*',
                 'aset.nama_aset',
-                'aset.status_aset'
+                'aset.status_aset',
+                'aset.id_lokasi_aset',
             )
             ->firstOrFail();
 
@@ -229,9 +223,8 @@ class ServerController extends Controller
             ->orderBy('dicatat_pada', 'desc')
             ->first();
         $assetLocation = DB::table('lokasi_aset')
-            ->where('id_aset', $serverDetail->id_aset)
+            ->where('id_lokasi_aset', $serverDetail->id_lokasi_aset)
             ->whereNull('deleted_at')
-            ->orderBy('id_lokasi_aset')
             ->first();
         $locations = $this->assetLocations();
 
@@ -250,7 +243,7 @@ class ServerController extends Controller
             'jenis_memori' => $serverDetail->jenis_memori,
             'kapasitas_penyimpanan_gb' => $serverDetail->kapasitas_penyimpanan_gb,
             'jenis_penyimpanan' => $serverDetail->jenis_penyimpanan,
-            'id_lokasi_aset' => $assetLocation->id_lokasi_aset ?? null,
+            'id_lokasi_aset' => $serverDetail->id_lokasi_aset,
             'lokasi_rack' => $serverDetail->lokasi_rack,
             'status_aset' => $serverDetail->status_aset,
             'status_monitoring' => $monitoring->status ?? 'Offline',
@@ -298,6 +291,7 @@ class ServerController extends Controller
                 ->update([
                     'nama_aset' => $request->nama_server,
                     'status_aset' => $request->status_aset,
+                    'id_lokasi_aset' => $request->integer('lokasi_aset_id') ?: null,
                 ]);
 
             /* Update tabel server */
@@ -317,14 +311,6 @@ class ServerController extends Controller
                     'kapasitas_penyimpanan_gb' => $request->kapasitas_penyimpanan_gb,
                     'jenis_penyimpanan' => $request->jenis_penyimpanan,
                 ]);
-
-            $location = $this->saveAssetLocation(
-                (int) $server->id_aset,
-                $request->integer('lokasi_aset_id') ?: null,
-            );
-            DB::table('server')
-                ->where('id_server', $id)
-                ->update(['lokasi_rack' => $this->rackLabel($location)]);
 
             /* Insert monitoring baru (biar status up-to-date) */
             DB::table('server_monitoring')->insert([
@@ -607,63 +593,6 @@ class ServerController extends Controller
             $location->kode_rak,
             $location->nama_rak,
         ])->filter()->implode(' - ');
-    }
-
-    private function saveAssetLocation(int $assetId, ?int $sourceLocationId): ?object
-    {
-        $existingLocation = DB::table('lokasi_aset')
-            ->where('id_aset', $assetId)
-            ->whereNull('deleted_at')
-            ->orderBy('id_lokasi_aset')
-            ->first();
-
-        if ($sourceLocationId === null) {
-            if ($existingLocation) {
-                DB::table('lokasi_aset')
-                    ->where('id_aset', $assetId)
-                    ->whereNull('deleted_at')
-                    ->update(['deleted_at' => now()]);
-            }
-
-            return null;
-        }
-
-        $sourceLocation = DB::table('lokasi_aset')
-            ->where('id_lokasi_aset', $sourceLocationId)
-            ->whereNull('deleted_at')
-            ->firstOrFail();
-
-        $attributes = [
-            'id_data_center' => $sourceLocation->id_data_center,
-            'nama_gedung' => $sourceLocation->nama_gedung,
-            'lantai' => $sourceLocation->lantai,
-            'nama_ruangan' => $sourceLocation->nama_ruangan,
-            'zona' => $sourceLocation->zona,
-            'kode_rak' => $sourceLocation->kode_rak,
-            'nama_rak' => $sourceLocation->nama_rak,
-            'tinggi_rak' => $sourceLocation->tinggi_rak,
-            'posisi_rak' => $sourceLocation->posisi_rak,
-            'tanggal_penempatan' => $sourceLocation->tanggal_penempatan,
-            'keterangan' => $sourceLocation->keterangan,
-            'deleted_at' => null,
-        ];
-
-        if ($existingLocation) {
-            DB::table('lokasi_aset')
-                ->where('id_lokasi_aset', $existingLocation->id_lokasi_aset)
-                ->update($attributes);
-        } else {
-            DB::table('lokasi_aset')->insert(array_merge($attributes, ['id_aset' => $assetId]));
-        }
-
-        return $sourceLocation;
-    }
-
-    private function rackLabel(?object $location): ?string
-    {
-        return filled($location?->nama_rak)
-            ? Str::limit($location->nama_rak, 100, '')
-            : null;
     }
 
     /**

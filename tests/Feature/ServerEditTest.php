@@ -18,6 +18,7 @@ class ServerEditTest extends TestCase
             $table->string('kode_aset')->nullable();
             $table->string('nama_aset');
             $table->string('status_aset');
+            $table->unsignedInteger('id_lokasi_aset')->nullable();
             $table->string('kondisi_aset')->nullable();
             $table->string('status_kepemilikan')->nullable();
             $table->date('tanggal_pengadaan')->nullable();
@@ -32,7 +33,7 @@ class ServerEditTest extends TestCase
 
         Schema::create('lokasi_aset', function (Blueprint $table) {
             $table->increments('id_lokasi_aset');
-            $table->unsignedInteger('id_aset');
+            $table->unsignedInteger('id_aset')->nullable();
             $table->unsignedInteger('id_data_center')->nullable();
             $table->string('nama_gedung')->nullable();
             $table->string('lantai')->nullable();
@@ -80,6 +81,7 @@ class ServerEditTest extends TestCase
             'id_aset' => 1,
             'nama_aset' => 'Server Utama',
             'status_aset' => 'Aktif',
+            'id_lokasi_aset' => 1,
         ]);
         DB::table('data_center')->insert([
             'id_data_center' => 1,
@@ -87,7 +89,7 @@ class ServerEditTest extends TestCase
         ]);
         DB::table('lokasi_aset')->insert([
             'id_lokasi_aset' => 1,
-            'id_aset' => 1,
+            'id_aset' => null,
             'id_data_center' => 1,
             'nama_gedung' => 'Gedung A',
             'nama_ruangan' => 'Ruang Server',
@@ -98,10 +100,11 @@ class ServerEditTest extends TestCase
             'id_aset' => 2,
             'nama_aset' => 'Aset Lain',
             'status_aset' => 'Aktif',
+            'id_lokasi_aset' => 2,
         ]);
         DB::table('lokasi_aset')->insert([
             'id_lokasi_aset' => 2,
-            'id_aset' => 2,
+            'id_aset' => null,
             'id_data_center' => 1,
             'nama_gedung' => 'Gedung B',
             'nama_ruangan' => 'Ruang Server Cadangan',
@@ -194,19 +197,23 @@ class ServerEditTest extends TestCase
         ]);
         $this->assertDatabaseHas('lokasi_aset', [
             'id_lokasi_aset' => 1,
-            'id_aset' => 1,
-            'nama_gedung' => 'Gedung B',
-            'nama_rak' => 'Rack B02',
+            'id_aset' => null,
+            'nama_gedung' => 'Gedung A',
+            'nama_rak' => 'Rack A01',
         ]);
         $this->assertDatabaseHas('lokasi_aset', [
             'id_lokasi_aset' => 2,
-            'id_aset' => 2,
+            'id_aset' => null,
             'nama_gedung' => 'Gedung B',
             'nama_rak' => 'Rack B02',
         ]);
+        $this->assertDatabaseHas('aset', [
+            'id_aset' => 1,
+            'id_lokasi_aset' => 2,
+        ]);
     }
 
-    public function test_server_can_be_created_with_copied_asset_location(): void
+    public function test_server_can_be_assigned_to_a_shared_asset_location(): void
     {
         $this->withSession(['user_id' => 1, 'user_name' => 'Administrator'])
             ->post(route('server.store'), [
@@ -221,15 +228,13 @@ class ServerEditTest extends TestCase
         $newAsset = DB::table('aset')->where('nama_aset', 'Server Baru')->first();
 
         $this->assertNotNull($newAsset);
-        $this->assertDatabaseHas('lokasi_aset', [
+        $this->assertDatabaseHas('aset', [
             'id_aset' => $newAsset->id_aset,
-            'nama_gedung' => 'Gedung B',
-            'nama_ruangan' => 'Ruang Server Cadangan',
-            'nama_rak' => 'Rack B02',
+            'id_lokasi_aset' => 2,
         ]);
         $this->assertDatabaseHas('lokasi_aset', [
             'id_lokasi_aset' => 2,
-            'id_aset' => 2,
+            'id_aset' => null,
             'nama_rak' => 'Rack B02',
         ]);
     }

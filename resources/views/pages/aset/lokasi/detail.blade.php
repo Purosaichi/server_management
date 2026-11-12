@@ -20,7 +20,7 @@
     <div class="asset-location-form-header">
         <div>
             <h1>Detail Lokasi Aset</h1>
-            <p>{{ $location->nama_aset ?: 'Aset' }}{{ $location->kode_aset ? ' - ' . $location->kode_aset : '' }}</p>
+            <p>Detail lokasi fisik dan aset/server yang menempatinya.</p>
         </div>
         <div class="asset-location-header-actions">
             <a href="{{ route('aset.lokasi.servers', $location->id_lokasi_aset) }}" class="asset-location-add-button">

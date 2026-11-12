@@ -12,7 +12,9 @@ class AsetLocationController extends Controller
         $locations = DB::table('lokasi_aset')
             ->leftJoin('data_center', 'data_center.id_data_center', '=', 'lokasi_aset.id_data_center')
             ->whereNull('lokasi_aset.deleted_at')
-            ->orderBy('lokasi_aset.id_lokasi_aset')
+            ->orderBy('data_center.nama_data_center')
+            ->orderBy('lokasi_aset.nama_gedung')
+            ->orderBy('lokasi_aset.nama_rak')
             ->get([
                 'lokasi_aset.id_lokasi_aset',
                 'data_center.nama_data_center',
@@ -28,14 +30,11 @@ class AsetLocationController extends Controller
     public function show(int $id)
     {
         $location = DB::table('lokasi_aset')
-            ->leftJoin('aset', 'aset.id_aset', '=', 'lokasi_aset.id_aset')
             ->leftJoin('data_center', 'data_center.id_data_center', '=', 'lokasi_aset.id_data_center')
             ->where('lokasi_aset.id_lokasi_aset', $id)
             ->whereNull('lokasi_aset.deleted_at')
             ->first([
                 'lokasi_aset.id_lokasi_aset',
-                'aset.kode_aset',
-                'aset.nama_aset',
                 'data_center.nama_data_center',
                 'lokasi_aset.nama_gedung',
                 'lokasi_aset.lantai',
@@ -74,27 +73,9 @@ class AsetLocationController extends Controller
 
         abort_if($location === null, 404);
 
-        $matchingLocations = DB::table('lokasi_aset as matching_location')
-            ->whereNull('matching_location.deleted_at');
-        foreach ([
-            'id_data_center',
-            'nama_gedung',
-            'lantai',
-            'nama_ruangan',
-            'zona',
-            'kode_rak',
-            'nama_rak',
-        ] as $field) {
-            $column = 'matching_location.' . $field;
-            $location->$field === null
-                ? $matchingLocations->whereNull($column)
-                : $matchingLocations->where($column, $location->$field);
-        }
-
-        $assetIds = $matchingLocations->pluck('matching_location.id_aset')->unique();
         $servers = DB::table('server')
             ->join('aset', 'aset.id_aset', '=', 'server.id_aset')
-            ->whereIn('aset.id_aset', $assetIds)
+            ->where('aset.id_lokasi_aset', $id)
             ->whereNull('server.deleted_at')
             ->orderBy('server.nama_server')
             ->get([
@@ -189,15 +170,12 @@ class AsetLocationController extends Controller
 
     public function create()
     {
-        $assets = DB::table('aset')
-            ->orderBy('nama_aset')
-            ->get(['id_aset', 'kode_aset', 'nama_aset']);
         $dataCenters = DB::table('data_center')
             ->whereNull('deleted_at')
             ->orderBy('nama_data_center')
             ->get(['id_data_center', 'nama_data_center', 'lokasi']);
 
-        return view('pages.aset.lokasi.create', compact('assets', 'dataCenters'));
+        return view('pages.aset.lokasi.create', compact('dataCenters'));
     }
 
     public function edit(int $id)
@@ -206,21 +184,17 @@ class AsetLocationController extends Controller
             ->where('id_lokasi_aset', $id)
             ->whereNull('deleted_at')
             ->firstOrFail();
-        $assets = DB::table('aset')
-            ->orderBy('nama_aset')
-            ->get(['id_aset', 'kode_aset', 'nama_aset']);
         $dataCenters = DB::table('data_center')
             ->whereNull('deleted_at')
             ->orderBy('nama_data_center')
             ->get(['id_data_center', 'nama_data_center', 'lokasi']);
 
-        return view('pages.aset.lokasi.edit', compact('location', 'assets', 'dataCenters'));
+        return view('pages.aset.lokasi.edit', compact('location', 'dataCenters'));
     }
 
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'id_aset' => 'required|integer|exists:aset,id_aset',
             'id_data_center' => 'nullable|integer|exists:data_center,id_data_center',
             'nama_gedung' => 'nullable|string|max:200',
             'lantai' => 'nullable|string|max:40',
@@ -234,7 +208,7 @@ class AsetLocationController extends Controller
             'keterangan' => 'nullable|string|max:510',
         ]);
 
-        DB::table('lokasi_aset')->insert($validated);
+        DB::table('lokasi_aset')->insert(array_merge($validated, ['id_aset' => null]));
 
         return redirect()->route('aset.lokasi')->with('success', 'Lokasi aset berhasil ditambahkan.');
     }
@@ -242,7 +216,6 @@ class AsetLocationController extends Controller
     public function update(Request $request, int $id)
     {
         $validated = $request->validate([
-            'id_aset' => 'required|integer|exists:aset,id_aset',
             'id_data_center' => 'nullable|integer|exists:data_center,id_data_center',
             'nama_gedung' => 'nullable|string|max:200',
             'lantai' => 'nullable|string|max:40',
@@ -259,7 +232,7 @@ class AsetLocationController extends Controller
         $updated = DB::table('lokasi_aset')
             ->where('id_lokasi_aset', $id)
             ->whereNull('deleted_at')
-            ->update($validated);
+            ->update(array_merge($validated, ['id_aset' => null]));
 
         if ($updated === 0 && ! DB::table('lokasi_aset')
             ->where('id_lokasi_aset', $id)
@@ -278,9 +251,21 @@ class AsetLocationController extends Controller
             ->whereNull('deleted_at')
             ->firstOrFail();
 
-        DB::table('lokasi_aset')
-            ->where('id_lokasi_aset', $location->id_lokasi_aset)
-            ->update(['deleted_at' => now()]);
+        DB::transaction(function () use ($location) {
+            DB::table('lokasi_aset')
+                ->where('id_lokasi_aset', $location->id_lokasi_aset)
+                ->update(['deleted_at' => now(), 'id_aset' => null]);
+
+            $assetIds = DB::table('aset')
+                ->where('id_lokasi_aset', $location->id_lokasi_aset)
+                ->pluck('id_aset');
+            DB::table('aset')
+                ->whereIn('id_aset', $assetIds)
+                ->update(['id_lokasi_aset' => null]);
+            DB::table('server')
+                ->whereIn('id_aset', $assetIds)
+                ->update(['lokasi_rack' => null]);
+        });
 
         return redirect()->route('aset.lokasi')->with('success', 'Lokasi aset berhasil dihapus.');
     }

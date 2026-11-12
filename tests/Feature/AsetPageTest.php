@@ -787,7 +787,7 @@ class AsetPageTest extends TestCase
         ]);
         DB::table('lokasi_aset')->insert([
             'id_lokasi_aset' => 1,
-            'id_aset' => 17,
+            'id_aset' => null,
             'id_data_center' => 1,
             'nama_gedung' => 'Gedung A',
             'lantai' => '2',
@@ -805,8 +805,7 @@ class AsetPageTest extends TestCase
         $this->withSession(['user_id' => 1, 'user_name' => 'Administrator'])
             ->get(route('aset.lokasi.detail', 1))
             ->assertOk()
-            ->assertSee('AST-017')
-            ->assertSee('Server Utama')
+            ->assertSee('Detail lokasi fisik')
             ->assertSee('DC Utama')
             ->assertSee('Gedung A')
             ->assertSee('Ruang Server')
@@ -818,7 +817,7 @@ class AsetPageTest extends TestCase
             ->assertSee(route('aset.lokasi.edit', 1));
     }
 
-    public function test_asset_location_subpage_lists_servers_at_the_same_physical_location(): void
+    public function test_asset_location_subpage_lists_servers_assigned_to_the_location(): void
     {
         $this->createLocationTable();
         $this->createDataCenterTable();
@@ -826,6 +825,7 @@ class AsetPageTest extends TestCase
             $table->increments('id_aset');
             $table->string('kode_aset')->nullable();
             $table->string('nama_aset');
+            $table->unsignedInteger('id_lokasi_aset')->nullable();
         });
         Schema::create('server', function (Blueprint $table) {
             $table->increments('id_server');
@@ -841,9 +841,9 @@ class AsetPageTest extends TestCase
             'nama_data_center' => 'DC Utama',
         ]);
         DB::table('aset')->insert([
-            ['id_aset' => 17, 'kode_aset' => 'AST-017', 'nama_aset' => 'Server Pertama'],
-            ['id_aset' => 18, 'kode_aset' => 'AST-018', 'nama_aset' => 'Server Kedua'],
-            ['id_aset' => 19, 'kode_aset' => 'AST-019', 'nama_aset' => 'Server Ruangan Lain'],
+            ['id_aset' => 17, 'kode_aset' => 'AST-017', 'nama_aset' => 'Server Pertama', 'id_lokasi_aset' => 1],
+            ['id_aset' => 18, 'kode_aset' => 'AST-018', 'nama_aset' => 'Server Kedua', 'id_lokasi_aset' => 1],
+            ['id_aset' => 19, 'kode_aset' => 'AST-019', 'nama_aset' => 'Server Ruangan Lain', 'id_lokasi_aset' => 3],
         ]);
         DB::table('server')->insert([
             ['id_server' => 1, 'id_aset' => 17, 'nama_server' => 'SVR-001', 'hostname' => 'svr-001.local', 'alamat_ip_produksi' => '192.0.2.1'],
@@ -853,18 +853,7 @@ class AsetPageTest extends TestCase
         DB::table('lokasi_aset')->insert([
             [
                 'id_lokasi_aset' => 1,
-                'id_aset' => 17,
-                'id_data_center' => 1,
-                'nama_gedung' => 'Gedung A',
-                'lantai' => '2',
-                'nama_ruangan' => 'Ruang Server',
-                'zona' => 'Utara',
-                'kode_rak' => 'RK-01',
-                'nama_rak' => 'Rak Utama',
-            ],
-            [
-                'id_lokasi_aset' => 2,
-                'id_aset' => 18,
+                'id_aset' => null,
                 'id_data_center' => 1,
                 'nama_gedung' => 'Gedung A',
                 'lantai' => '2',
@@ -875,7 +864,7 @@ class AsetPageTest extends TestCase
             ],
             [
                 'id_lokasi_aset' => 3,
-                'id_aset' => 19,
+                'id_aset' => null,
                 'id_data_center' => 1,
                 'nama_gedung' => 'Gedung A',
                 'lantai' => '2',
@@ -1029,7 +1018,7 @@ class AsetPageTest extends TestCase
             ->assertDontSee('DC Arsip');
     }
 
-    public function test_location_can_be_created_for_an_asset(): void
+    public function test_asset_location_can_be_created_without_assigning_an_asset(): void
     {
         $this->createLocationTable();
         $this->createDataCenterTable();
@@ -1054,12 +1043,11 @@ class AsetPageTest extends TestCase
             ->get(route('aset.lokasi.create'))
             ->assertOk()
             ->assertSee('Tambah Lokasi Aset')
-            ->assertSee('AST-017 - Server Utama')
+            ->assertDontSee('name="id_aset"', false)
             ->assertSee('DC Utama - Jakarta');
 
         $this->withSession(['user_id' => 1, 'user_name' => 'Administrator'])
             ->post(route('aset.lokasi.store'), [
-                'id_aset' => 17,
                 'id_data_center' => 1,
                 'nama_gedung' => 'Gedung A',
                 'lantai' => '2',
@@ -1076,7 +1064,7 @@ class AsetPageTest extends TestCase
             ->assertSessionHas('success', 'Lokasi aset berhasil ditambahkan.');
 
         $this->assertDatabaseHas('lokasi_aset', [
-            'id_aset' => 17,
+            'id_aset' => null,
             'id_data_center' => 1,
             'kode_rak' => 'RK-01',
             'tinggi_rak' => 42,
@@ -1106,7 +1094,7 @@ class AsetPageTest extends TestCase
         ]);
         DB::table('lokasi_aset')->insert([
             'id_lokasi_aset' => 1,
-            'id_aset' => 17,
+            'id_aset' => null,
             'id_data_center' => 1,
             'nama_gedung' => 'Gedung A',
             'zona' => 'Utara',
@@ -1117,13 +1105,12 @@ class AsetPageTest extends TestCase
             ->get(route('aset.lokasi.edit', 1))
             ->assertOk()
             ->assertSee('Edit Lokasi Aset')
-            ->assertSee('AST-017 - Server Utama')
+            ->assertDontSee('name="id_aset"', false)
             ->assertSee('value="Gedung A"', false)
             ->assertSee('value="Utara"', false);
 
         $this->withSession(['user_id' => 1, 'user_name' => 'Administrator'])
             ->put(route('aset.lokasi.update', 1), [
-                'id_aset' => 17,
                 'id_data_center' => 1,
                 'nama_gedung' => 'Gedung B',
                 'lantai' => '3',
@@ -1141,6 +1128,7 @@ class AsetPageTest extends TestCase
 
         $this->assertDatabaseHas('lokasi_aset', [
             'id_lokasi_aset' => 1,
+            'id_aset' => null,
             'nama_gedung' => 'Gedung B',
             'zona' => 'Selatan',
             'keterangan' => 'Lokasi diperbarui',
@@ -1151,9 +1139,27 @@ class AsetPageTest extends TestCase
     {
         $this->createLocationTable();
         $this->createDataCenterTable();
+        Schema::create('aset', function (Blueprint $table) {
+            $table->increments('id_aset');
+            $table->unsignedInteger('id_lokasi_aset')->nullable();
+        });
+        Schema::create('server', function (Blueprint $table) {
+            $table->increments('id_server');
+            $table->unsignedInteger('id_aset');
+            $table->string('lokasi_rack')->nullable();
+        });
+        DB::table('aset')->insert([
+            'id_aset' => 17,
+            'id_lokasi_aset' => 1,
+        ]);
+        DB::table('server')->insert([
+            'id_server' => 1,
+            'id_aset' => 17,
+            'lokasi_rack' => 'Rack A',
+        ]);
         DB::table('lokasi_aset')->insert([
             'id_lokasi_aset' => 1,
-            'id_aset' => 17,
+            'id_aset' => null,
             'nama_gedung' => 'Gedung A',
             'deleted_at' => null,
         ]);
@@ -1170,6 +1176,14 @@ class AsetPageTest extends TestCase
         $this->assertDatabaseHas('lokasi_aset', [
             'id_lokasi_aset' => 1,
             'nama_gedung' => 'Gedung A',
+        ]);
+        $this->assertDatabaseHas('aset', [
+            'id_aset' => 17,
+            'id_lokasi_aset' => null,
+        ]);
+        $this->assertDatabaseHas('server', [
+            'id_server' => 1,
+            'lokasi_rack' => null,
         ]);
 
         $this->withSession(['user_id' => 1, 'user_name' => 'Administrator'])
@@ -1586,7 +1600,7 @@ class AsetPageTest extends TestCase
     {
         Schema::create('lokasi_aset', function (Blueprint $table) {
             $table->increments('id_lokasi_aset');
-            $table->unsignedInteger('id_aset');
+            $table->unsignedInteger('id_aset')->nullable();
             $table->unsignedInteger('id_data_center')->nullable();
             $table->string('nama_gedung')->nullable();
             $table->string('lantai')->nullable();

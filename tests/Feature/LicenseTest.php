@@ -122,6 +122,77 @@ class LicenseTest extends TestCase
             ->assertSee('images/Red-Hat.png');
     }
 
+    public function test_license_detail_uses_the_asset_shared_location(): void
+    {
+        $this->createLicenseTables();
+        Schema::table('aset', function (Blueprint $table) {
+            $table->unsignedInteger('id_lokasi_aset')->nullable();
+        });
+        Schema::create('server', function (Blueprint $table) {
+            $table->increments('id_server');
+            $table->unsignedInteger('id_aset');
+            $table->string('hostname')->nullable();
+            $table->string('alamat_ip_produksi')->nullable();
+            $table->string('lokasi_rack')->nullable();
+        });
+        Schema::create('data_center', function (Blueprint $table) {
+            $table->increments('id_data_center');
+            $table->string('nama_data_center');
+        });
+        Schema::create('lokasi_aset', function (Blueprint $table) {
+            $table->increments('id_lokasi_aset');
+            $table->unsignedInteger('id_aset')->nullable();
+            $table->unsignedInteger('id_data_center')->nullable();
+            $table->string('nama_gedung')->nullable();
+            $table->string('lantai')->nullable();
+            $table->string('nama_ruangan')->nullable();
+            $table->string('zona')->nullable();
+            $table->string('kode_rak')->nullable();
+            $table->string('nama_rak')->nullable();
+            $table->timestamp('deleted_at')->nullable();
+        });
+
+        DB::table('lisensi')->insert([
+            'id_lisensi' => 1,
+            'nama_lisensi' => 'Database License',
+            'provider' => 'Vendor',
+            'status' => 'Aman',
+            'jumlah_lisensi' => 1,
+        ]);
+        DB::table('aset')->insert([
+            'id_aset' => 1,
+            'nama_aset' => 'Server Database',
+            'id_lokasi_aset' => 1,
+        ]);
+        DB::table('lisensi_aset')->insert([
+            'id_lisensi' => 1,
+            'id_aset' => 1,
+        ]);
+        DB::table('server')->insert([
+            'id_server' => 1,
+            'id_aset' => 1,
+            'hostname' => 'db.local',
+            'alamat_ip_produksi' => '192.0.2.10',
+            'lokasi_rack' => 'Lokasi lama',
+        ]);
+        DB::table('data_center')->insert([
+            'id_data_center' => 1,
+            'nama_data_center' => 'DC Utama',
+        ]);
+        DB::table('lokasi_aset')->insert([
+            'id_lokasi_aset' => 1,
+            'id_data_center' => 1,
+            'nama_gedung' => 'Gedung A',
+            'nama_rak' => 'Rak 01',
+        ]);
+
+        $this->withSession(['user_id' => 1, 'user_name' => 'Administrator'])
+            ->get(route('licenses.detail', 1))
+            ->assertOk()
+            ->assertSee('DC Utama - Gedung A - Rak 01')
+            ->assertDontSee('Lokasi lama');
+    }
+
     private function createLicenseTables(): void
     {
         Schema::create('lisensi', function (Blueprint $table) {

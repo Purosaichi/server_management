@@ -20,7 +20,7 @@
     <div class="asset-location-form-header">
         <div>
             <h1>Edit Lokasi Aset</h1>
-            <p>Perbarui informasi aset dan penempatannya.</p>
+            <p>Perbarui rincian lokasi fisik yang tersedia untuk aset dan server.</p>
         </div>
     </div>
 
@@ -34,17 +34,6 @@
         @csrf
         @method('PUT')
         <div class="asset-location-form-grid">
-            <label class="asset-location-field">
-                <span>Aset <strong>*</strong></span>
-                <select name="id_aset" required>
-                    <option value="">Pilih aset</option>
-                    @foreach($assets as $asset)
-                        <option value="{{ $asset->id_aset }}" @selected(old('id_aset', $location->id_aset) == $asset->id_aset)>
-                            {{ $asset->kode_aset }} - {{ $asset->nama_aset }}
-                        </option>
-                    @endforeach
-                </select>
-            </label>
             <label class="asset-location-field">
                 <span>Data Center</span>
                 <select name="id_data_center">
