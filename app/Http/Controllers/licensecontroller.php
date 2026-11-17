@@ -25,13 +25,14 @@ class LicenseController extends Controller
             $latestBilling = $billingByLicense->get($lic->id_lisensi);
             $effectiveExpiry = $latestBilling?->tanggal_jatuh_tempo ?? $lic->tanggal_kadaluarsa;
             $sisaHari = $this->daysUntilExpiration($effectiveExpiry);
+            $dynamicStatus = $this->getDynamicStatus($effectiveExpiry, $lic->status);
 
             return [
                 'id'           => $lic->id_lisensi,
                 'name'         => $lic->nama_lisensi,
                 'provider'     => $lic->provider,
-                'status'       => $lic->status,
-                'status_type'  => $this->getStatusType($lic->status),
+                'status'       => $dynamicStatus['status'],
+                'status_type'  => $dynamicStatus['type'],
                 'jumlah'       => $lic->jumlah_lisensi . ' License',
                 'expired'      => $effectiveExpiry
                                     ? Carbon::parse($effectiveExpiry)->format('d M Y')
@@ -97,13 +98,14 @@ class LicenseController extends Controller
 
         $effectiveExpiry = $billing?->tanggal_jatuh_tempo ?? $lic->tanggal_kadaluarsa;
         $sisaHari = $this->daysUntilExpiration($effectiveExpiry);
+        $dynamicStatus = $this->getDynamicStatus($effectiveExpiry, $lic->status);
 
         $license = [
             'id'           => $lic->id_lisensi,
             'name'         => $lic->nama_lisensi,
             'provider'     => $lic->provider,
-            'status'       => $lic->status,
-            'status_type'  => $this->getStatusType($lic->status),
+            'status'       => $dynamicStatus['status'],
+            'status_type'  => $dynamicStatus['type'],
             'jumlah'       => $lic->jumlah_lisensi . ' License',
             'expired'      => $effectiveExpiry
                                 ? Carbon::parse($effectiveExpiry)->format('d M Y')
@@ -467,6 +469,28 @@ class LicenseController extends Controller
         if ($status === 'Aman') return 'safe';
         if ($status === 'Akan Expired') return 'warning';
         return 'expired';
+    }
+
+    private function getDynamicStatus(?string $expirationDate, ?string $fallback = null): array
+    {
+        if ($expirationDate === null) {
+            return [
+                'status' => $fallback ?? '-',
+                'type' => $this->getStatusType($fallback),
+            ];
+        }
+
+        $daysRemaining = $this->daysUntilExpiration($expirationDate);
+
+        if ($daysRemaining < 0) {
+            return ['status' => 'Expired', 'type' => 'expired'];
+        }
+
+        if ($daysRemaining <= 90) {
+            return ['status' => 'Akan Expired', 'type' => 'warning'];
+        }
+
+        return ['status' => 'Aman', 'type' => 'safe'];
     }
 
     private function daysUntilExpiration(?string $expirationDate): ?int
