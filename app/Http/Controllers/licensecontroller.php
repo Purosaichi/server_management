@@ -149,8 +149,9 @@ class LicenseController extends Controller
         $billing = null;
         $assets = DB::table('aset')->orderBy('nama_aset')->get(['id_aset', 'nama_aset']);
         $selectedAssetId = null;
+        ['billingStartDate' => $billingStartDate, 'billingEndDate' => $billingEndDate] = $this->formDateValues($billing, $license);
 
-        return view('pages.licenses.form', compact('license', 'billing', 'assets', 'selectedAssetId'));
+        return view('pages.licenses.form', compact('license', 'billing', 'assets', 'selectedAssetId', 'billingStartDate', 'billingEndDate'));
     }
 
     public function store(Request $request)
@@ -182,8 +183,9 @@ class LicenseController extends Controller
             ->where('id_lisensi', $id)
             ->orderByDesc('id_lisensi_aset')
             ->value('id_aset');
+        ['billingStartDate' => $billingStartDate, 'billingEndDate' => $billingEndDate] = $this->formDateValues($billing, $license);
 
-        return view('pages.licenses.form', compact('license', 'billing', 'assets', 'selectedAssetId'));
+        return view('pages.licenses.form', compact('license', 'billing', 'assets', 'selectedAssetId', 'billingStartDate', 'billingEndDate'));
     }
 
     public function update(Request $request, int $id)
@@ -229,13 +231,16 @@ class LicenseController extends Controller
             'id_aset' => 'nullable|integer|exists:aset,id_aset',
         ]);
 
-        if (blank($validated['next_due_date'] ?? null)
-            && filled($validated['last_payment'] ?? null)
+        if (filled($validated['last_payment'] ?? null)
             && filled($validated['billing_period'] ?? null)) {
-            $validated['next_due_date'] = $this->calculateDueDate(
+            $calculatedDueDate = $this->calculateDueDate(
                 $validated['last_payment'],
                 $validated['billing_period'],
             );
+
+            if ($calculatedDueDate !== null) {
+                $validated['next_due_date'] = $calculatedDueDate;
+            }
         }
 
         return $validated;
@@ -315,14 +320,38 @@ class LicenseController extends Controller
         ]);
     }
 
+    private function formDateValues(?object $billing, ?License $license): array
+    {
+        $start = $this->toDateInput($billing?->tanggal_bayar_terakhir ?? $license?->tanggal_mulai);
+        $storedEnd = $this->toDateInput($billing?->tanggal_jatuh_tempo ?? $license?->tanggal_kadaluarsa);
+        $period = $billing?->siklus_tagihan ?? null;
+        $calculatedEnd = ($start !== '' && filled($period))
+            ? $this->calculateDueDate($start, $period)
+            : null;
+
+        return [
+            'billingStartDate' => $start,
+            'billingEndDate' => $calculatedEnd ?? $storedEnd,
+        ];
+    }
+
+    private function toDateInput(mixed $value): string
+    {
+        if (blank($value)) {
+            return '';
+        }
+
+        return Carbon::parse($value)->toDateString();
+    }
+
     private function calculateDueDate(string $startDate, string $billingPeriod): ?string
     {
-        if (! preg_match('/^\s*(\d+)\s*(hari|days?|minggu|weeks?|bulan|months?|tahun|years?)\s*$/i', $billingPeriod, $matches)) {
+        if (! preg_match('/^\s*(\d+)\s*(hari|days?|minggu|weeks?|bulan|months?|tahun|years?)?\s*$/i', $billingPeriod, $matches)) {
             return null;
         }
 
         $amount = (int) $matches[1];
-        $unit = strtolower($matches[2]);
+        $unit = strtolower($matches[2] ?? 'tahun');
         $date = Carbon::parse($startDate);
 
         if (in_array($unit, ['hari', 'day', 'days'], true)) {

@@ -71,6 +71,26 @@
             </div>
         </div>
 
+        @php
+            $formatDateInput = function ($value) {
+                if (blank($value)) {
+                    return '';
+                }
+
+                return \Carbon\Carbon::parse($value)->toDateString();
+            };
+            $startDateValue = $formatDateInput(old('last_payment', $billingStartDate));
+            $endDateValue = $formatDateInput(old('next_due_date', $billingEndDate));
+            $amountValue = old('amount', $billing->jumlah ?? '');
+            $amountDisplayValue = '';
+            if ($amountValue !== '' && is_numeric($amountValue)) {
+                $amountNumber = (float) $amountValue;
+                $amountDisplayValue = fmod($amountNumber, 1) === 0.0
+                    ? number_format($amountNumber, 0, ',', '.')
+                    : rtrim(rtrim(number_format($amountNumber, 2, ',', '.'), '0'), ',');
+            }
+        @endphp
+
         <h3 class="app-form-section">Billing Information</h3>
         <div class="app-form-grid">
             <div class="app-form-group">
@@ -88,15 +108,17 @@
             </div>
             <div class="app-form-group">
                 <label for="last_payment">Tanggal Mulai</label>
-                <input type="date" id="last_payment" name="last_payment" value="{{ old('last_payment', $billing->tanggal_bayar_terakhir ?? ($license->tanggal_mulai ?? '')) }}">
+                <input type="date" id="last_payment" name="last_payment" value="{{ $startDateValue }}">
             </div>
             <div class="app-form-group">
                 <label for="next_due_date">Tanggal Berakhir</label>
-                <input type="date" id="next_due_date" name="next_due_date" value="{{ old('next_due_date', $billing->tanggal_jatuh_tempo ?? ($license->tanggal_kadaluarsa ?? '')) }}">
+                <input type="date" id="next_due_date" name="next_due_date" value="{{ $endDateValue }}" readonly tabindex="-1">
             </div>
             <div class="app-form-group">
                 <label for="amount">Amount (Rp)</label>
-                <input type="number" id="amount" name="amount" value="{{ old('amount', $billing->jumlah ?? '') }}" min="0" step="0.01">
+                <input type="text" id="amount" name="amount_display" value="{{ $amountDisplayValue }}"
+                       inputmode="decimal" autocomplete="off" placeholder="Contoh: 1.000.000">
+                <input type="hidden" id="amount_value" name="amount" value="{{ $amountValue }}">
             </div>
             <div class="app-form-group">
                 <label for="payment_method">Payment Method</label>
@@ -129,13 +151,38 @@
     const billingPeriodInput = document.getElementById('billing_period');
     const billingStartDateInput = document.getElementById('last_payment');
     const billingDueDateInput = document.getElementById('next_due_date');
+    const amountInput = document.getElementById('amount');
+    const amountValueInput = document.getElementById('amount_value');
+
+    function updateAmountValue() {
+        const input = amountInput.value.trim().replace(/[^\d,.]/g, '');
+        const hasDecimalSeparator = input.includes(',');
+        const [integerPart, decimalPart] = hasDecimalSeparator
+            ? input.split(',', 2)
+            : [input, ''];
+        const normalizedInteger = (integerPart || '').replace(/\D/g, '').replace(/^0+(?=\d)/, '');
+        const normalizedDecimal = decimalPart ? decimalPart.replace(/\D/g, '').slice(0, 2) : '';
+        amountValueInput.value = normalizedInteger + (normalizedDecimal ? `.${normalizedDecimal}` : '');
+
+        if (!normalizedInteger) {
+            amountInput.value = '';
+            amountValueInput.value = '';
+            return;
+        }
+
+        amountInput.value = Number(normalizedInteger).toLocaleString('id-ID')
+            + (normalizedDecimal ? `,${normalizedDecimal}` : '');
+    }
 
     function updateBillingDueDate() {
-        const period = billingPeriodInput.value.match(/^\s*(\d+)\s*(hari|days?|minggu|weeks?|bulan|months?|tahun|years?)\s*$/i);
-        if (!period || !billingStartDateInput.value) return;
+        const period = billingPeriodInput.value.match(/^\s*(\d+)\s*(hari|days?|minggu|weeks?|bulan|months?|tahun|years?)?\s*$/i);
+        if (!period || !billingStartDateInput.value) {
+            billingDueDateInput.value = '';
+            return;
+        }
 
         const amount = Number(period[1]);
-        const unit = period[2].toLowerCase();
+        const unit = (period[2] || 'tahun').toLowerCase();
         const startDate = new Date(`${billingStartDateInput.value}T00:00:00`);
 
         if (['hari', 'day', 'days'].includes(unit)) {
@@ -159,6 +206,11 @@
     }
 
     billingPeriodInput.addEventListener('input', updateBillingDueDate);
+    billingStartDateInput.addEventListener('input', updateBillingDueDate);
     billingStartDateInput.addEventListener('change', updateBillingDueDate);
+    amountInput.addEventListener('input', updateAmountValue);
+    amountInput.addEventListener('blur', updateAmountValue);
+    updateBillingDueDate();
+    updateAmountValue();
 </script>
 @endsection

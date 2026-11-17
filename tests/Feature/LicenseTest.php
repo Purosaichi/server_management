@@ -45,13 +45,13 @@ class LicenseTest extends TestCase
                 'id_lisensi' => 1,
                 'jenis_tagihan' => 'Lisensi',
                 'status_pembayaran' => 'Paid',
-                'tanggal_jatuh_tempo' => '2026-09-20',
+                'tanggal_jatuh_tempo' => '2027-08-15',
                 'jumlah' => 250000,
             ]);
             $this->assertDatabaseHas('lisensi', [
                 'id_lisensi' => 1,
                 'tanggal_mulai' => '2026-08-15',
-                'tanggal_kadaluarsa' => '2026-09-20',
+                'tanggal_kadaluarsa' => '2027-08-15',
             ]);
 
             $logo = DB::table('lisensi')->where('id_lisensi', 1)->value('logo');
@@ -63,6 +63,76 @@ class LicenseTest extends TestCase
                 File::delete(public_path('images/'.$logo));
             }
         }
+    }
+
+    public function test_license_end_date_is_calculated_from_start_date_and_billing_period(): void
+    {
+        $this->createLicenseTables();
+
+        $this->withSession(['user_id' => 1, 'user_name' => 'Administrator'])
+            ->post('/licenses', [
+                'nama_lisensi' => 'Annual Software',
+                'provider' => 'Vendor',
+                'status' => 'Aman',
+                'jumlah_lisensi' => 1,
+                'billing_period' => '1 tahun',
+                'last_payment' => '2026-11-18',
+                'next_due_date' => '2026-12-18',
+            ])
+            ->assertRedirect(route('licenses.detail', 1));
+
+        $this->assertDatabaseHas('lisensi', [
+            'id_lisensi' => 1,
+            'tanggal_mulai' => '2026-11-18',
+            'tanggal_kadaluarsa' => '2027-11-18',
+        ]);
+        $this->assertDatabaseHas('tagihan', [
+            'id_lisensi' => 1,
+            'siklus_tagihan' => '1 tahun',
+            'tanggal_bayar_terakhir' => '2026-11-18',
+            'tanggal_jatuh_tempo' => '2027-11-18',
+        ]);
+    }
+
+    public function test_license_edit_form_shows_selectable_start_date_and_calculated_end_date(): void
+    {
+        $this->createLicenseTables();
+        DB::table('lisensi')->insert([
+            'nama_lisensi' => 'Adobe Acrobat Pro',
+            'provider' => 'Adobe',
+            'status' => 'Aman',
+            'jumlah_lisensi' => 1,
+            'tanggal_mulai' => '2026-11-18 00:00:00',
+            'tanggal_kadaluarsa' => '2026-12-01',
+        ]);
+        DB::table('tagihan')->insert([
+            'jenis_tagihan' => 'Lisensi',
+            'id_lisensi' => 1,
+            'siklus_tagihan' => '1 tahun',
+            'tanggal_bayar_terakhir' => '2026-11-18 00:00:00',
+            'tanggal_jatuh_tempo' => '2026-12-01',
+        ]);
+
+        $this->withSession(['user_id' => 1, 'user_name' => 'Administrator'])
+            ->get('/licenses/1/edit')
+            ->assertOk()
+            ->assertSee('type="date" id="last_payment"', false)
+            ->assertSee('value="2026-11-18"', false)
+            ->assertSee('value="2027-11-18"', false)
+            ->assertSee('readonly', false);
+    }
+
+    public function test_license_form_marks_end_date_as_automatically_calculated(): void
+    {
+        $this->createLicenseTables();
+
+        $this->withSession(['user_id' => 1, 'user_name' => 'Administrator'])
+            ->get('/licenses/create')
+            ->assertOk()
+            ->assertSee('type="date" id="last_payment"', false)
+            ->assertSee('type="date" id="next_due_date"', false)
+            ->assertSee('readonly', false)
+            ->assertSee('updateBillingDueDate();', false);
     }
 
     public function test_license_delete_sets_deleted_at_without_removing_record(): void

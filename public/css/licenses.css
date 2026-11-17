@@ -44,6 +44,10 @@
     white-space: nowrap;
 }
 
+.lic-row-actions {
+    justify-content: flex-end;
+}
+
 .lic-table-tools {
     color: #6b7280;
     font-size: 0.85rem;
@@ -188,6 +192,16 @@
 .lic-table-wrapper thead th:last-child {
     border-top-right-radius: 0.5rem;
     border-bottom-right-radius: 0.5rem;
+}
+
+.lic-table-wrapper thead th.lic-actions-header,
+.lic-table-wrapper tbody td.lic-actions-cell {
+    width: 1%;
+    white-space: nowrap;
+}
+
+.lic-table-wrapper thead th.lic-actions-header {
+    text-align: right;
 }
 
 .lic-table-wrapper tbody tr {

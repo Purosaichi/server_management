@@ -34,6 +34,7 @@
                     <th>Status</th>
                     <th>Jumlah Lisensi</th>
                     <th>Tanggal Expired</th>
+                    <th class="lic-actions-header" aria-label="Aksi"></th>
                 </tr>
             </thead>
             <tbody>
@@ -68,7 +69,7 @@
                             @endif
                         </div>
                     </td>
-                    <td>
+                    <td class="lic-actions-cell">
                         <div class="lic-row-actions">
                             <a href="{{ route('licenses.edit', ['id' => $lic['id']]) }}" class="lic-btn-edit">Edit</a>
                             <button type="button" class="lic-btn-delete"
