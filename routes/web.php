@@ -16,6 +16,7 @@ use App\Http\Controllers\StorageController;
 use App\Http\Controllers\PenyediaController;
 use App\Http\Controllers\MerekController;
 use App\Http\Controllers\WarrantyController;
+use App\Http\Controllers\AsetDashboardController;
 
 Route::redirect('/', '/login');
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
@@ -24,7 +25,7 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 Route::middleware(['auth.session'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-    Route::view('/aset', 'pages.aset.aset')->name('aset.index');
+    Route::get('/aset', [AsetDashboardController::class, 'index'])->name('aset.index');
     Route::get('/aset/merek/create', [MerekController::class, 'create'])->name('aset.merek.create');
     Route::post('/aset/merek', [MerekController::class, 'store'])->name('aset.merek.store');
     Route::get('/aset/merek/{id}/edit', [MerekController::class, 'edit'])->name('aset.merek.edit');

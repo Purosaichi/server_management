@@ -2,14 +2,50 @@
 
 @section('title', 'Aset')
 @section('page-title', 'Aset')
-@section('page-subtitle', 'Inventaris aset')
+@section('page-subtitle', 'Ringkasan data inventaris aset')
 
 @section('content')
-<div class="rounded-lg border border-gray-200 bg-white px-6 py-10 text-center">
-    <div class="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-blue-50 text-blue-700">
-        <i class="fas fa-boxes-stacked text-xl" aria-hidden="true"></i>
-    </div>
-    <h1 class="text-lg font-semibold text-gray-900">Halaman Aset</h1>
-    <p class="mt-2 text-sm text-gray-500">Data inventaris aset akan ditampilkan di sini.</p>
+<link rel="stylesheet" href="{{ asset('css/aset-dashboard.css') }}">
+
+<div class="asset-dashboard-header">
+    <h2>Ringkasan Aset</h2>
 </div>
+
+<div class="asset-dashboard-grid">
+    @foreach ($sections as $section)
+        <div class="asset-summary-card">
+            <div class="flex items-start justify-between gap-4">
+                <div>
+                    <p class="asset-summary-label">{{ $section['title'] }}</p>
+                    <p class="asset-summary-value">{{ $section['count'] }}</p>
+                    <p class="asset-summary-detail">{{ $section['summary'] }}</p>
+                </div>
+                <div class="asset-summary-icon">
+                    <i class="fas {{ $section['icon'] }} text-lg" aria-hidden="true"></i>
+                </div>
+            </div>
+
+            <div class="asset-summary-list">
+                <p class="asset-summary-list-heading">Data terbaru</p>
+                @forelse ($section['items'] as $item)
+                    <div class="asset-summary-row">
+                        <span class="asset-summary-name">{{ $item['name'] }}</span>
+                        <span class="asset-summary-meta">{{ $item['detail'] }}</span>
+                    </div>
+                @empty
+                    <p class="asset-summary-empty">Belum ada data.</p>
+                @endforelse
+            </div>
+
+            <a href="{{ $section['url'] }}" class="asset-summary-link">
+                Lihat semua
+                <i class="fas fa-arrow-right text-xs" aria-hidden="true"></i>
+            </a>
+        </div>
+    @endforeach
+</div>
+
+<footer class="footer">
+    <p>&copy; 2026 Direktorat Jenderal Guru, Tenaga Kependidikan dan Pendidikan Guru - Kemendikdasmen</p>
+</footer>
 @endsection

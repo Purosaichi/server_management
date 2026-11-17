@@ -6,7 +6,8 @@ namespace App\Http\Controllers;
 use App\Models\DashboardStat;
 use App\Models\ServerStatus;
 use App\Models\AplikasiDetail;
-use App\Models\ReminderKadaluarsa;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class DashboardController extends Controller
 {
@@ -57,17 +58,45 @@ class DashboardController extends Controller
             })
             ->toArray();
 
-        /* REMINDER KADALUARSA (yang < 60 hari) */
-        $reminders = ReminderKadaluarsa::where('sisa_hari', '<=', 60)
-            ->orderBy('sisa_hari')
+        $domainCount = DB::table('domain')
+            ->whereNull('deleted_at')
+            ->count();
+        $activeDomainIds = DB::table('domain')
+            ->whereNull('deleted_at')
+            ->select('id_domain');
+        $domains = DB::table('vw_domain_detail')
+            ->whereIn('id_domain', $activeDomainIds)
+            ->orderBy('nama_domain')
             ->limit(3)
-            ->get();
+            ->get([
+                'id_domain',
+                'nama_domain',
+                'nama_aplikasi',
+                'status_domain',
+                'nama_pic',
+                'ssl_status',
+                'tanggal_kadaluarsa',
+            ])
+            ->map(function ($domain) {
+                return [
+                    'id' => $domain->id_domain,
+                    'domain' => $domain->nama_domain,
+                    'application' => $domain->nama_aplikasi ?? '_',
+                    'status' => $domain->status_domain ?? '-',
+                    'pic' => $domain->nama_pic ?? '_',
+                    'ssl' => $domain->ssl_status ?? 'tidak ada',
+                    'last_activity' => $domain->tanggal_kadaluarsa
+                        ? Carbon::parse($domain->tanggal_kadaluarsa)->format('d F Y')
+                        : '_',
+                ];
+            });
 
         return view('pages.home.dashboard', compact(
             'stats',
             'servers',
             'applications',
-            'reminders'
+            'domains',
+            'domainCount'
         ));
     }
 

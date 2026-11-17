@@ -92,6 +92,10 @@
     margin-bottom: 2rem;
 }
 
+.dashboard-domain-card {
+    margin-bottom: 2.75rem;
+}
+
 .table-header {
     padding: 1rem 1.5rem;
     border-bottom: 1px solid #f3f4f6;

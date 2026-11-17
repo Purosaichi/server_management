@@ -10,27 +10,116 @@ use Tests\TestCase;
 
 class AsetPageTest extends TestCase
 {
-    public function test_asset_menu_opens_the_placeholder_page(): void
+    public function test_asset_page_displays_cards_for_each_asset_menu_section(): void
     {
+        $this->createAssetDashboardTables();
+        DB::table('server')->insert(['nama_server' => 'Server Produksi']);
+        DB::table('router')->insert(['id_router' => 1]);
+        DB::table('switch')->insert(['id_switch' => 1]);
+        DB::table('data_center')->insert(['nama_data_center' => 'DC Utama']);
+        DB::table('lokasi_aset')->insert([
+            'id_data_center' => 1,
+            'nama_gedung' => 'Gedung A',
+            'nama_rak' => 'Rack A01',
+        ]);
+        DB::table('storage')->insert([
+            'jenis_storage' => 'NAS',
+            'kapasitas_raw' => 1000,
+            'kapasitas_terpakai' => 400,
+        ]);
+        DB::table('penyedia')->insert(['nama_penyedia' => 'Vendor Utama']);
+        DB::table('merek')->insert(['nama_merek' => 'Dell']);
+        DB::table('garansi')->insert([
+            'nomor_garansi' => 'GAR-001',
+            'tanggal_berakhir' => '2027-01-01',
+        ]);
+
         $this->withSession(['user_id' => 1, 'user_name' => 'Administrator'])
             ->get(route('aset.index'))
             ->assertOk()
-            ->assertSee('Halaman Aset')
-            ->assertSee('Data inventaris aset akan ditampilkan di sini.')
+            ->assertSee('Ringkasan Aset')
+            ->assertSee('Data terbaru')
+            ->assertSee('Server Produksi')
             ->assertSee(route('server.index'))
             ->assertSee('Server')
             ->assertSee(route('network-device.router'))
             ->assertSee('Network Device')
+            ->assertSee('1 router · 1 switch')
+            ->assertSee(route('aset.lokasi'))
+            ->assertSee('Lokasi Aset')
+            ->assertSee('DC Utama · Gedung A · Rack A01')
             ->assertSee(route('aset.storage'))
             ->assertSee('Storage')
+            ->assertSee('1.000 kapasitas · 400 terpakai')
+            ->assertSee('Vendor Utama')
+            ->assertSee('Dell')
+            ->assertSee('GAR-001')
             ->assertSee(route('aset.penyedia'))
             ->assertSee('Penyedia')
             ->assertSee(route('aset.merek'))
             ->assertSee('Merek')
             ->assertSee(route('aset.garansi'))
             ->assertSee('Garansi')
+            ->assertSee('Lihat semua')
+            ->assertSeeInOrder([
+                'Server',
+                'Network Device',
+                'Lokasi Aset',
+                'Storage',
+                'Penyedia',
+                'Merek',
+                'Garansi',
+            ])
             ->assertSee('data-sidebar-toggle', false)
             ->assertSee('aria-controls="asetSubmenu"', false);
+    }
+
+    private function createAssetDashboardTables(): void
+    {
+        Schema::create('server', function (Blueprint $table) {
+            $table->increments('id_server');
+            $table->string('nama_server');
+            $table->timestamp('deleted_at')->nullable();
+        });
+        Schema::create('router', function (Blueprint $table) {
+            $table->increments('id_router');
+        });
+        Schema::create('switch', function (Blueprint $table) {
+            $table->increments('id_switch');
+        });
+        Schema::create('data_center', function (Blueprint $table) {
+            $table->increments('id_data_center');
+            $table->string('nama_data_center');
+        });
+        Schema::create('lokasi_aset', function (Blueprint $table) {
+            $table->increments('id_lokasi_aset');
+            $table->unsignedInteger('id_data_center')->nullable();
+            $table->string('nama_gedung')->nullable();
+            $table->string('nama_rak')->nullable();
+            $table->timestamp('deleted_at')->nullable();
+        });
+        Schema::create('storage', function (Blueprint $table) {
+            $table->increments('id_storage');
+            $table->string('jenis_storage')->nullable();
+            $table->integer('kapasitas_raw')->nullable();
+            $table->integer('kapasitas_terpakai')->nullable();
+            $table->timestamp('deleted_at')->nullable();
+        });
+        Schema::create('penyedia', function (Blueprint $table) {
+            $table->increments('id_penyedia');
+            $table->string('nama_penyedia');
+            $table->timestamp('deleted_at')->nullable();
+        });
+        Schema::create('merek', function (Blueprint $table) {
+            $table->increments('id_merek');
+            $table->string('nama_merek');
+            $table->timestamp('deleted_at')->nullable();
+        });
+        Schema::create('garansi', function (Blueprint $table) {
+            $table->increments('id_garansi');
+            $table->string('nomor_garansi')->nullable();
+            $table->date('tanggal_berakhir')->nullable();
+        });
     }
 
     public function test_warranty_page_displays_warranty_records(): void

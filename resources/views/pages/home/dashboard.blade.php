@@ -8,6 +8,7 @@
 
 @section('content')
 <link rel="stylesheet" href="{{ asset('css/dashboard.css') }}">
+<link rel="stylesheet" href="{{ asset('css/domain.css') }}">
 
 <div class="header">
     <h2 class="title-header">Dashboard</h2>
@@ -138,41 +139,60 @@
     </div>
 </div>
 
-<!-- /* REMINDER KADALUARSA */ -->
-@if($reminders->count() > 0)
-<div class="table-container">
-    <div class="table-header">
-        <h3 class="table-title">Reminder Kadaluarsa</h3>
-        <span class="table-count">Dalam 60 hari ke depan</span>
+<!-- /* DAFTAR DOMAIN */ -->
+<div class="dmn-table-container dashboard-domain-card">
+    <div class="dmn-table-header">
+        <h3 class="dmn-table-title">Daftar Domain</h3>
+        <span class="dmn-table-count">Menampilkan {{ $domains->count() }} dari {{ $domainCount }} domain</span>
     </div>
-    <div class="table-wrapper">
+    <div class="dmn-table-wrapper">
         <table>
             <thead>
                 <tr>
-                    <th>Jenis</th>
-                    <th>Nama</th>
-                    <th>Tanggal Kadaluarsa</th>
-                    <th>Sisa Hari</th>
+                    <th>Domain</th>
+                    <th>Application</th>
+                    <th>Status</th>
+                    <th>PIC</th>
+                    <th>SSL Certificate</th>
+                    <th>Last Activity</th>
                 </tr>
             </thead>
             <tbody>
-                @foreach($reminders as $r)
-                <tr>
-                    <td>{{ $r->jenis }}</td>
-                    <td><span class="app-name">{{ $r->nama }}</span></td>
-                    <td>{{ $r->tanggal_kadaluarsa }}</td>
+                @forelse($domains as $domain)
+                <tr class="dmn-domain-row">
                     <td>
-                        <span class="badge {{ $r->sisa_hari <= 7 ? 'badge-red' : ($r->sisa_hari <= 30 ? 'badge-yellow' : 'badge-green') }}">
-                            {{ $r->sisa_hari }} hari
+                        <a href="{{ route('domain.detail', $domain['id']) }}" class="dmn-name">
+                            {{ $domain['domain'] }}
+                        </a>
+                    </td>
+                    <td>{{ $domain['application'] }}</td>
+                    <td>
+                        <span class="dmn-badge {{ $domain['status'] === 'Aktif' ? 'dmn-badge-green' : 'dmn-badge-red' }}">
+                            {{ $domain['status'] }}
                         </span>
                     </td>
+                    <td>{{ $domain['pic'] }}</td>
+                    <td>
+                        <span class="dmn-badge {{ $domain['ssl'] === 'Aktif' ? 'dmn-badge-green' : 'dmn-badge-red' }}">
+                            {{ $domain['ssl'] }}
+                        </span>
+                    </td>
+                    <td>{{ $domain['last_activity'] }}</td>
                 </tr>
-                @endforeach
+                @empty
+                <tr>
+                    <td colspan="6" style="text-align: center; color: #9ca3af; padding: 2rem;">
+                        Belum ada data domain.
+                    </td>
+                </tr>
+                @endforelse
             </tbody>
         </table>
     </div>
+    <div class="table-footer">
+        <a href="{{ route('domain.domain') }}" class="link-all">Lihat Semua →</a>
+    </div>
 </div>
-@endif
 
 <footer class="footer">
     <p>&copy; 2026 Direktorat Jenderal Guru, Tenaga Kependidikan dan Pendidikan Guru - Kemendikdasmen</p>
