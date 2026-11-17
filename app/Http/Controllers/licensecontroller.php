@@ -14,8 +14,17 @@ class LicenseController extends Controller
 {
     public function index()
     {
-        $licenses = License::query()->orderBy('nama_lisensi')->get()->map(function ($lic) {
-            $sisaHari = $this->daysUntilExpiration($lic->tanggal_kadaluarsa);
+        $billingByLicense = DB::table('tagihan')
+            ->whereNotNull('id_lisensi')
+            ->orderByDesc('id_tagihan')
+            ->get(['id_lisensi', 'tanggal_jatuh_tempo'])
+            ->unique('id_lisensi')
+            ->keyBy('id_lisensi');
+
+        $licenses = License::query()->orderBy('nama_lisensi')->get()->map(function ($lic) use ($billingByLicense) {
+            $latestBilling = $billingByLicense->get($lic->id_lisensi);
+            $effectiveExpiry = $latestBilling?->tanggal_jatuh_tempo ?? $lic->tanggal_kadaluarsa;
+            $sisaHari = $this->daysUntilExpiration($effectiveExpiry);
 
             return [
                 'id'           => $lic->id_lisensi,
@@ -24,8 +33,8 @@ class LicenseController extends Controller
                 'status'       => $lic->status,
                 'status_type'  => $this->getStatusType($lic->status),
                 'jumlah'       => $lic->jumlah_lisensi . ' License',
-                'expired'      => $lic->tanggal_kadaluarsa
-                                    ? Carbon::parse($lic->tanggal_kadaluarsa)->format('d M Y')
+                'expired'      => $effectiveExpiry
+                                    ? Carbon::parse($effectiveExpiry)->format('d M Y')
                                     : '-',
                 'expired_note' => $this->getExpiredNote($sisaHari),
                 'expired_type' => $this->getExpiredType($sisaHari),
@@ -140,7 +149,14 @@ class LicenseController extends Controller
             'pic'            => '-',
         ];
 
-        return view('pages.licenses.detail', compact('license', 'payments'));
+        $paymentMinDate = $effectiveExpiry
+            ? Carbon::parse($effectiveExpiry)->toDateString()
+            : null;
+        $paymentDefaultDate = $paymentMinDate && now()->toDateString() < $paymentMinDate
+            ? $paymentMinDate
+            : now()->toDateString();
+
+        return view('pages.licenses.detail', compact('license', 'payments', 'paymentMinDate', 'paymentDefaultDate'));
     }
 
     public function create()
@@ -152,6 +168,53 @@ class LicenseController extends Controller
         ['billingStartDate' => $billingStartDate, 'billingEndDate' => $billingEndDate] = $this->formDateValues($billing, $license);
 
         return view('pages.licenses.form', compact('license', 'billing', 'assets', 'selectedAssetId', 'billingStartDate', 'billingEndDate'));
+    }
+
+    public function storePayment(Request $request, int $id)
+    {
+        $license = License::findOrFail($id);
+
+        $billing = DB::table('tagihan')
+            ->where('id_lisensi', $id)
+            ->orderByDesc('id_tagihan')
+            ->first();
+
+        if (! $billing || $billing->jumlah === null) {
+            return back()->withErrors([
+                'payment_date' => 'Nominal pembayaran belum tersedia pada data billing lisensi.',
+            ]);
+        }
+
+        $validated = $request->validate([
+            'payment_date' => 'required|date',
+            'payment_method' => 'required|in:Transfer Bank,Kartu Kredit,Kartu Debit,E-Wallet,Virtual Account,Tunai',
+        ]);
+
+        $minimumPaymentDate = $billing->tanggal_jatuh_tempo ?? $license->tanggal_kadaluarsa;
+        if ($minimumPaymentDate && Carbon::parse($validated['payment_date'])->lt(Carbon::parse($minimumPaymentDate))) {
+            return back()->withErrors([
+                'payment_date' => 'Tanggal pembayaran tidak boleh sebelum tanggal expired lisensi (' . Carbon::parse($minimumPaymentDate)->format('d F Y') . ').',
+            ])->withInput();
+        }
+
+        $billingPeriod = $billing->siklus_tagihan;
+        $dueDate = $billingPeriod
+            ? $this->calculateDueDate($validated['payment_date'], $billingPeriod)
+            : null;
+
+        DB::table('tagihan')->insert([
+            'jenis_tagihan' => 'Lisensi',
+            'id_lisensi' => $id,
+            'status_pembayaran' => 'Paid',
+            'siklus_tagihan' => $billingPeriod,
+            'tanggal_bayar_terakhir' => $validated['payment_date'],
+            'tanggal_jatuh_tempo' => $dueDate,
+            'jumlah' => $billing->jumlah,
+            'metode_pembayaran' => $validated['payment_method'],
+        ]);
+
+        return redirect()->route('licenses.detail', $id)
+            ->with('success', 'Pembayaran berhasil dicatat.');
     }
 
     public function store(Request $request)

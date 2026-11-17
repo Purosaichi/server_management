@@ -10,6 +10,9 @@
 @if(session('success'))
     <div class="lic-alert-success" role="status">{{ session('success') }}</div>
 @endif
+@if($errors->any())
+    <div class="lic-alert-error" role="alert">{{ $errors->first() }}</div>
+@endif
 
 <!-- /* Tombol Back */ -->
 <div class="lic-back-wrap">
@@ -129,6 +132,10 @@
 
 <!-- /* TABEL RIWAYAT PEMBAYARAN */ -->
 <div class="lic-payment-card">
+    <div class="lic-payment-header">
+        <h4>Riwayat Pembayaran</h4>
+        <button type="button" class="lic-payment-button" id="openPaymentModal">+ Tambah Pembayaran</button>
+    </div>
     <table class="lic-payment-table">
         <thead>
             <tr>
@@ -155,6 +162,40 @@
     </table>
 </div>
 
+<div class="lic-payment-modal" id="paymentModal" @if(!$errors->any()) hidden @endif>
+    <div class="lic-payment-modal-dialog" role="dialog" aria-modal="true" aria-labelledby="paymentModalTitle">
+        <div class="lic-payment-modal-header">
+            <h4 id="paymentModalTitle">Tambah Pembayaran</h4>
+            <button type="button" class="lic-payment-modal-close" id="closePaymentModal" aria-label="Tutup">&times;</button>
+        </div>
+        <form action="{{ route('licenses.payments.store', $license['id']) }}" method="POST" class="lic-payment-form">
+            @csrf
+            <label for="payment_date">Tanggal Bayar</label>
+            <input type="date" id="payment_date" name="payment_date" value="{{ old('payment_date', $paymentDefaultDate) }}" min="{{ $paymentMinDate }}" required>
+            <small>Pilih tanggal minimal {{ $paymentMinDate ? \Carbon\Carbon::parse($paymentMinDate)->format('d F Y') : 'tanggal expired lisensi' }}.</small>
+
+            <label for="payment_amount_display">Nominal yang Harus Dibayar</label>
+            <input type="text" id="payment_amount_display" value="Rp{{ $license['amount'] }}" readonly>
+
+            <label for="payment_method">Metode Pembayaran</label>
+            <select id="payment_method" name="payment_method" required>
+                <option value="">-- Pilih Metode --</option>
+                <option value="Transfer Bank" {{ old('payment_method') === 'Transfer Bank' ? 'selected' : '' }}>Transfer Bank</option>
+                <option value="Kartu Kredit" {{ old('payment_method') === 'Kartu Kredit' ? 'selected' : '' }}>Kartu Kredit</option>
+                <option value="Kartu Debit" {{ old('payment_method') === 'Kartu Debit' ? 'selected' : '' }}>Kartu Debit</option>
+                <option value="E-Wallet" {{ old('payment_method') === 'E-Wallet' ? 'selected' : '' }}>E-Wallet</option>
+                <option value="Virtual Account" {{ old('payment_method') === 'Virtual Account' ? 'selected' : '' }}>Virtual Account</option>
+                <option value="Tunai" {{ old('payment_method') === 'Tunai' ? 'selected' : '' }}>Tunai</option>
+            </select>
+
+            <div class="lic-payment-form-actions">
+                <button type="button" class="lic-payment-cancel" id="cancelPaymentModal">Batal</button>
+                <button type="submit" class="lic-payment-submit">Simpan Pembayaran</button>
+            </div>
+        </form>
+    </div>
+</div>
+
 <footer class="footer">
     © 2026 Direktorat Jenderal Guru, Tenaga Kependidikan dan Pendidikan Guru - Kemendikdasmen
 </footer>
@@ -166,6 +207,22 @@
     licenseInfoCard.addEventListener('dblclick', openLicenseEdit);
     licenseInfoCard.addEventListener('keydown', function (event) {
         if (event.key === 'Enter') openLicenseEdit();
+    });
+
+    const paymentModal = document.getElementById('paymentModal');
+    const openPaymentModal = document.getElementById('openPaymentModal');
+    const closePaymentModal = () => {
+        paymentModal.hidden = true;
+    };
+
+    openPaymentModal.addEventListener('click', () => {
+        paymentModal.hidden = false;
+        document.getElementById('payment_date').focus();
+    });
+    document.getElementById('closePaymentModal').addEventListener('click', closePaymentModal);
+    document.getElementById('cancelPaymentModal').addEventListener('click', closePaymentModal);
+    paymentModal.addEventListener('click', (event) => {
+        if (event.target === paymentModal) closePaymentModal();
     });
 </script>
 @endsection

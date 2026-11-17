@@ -106,6 +106,7 @@ Route::middleware(['auth.session'])->group(function () {
     Route::get('/licenses/{id}/edit', [LicenseController::class, 'edit'])->name('licenses.edit');
     Route::put('/licenses/{id}', [LicenseController::class, 'update'])->name('licenses.update');
     Route::delete('/licenses/{id}', [LicenseController::class, 'destroy'])->name('licenses.destroy');
+    Route::post('/licenses/{id}/payments', [LicenseController::class, 'storePayment'])->name('licenses.payments.store');
     Route::get('/licenses/{id}', [LicenseController::class, 'show'])->name('licenses.detail');
 
     Route::get('/maintenance', [MaintenanceController::class, 'index'])->name('maintenance.maintenance');

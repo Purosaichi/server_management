@@ -94,6 +94,71 @@ class LicenseTest extends TestCase
         ]);
     }
 
+    public function test_license_payment_reuses_amount_and_is_always_paid(): void
+    {
+        $this->createLicenseTables();
+        DB::table('lisensi')->insert([
+            'nama_lisensi' => 'Annual Software',
+            'provider' => 'Vendor',
+            'status' => 'Aman',
+            'jumlah_lisensi' => 1,
+            'tanggal_kadaluarsa' => '2027-11-18',
+        ]);
+        DB::table('tagihan')->insert([
+            'jenis_tagihan' => 'Lisensi',
+            'id_lisensi' => 1,
+            'status_pembayaran' => 'Unpaid',
+            'siklus_tagihan' => '1 tahun',
+            'tanggal_jatuh_tempo' => '2027-11-18',
+            'jumlah' => 1000000,
+        ]);
+
+        $this->withSession(['user_id' => 1, 'user_name' => 'Administrator'])
+            ->post('/licenses/1/payments', [
+                'payment_date' => '2027-11-18',
+                'payment_method' => 'Transfer Bank',
+            ])
+            ->assertRedirect(route('licenses.detail', 1));
+
+        $this->assertDatabaseHas('tagihan', [
+            'id_lisensi' => 1,
+            'status_pembayaran' => 'Paid',
+            'tanggal_bayar_terakhir' => '2027-11-18',
+            'jumlah' => 1000000,
+            'metode_pembayaran' => 'Transfer Bank',
+        ]);
+    }
+
+    public function test_license_payment_before_expiry_is_rejected(): void
+    {
+        $this->createLicenseTables();
+        DB::table('lisensi')->insert([
+            'nama_lisensi' => 'Annual Software',
+            'provider' => 'Vendor',
+            'status' => 'Aman',
+            'jumlah_lisensi' => 1,
+            'tanggal_kadaluarsa' => '2027-11-18',
+        ]);
+        DB::table('tagihan')->insert([
+            'jenis_tagihan' => 'Lisensi',
+            'id_lisensi' => 1,
+            'siklus_tagihan' => '1 tahun',
+            'tanggal_jatuh_tempo' => '2027-11-18',
+            'jumlah' => 1000000,
+        ]);
+
+        $this->withSession(['user_id' => 1, 'user_name' => 'Administrator'])
+            ->from('/licenses/1')
+            ->post('/licenses/1/payments', [
+                'payment_date' => '2027-11-17',
+                'payment_method' => 'Transfer Bank',
+            ])
+            ->assertRedirect('/licenses/1')
+            ->assertSessionHasErrors('payment_date');
+
+        $this->assertSame(1, DB::table('tagihan')->where('id_lisensi', 1)->count());
+    }
+
     public function test_license_edit_form_shows_selectable_start_date_and_calculated_end_date(): void
     {
         $this->createLicenseTables();
