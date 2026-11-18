@@ -14,16 +14,13 @@
 <div class="asset-location-page">
     <div class="asset-location-header">
         <div class="asset-location-heading">
-            <span class="asset-location-mark" aria-hidden="true"><i class="fas fa-location-dot"></i></span>
             <div>
-                <span class="asset-location-eyebrow">Inventaris Infrastruktur</span>
                 <h1 class="asset-location-title">Lokasi Aset</h1>
                 <p class="asset-location-subtitle">Daftar lokasi penyimpanan dan penempatan aset</p>
             </div>
         </div>
         <div class="asset-location-header-actions">
             <div class="asset-location-count" aria-label="Jumlah data">
-                <i class="fas fa-map-pin" aria-hidden="true"></i>
                 <strong>{{ $locations->count() }}</strong>
                 <span>lokasi terdaftar</span>
             </div>

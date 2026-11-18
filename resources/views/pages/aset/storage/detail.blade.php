@@ -28,9 +28,7 @@
 <div class="storage-page">
     <div class="storage-detail-header">
         <div class="storage-heading">
-            <span class="storage-mark" aria-hidden="true"><i class="fas fa-hard-drive"></i></span>
             <div>
-                <span class="storage-eyebrow">Inventaris Infrastruktur</span>
                 <h1 class="storage-title">{{ $storage->nama_aset ?: 'Detail Storage' }}</h1>
                 <p class="storage-subtitle">{{ $storage->kode_aset ?: 'Aset ID ' . $storage->id_aset }}</p>
             </div>

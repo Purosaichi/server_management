@@ -14,16 +14,13 @@
 <div class="asset-location-page">
     <div class="asset-location-header">
         <div class="asset-location-heading">
-            <span class="asset-location-mark" aria-hidden="true"><i class="fas fa-shield-halved"></i></span>
             <div>
-                <span class="asset-location-eyebrow">Inventaris Infrastruktur</span>
                 <h1 class="asset-location-title">Garansi</h1>
                 <p class="asset-location-subtitle">Daftar masa garansi aset dan server</p>
             </div>
         </div>
         <div class="asset-location-header-actions">
             <div class="asset-location-count" aria-label="Jumlah garansi">
-                <i class="fas fa-shield-halved" aria-hidden="true"></i>
                 <strong>{{ $warranties->count() }}</strong>
                 <span>garansi</span>
             </div>

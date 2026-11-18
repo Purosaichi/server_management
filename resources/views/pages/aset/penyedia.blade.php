@@ -14,16 +14,13 @@
 <div class="asset-location-page">
     <div class="asset-location-header">
         <div class="asset-location-heading">
-            <span class="asset-location-mark" aria-hidden="true"><i class="fas fa-user"></i></span>
             <div>
-                <span class="asset-location-eyebrow">Inventaris Infrastruktur</span>
                 <h1 class="asset-location-title">Penyedia</h1>
                 <p class="asset-location-subtitle">Daftar perusahaan/vendor penyedia aset</p>
             </div>
         </div>
         <div class="asset-location-header-actions">
             <div class="asset-location-count" aria-label="Jumlah penyedia">
-                <i class="fas fa-user" aria-hidden="true"></i>
                 <strong>{{ $providers->count() }}</strong>
                 <span>penyedia</span>
             </div>

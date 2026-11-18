@@ -14,16 +14,13 @@
 <div class="merek-page">
     <div class="merek-header">
         <div class="merek-heading">
-            <span class="merek-mark" aria-hidden="true"><i class="fas fa-tag"></i></span>
             <div>
-                <span class="merek-eyebrow">Inventaris Infrastruktur</span>
                 <h1 class="merek-title">Merek</h1>
                 <p class="merek-subtitle">Daftar merek perangkat aset</p>
             </div>
         </div>
         <div class="merek-header-actions">
             <div class="merek-count" aria-label="Jumlah merek">
-                <i class="fas fa-tag" aria-hidden="true"></i>
                 <strong>{{ $brands->count() }}</strong>
                 <span>merek</span>
             </div>

@@ -16,70 +16,50 @@
     </a>
 </div>
 
-<div class="asset-location-form-page">
-    <div class="asset-location-form-header">
+<div class="asset-location-detail-header">
+    <div class="asset-location-detail-identity">
         <div>
-            <h1>Detail Lokasi Aset</h1>
-            <p>Detail lokasi fisik dan aset/server yang menempatinya.</p>
-        </div>
-        <div class="asset-location-header-actions">
-            <a href="{{ route('aset.lokasi.servers', $location->id_lokasi_aset) }}" class="asset-location-add-button">
-                <i class="fas fa-server" aria-hidden="true"></i>
-                Lihat Server di Lokasi Ini
-            </a>
-            <a href="{{ route('aset.lokasi.edit', $location->id_lokasi_aset) }}" class="asset-location-add-button">
-                <i class="fas fa-pen" aria-hidden="true"></i>
-                Edit Lokasi
-            </a>
+            <span class="asset-location-detail-label">Lokasi Aset</span>
+            <h1>{{ $location->nama_rak ?: $location->nama_ruangan ?: 'Lokasi #' . $location->id_lokasi_aset }}</h1>
+            <p>{{ $location->nama_data_center ?: 'Data center belum ditentukan' }}</p>
         </div>
     </div>
+    <div class="asset-location-detail-summary"><span class="asset-location-detail-label">Gedung / Ruangan</span><strong>{{ $location->nama_gedung ?: '-' }} / {{ $location->nama_ruangan ?: '-' }}</strong></div>
+    <div class="asset-location-detail-summary"><span class="asset-location-detail-label">Zona</span><strong class="asset-location-detail-badge">{{ $location->zona ?: 'Tidak ada zona' }}</strong></div>
+    <div class="asset-location-detail-summary"><span class="asset-location-detail-label">Posisi Rak</span><strong>{{ $location->posisi_rak ?: '-' }}</strong></div>
+</div>
 
-    <dl class="asset-location-detail-grid">
-        <div class="asset-location-detail-item">
-            <dt>Data Center</dt>
-            <dd>{{ $location->nama_data_center ?: '-' }}</dd>
-        </div>
-        <div class="asset-location-detail-item">
-            <dt>Gedung</dt>
-            <dd>{{ $location->nama_gedung ?: '-' }}</dd>
-        </div>
-        <div class="asset-location-detail-item">
-            <dt>Lantai</dt>
-            <dd>{{ $location->lantai ?: '-' }}</dd>
-        </div>
-        <div class="asset-location-detail-item">
-            <dt>Ruangan</dt>
-            <dd>{{ $location->nama_ruangan ?: '-' }}</dd>
-        </div>
-        <div class="asset-location-detail-item">
-            <dt>Zona</dt>
-            <dd>{{ $location->zona ?: '-' }}</dd>
-        </div>
-        <div class="asset-location-detail-item">
-            <dt>Kode Rak</dt>
-            <dd>{{ $location->kode_rak ?: '-' }}</dd>
-        </div>
-        <div class="asset-location-detail-item">
-            <dt>Nama Rak</dt>
-            <dd>{{ $location->nama_rak ?: '-' }}</dd>
-        </div>
-        <div class="asset-location-detail-item">
-            <dt>Tinggi Rak</dt>
-            <dd>{{ $location->tinggi_rak ? $location->tinggi_rak . 'U' : '-' }}</dd>
-        </div>
-        <div class="asset-location-detail-item">
-            <dt>Posisi Rak</dt>
-            <dd>{{ $location->posisi_rak ?: '-' }}</dd>
-        </div>
-        <div class="asset-location-detail-item">
-            <dt>Tanggal Penempatan</dt>
-            <dd>{{ $location->tanggal_penempatan ? \Carbon\Carbon::parse($location->tanggal_penempatan)->format('d M Y') : '-' }}</dd>
-        </div>
-        <div class="asset-location-detail-item asset-location-detail-item-wide">
-            <dt>Keterangan</dt>
-            <dd>{{ $location->keterangan ?: '-' }}</dd>
-        </div>
-    </dl>
+<div class="asset-location-detail-actions">
+    <a href="{{ route('aset.lokasi.servers', $location->id_lokasi_aset) }}" class="asset-location-secondary-button"><i class="fas fa-server" aria-hidden="true"></i> Lihat Server di Lokasi Ini</a>
+    <a href="{{ route('aset.lokasi.edit', $location->id_lokasi_aset) }}" class="asset-location-add-button"><i class="fas fa-pen" aria-hidden="true"></i> Edit Lokasi</a>
+</div>
 
+<div class="asset-location-info-grid">
+    <section class="asset-location-info-card">
+        <div class="asset-location-info-card-header"><h2>Informasi Lokasi</h2><i class="fas fa-building" aria-hidden="true"></i></div>
+        <ul>
+            <li><span>Data Center</span><strong>{{ $location->nama_data_center ?: '-' }}</strong></li>
+            <li><span>Gedung</span><strong>{{ $location->nama_gedung ?: '-' }}</strong></li>
+            <li><span>Lantai</span><strong>{{ $location->lantai ?: '-' }}</strong></li>
+            <li><span>Ruangan</span><strong>{{ $location->nama_ruangan ?: '-' }}</strong></li>
+            <li><span>Zona</span><strong>{{ $location->zona ?: '-' }}</strong></li>
+        </ul>
+    </section>
+    <section class="asset-location-info-card">
+        <div class="asset-location-info-card-header"><h2>Informasi Rak</h2><i class="fas fa-server" aria-hidden="true"></i></div>
+        <ul>
+            <li><span>Kode Rak</span><strong>{{ $location->kode_rak ?: '-' }}</strong></li>
+            <li><span>Nama Rak</span><strong>{{ $location->nama_rak ?: '-' }}</strong></li>
+            <li><span>Tinggi Rak</span><strong>{{ $location->tinggi_rak ? $location->tinggi_rak . 'U' : '-' }}</strong></li>
+            <li><span>Posisi Rak</span><strong>{{ $location->posisi_rak ?: '-' }}</strong></li>
+        </ul>
+    </section>
+    <section class="asset-location-info-card">
+        <div class="asset-location-info-card-header"><h2>Penempatan</h2><i class="fas fa-calendar-check" aria-hidden="true"></i></div>
+        <ul>
+            <li><span>Tanggal Penempatan</span><strong>{{ $location->tanggal_penempatan ? \Carbon\Carbon::parse($location->tanggal_penempatan)->format('d M Y') : '-' }}</strong></li>
+            <li><span>Keterangan</span><strong>{{ $location->keterangan ?: '-' }}</strong></li>
+        </ul>
+    </section>
 </div>
 @endsection

@@ -14,16 +14,13 @@
 <div class="storage-page">
     <div class="storage-header">
         <div class="storage-heading">
-            <span class="storage-mark" aria-hidden="true"><i class="fas fa-hard-drive"></i></span>
             <div>
-                <span class="storage-eyebrow">Inventaris Infrastruktur</span>
                 <h1 class="storage-title">Storage</h1>
                 <p class="storage-subtitle">Daftar perangkat storage dan kapasitas penyimpanan aset</p>
             </div>
         </div>
         <div class="storage-header-actions">
             <div class="storage-count" aria-label="Jumlah perangkat storage">
-                <i class="fas fa-hard-drive" aria-hidden="true"></i>
                 <strong>{{ $storageCount }}</strong>
                 <span>perangkat</span>
             </div>
