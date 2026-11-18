@@ -2,7 +2,7 @@
     <div class="nd-table-header">
         <h3 class="nd-table-title">Daftar Router</h3>
         <div class="nd-table-actions">
-            <span class="nd-table-count">Total: {{ $routers->count() }} router</span>
+            <span class="nd-table-count"><strong>{{ $routers->count() }}</strong><span>router terdaftar</span></span>
             <a href="{{ route('network-device.router-create') }}" class="nd-btn-add">+ Tambah Router</a>
         </div>
     </div>

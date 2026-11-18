@@ -2,7 +2,7 @@
     <div class="nd-table-header">
         <h3 class="nd-table-title">Daftar Switch</h3>
         <div class="nd-table-actions">
-            <span class="nd-table-count">Total: {{ $switches->count() }} switch</span>
+            <span class="nd-table-count"><strong>{{ $switches->count() }}</strong><span>switch terdaftar</span></span>
             <a href="{{ route('network-device.switch-create') }}" class="nd-btn-add">+ Tambah Switch</a>
         </div>
     </div>

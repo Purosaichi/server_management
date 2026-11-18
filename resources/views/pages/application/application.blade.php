@@ -44,7 +44,6 @@
     <div class="app-table-header">
         <h3 class="app-table-title">Daftar Aplikasi</h3>
         <div style="display: flex; align-items: center; gap: 1rem;">
-            <span class="app-table-count">Total: {{ count($applications) }} aplikasi</span>
             <a href="{{ route('application.create') }}" class="app-btn-add">+ Tambah Aplikasi</a>
         </div>
     </div>

@@ -29,7 +29,7 @@
     <div class="srv-table-header">
         <h3 class="srv-table-title">Daftar Server</h3>
         <div style="display: flex; align-items: center; gap: 1rem;">
-            <span class="srv-table-count">Total Server: {{ count($servers) }} server</span>
+            <span class="srv-table-count"><strong>{{ count($servers) }}</strong><span>server terdaftar</span></span>
             <a href="{{ route('server.create') }}" class="srv-btn-add">+ Tambah Server</a>
         </div>
     </div>

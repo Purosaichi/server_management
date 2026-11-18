@@ -21,7 +21,7 @@
     <div class="lic-table-header">
         <h3>Daftar Lisensi</h3>
         <div class="lic-table-tools">
-            <span>Total: {{ $licenses->count() }} lisensi</span>
+            <span class="lic-table-count"><strong>{{ $licenses->count() }}</strong><span>lisensi terdaftar</span></span>
             <a href="{{ route('licenses.create') }}" class="lic-btn-add">+ Tambah Lisensi</a>
         </div>
     </div>

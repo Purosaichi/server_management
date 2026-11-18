@@ -53,6 +53,26 @@
     font-size: 0.85rem;
 }
 
+.lic-table-count {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    border: 1px solid #1d4ed8;
+    border-radius: 0.5rem;
+    color: #9ca3af;
+    font-size: 0.875rem;
+}
+
+.lic-table-count strong {
+    color: #60a5fa;
+    font-weight: 700;
+}
+
+.lic-table-count span {
+    color: #d1d5db;
+}
+
 .lic-btn-add,
 .lic-btn-edit,
 .lic-btn-delete {

@@ -39,8 +39,23 @@
 }
 
 .srv-table-header .srv-table-count {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    border: 1px solid #1d4ed8;
+    border-radius: 0.5rem;
+    color: #9ca3af;
     font-size: 0.875rem;
-    color: #6b7280;
+}
+
+.srv-table-count strong {
+    color: #60a5fa;
+    font-weight: 700;
+}
+
+.srv-table-count span {
+    color: #d1d5db;
 }
 
 .srv-table-wrapper {

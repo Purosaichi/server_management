@@ -17,7 +17,7 @@
     <div class="dmn-table-header">
         <h3 class="dmn-table-title">Daftar Domain</h3>
         <div style="display: flex; align-items: center; gap: 1rem;">
-            <span class="dmn-table-count">Total: {{ count($domains) }} domain</span>
+            <span class="dmn-table-count"><strong>{{ count($domains) }}</strong><span>domain terdaftar</span></span>
             <a href="{{ route('domain.create') }}" class="dmn-btn-add"> + Tambah Domain</a>
         </div>    
     </div>
