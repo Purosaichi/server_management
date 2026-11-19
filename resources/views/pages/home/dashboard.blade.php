@@ -143,7 +143,7 @@
 <div class="dmn-table-container dashboard-domain-card">
     <div class="dmn-table-header">
         <h3 class="dmn-table-title">Daftar Domain</h3>
-        <span class="dmn-table-count">Menampilkan {{ $domains->count() }} dari {{ $domainCount }} domain</span>
+        <span class="dmn-table-count">Menampilkan {{ $domains->count() }} dari {{ $domainCount }}</span>
     </div>
     <div class="dmn-table-wrapper">
         <table>
