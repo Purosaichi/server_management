@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
 
 class LicenseController extends Controller
 {
@@ -25,7 +26,7 @@ class LicenseController extends Controller
             $latestBilling = $billingByLicense->get($lic->id_lisensi);
             $effectiveExpiry = $latestBilling?->tanggal_jatuh_tempo ?? $lic->tanggal_kadaluarsa;
             $sisaHari = $this->daysUntilExpiration($effectiveExpiry);
-            $dynamicStatus = $this->getDynamicStatus($effectiveExpiry, $lic->status);
+            $dynamicStatus = $this->syncDynamicStatus($lic, $effectiveExpiry);
 
             return [
                 'id'           => $lic->id_lisensi,
@@ -98,7 +99,7 @@ class LicenseController extends Controller
 
         $effectiveExpiry = $billing?->tanggal_jatuh_tempo ?? $lic->tanggal_kadaluarsa;
         $sisaHari = $this->daysUntilExpiration($effectiveExpiry);
-        $dynamicStatus = $this->getDynamicStatus($effectiveExpiry, $lic->status);
+        $dynamicStatus = $this->syncDynamicStatus($lic, $effectiveExpiry);
 
         $license = [
             'id'           => $lic->id_lisensi,
@@ -260,7 +261,7 @@ class LicenseController extends Controller
         $logo = $request->hasFile('logo') ? $this->storeLogo($request) : $license->logo;
 
         DB::transaction(function () use ($license, $validated, $logo) {
-            $license->update($this->licenseAttributes($validated, $logo));
+            $license->update($this->licenseAttributes($validated, $logo, $license->status));
             $this->saveBilling($license->id_lisensi, $validated);
             $this->saveAsset($license->id_lisensi, $validated['id_aset'] ?? null);
         });
@@ -282,9 +283,13 @@ class LicenseController extends Controller
         $validated = $request->validate([
             'nama_lisensi' => 'required|string|max:150',
             'provider' => 'required|string|max:100',
-            'status' => 'required|in:Aman,Akan Expired,Expired',
             'jumlah_lisensi' => 'required|integer|min:1',
-            'nomor_lisensi' => 'nullable|string|max:150',
+            'nomor_lisensi' => [
+                'nullable',
+                'string',
+                'max:150',
+                Rule::unique('lisensi', 'nomor_lisensi')->ignore($id, 'id_lisensi'),
+            ],
             'jenis_lisensi' => 'nullable|string|max:100',
             'logo' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:5120',
             'billing_status' => 'nullable|in:Paid,Unpaid',
@@ -311,12 +316,12 @@ class LicenseController extends Controller
         return $validated;
     }
 
-    private function licenseAttributes(array $validated, ?string $logo): array
+    private function licenseAttributes(array $validated, ?string $logo, string $fallbackStatus = 'Aman'): array
     {
         return [
             'nama_lisensi' => $validated['nama_lisensi'],
             'provider' => $validated['provider'],
-            'status' => $validated['status'],
+            'status' => $this->getDynamicStatus($validated['next_due_date'] ?? null, $fallbackStatus)['status'],
             'jumlah_lisensi' => $validated['jumlah_lisensi'],
             'tanggal_mulai' => $validated['last_payment'] ?? null,
             'tanggal_kadaluarsa' => $validated['next_due_date'] ?? null,
@@ -491,6 +496,21 @@ class LicenseController extends Controller
         }
 
         return ['status' => 'Aman', 'type' => 'safe'];
+    }
+
+    private function syncDynamicStatus(License $license, ?string $expirationDate): array
+    {
+        $dynamicStatus = $this->getDynamicStatus($expirationDate, $license->status);
+
+        if ($license->status !== $dynamicStatus['status']) {
+            DB::table('lisensi')
+                ->where('id_lisensi', $license->id_lisensi)
+                ->update(['status' => $dynamicStatus['status']]);
+
+            $license->status = $dynamicStatus['status'];
+        }
+
+        return $dynamicStatus;
     }
 
     private function daysUntilExpiration(?string $expirationDate): ?int

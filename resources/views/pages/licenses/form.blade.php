@@ -42,14 +42,6 @@
                 <input type="text" id="provider" name="provider" value="{{ old('provider', $license->provider ?? '') }}" required maxlength="100">
             </div>
             <div class="app-form-group">
-                <label for="status">Status <span style="color: red;">*</span></label>
-                <select id="status" name="status" required>
-                    @foreach(['Aman', 'Akan Expired', 'Expired'] as $status)
-                        <option value="{{ $status }}" {{ old('status', $license->status ?? 'Aman') === $status ? 'selected' : '' }}>{{ $status }}</option>
-                    @endforeach
-                </select>
-            </div>
-            <div class="app-form-group">
                 <label for="jumlah_lisensi">Jumlah Lisensi <span style="color: red;">*</span></label>
                 <input type="number" id="jumlah_lisensi" name="jumlah_lisensi" value="{{ old('jumlah_lisensi', $license->jumlah_lisensi ?? 1) }}" min="1" required>
             </div>
