@@ -31,7 +31,6 @@
             <div class="form-login">
                 
                 <h2 class="form-title">LOGIN</h2>
-                <p class="form-subtitle">Masuk ke dashboard monitoring</p>
 
                 @if (session('error'))
                     <div class="alert-error">{{ session('error') }}</div>
