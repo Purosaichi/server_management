@@ -78,7 +78,10 @@
                     @php
                         $usagePercentage = min(max((float) ($storage->persentase_penggunaan ?? 0), 0), 100);
                     @endphp
-                    <tr>
+                    <tr class="storage-data-row"
+                        data-detail-url="{{ route('aset.storage.detail', $storage->id_storage) }}"
+                        tabindex="0"
+                        title="Double click untuk lihat detail">
                         <td>{{ $storage->id_storage }}</td>
                         <td>
                             <span class="storage-asset-name">{{ $storage->nama_aset ?: 'Aset tidak ditemukan' }}</span>
@@ -104,10 +107,6 @@
                             @endif
                         </td>
                         <td>
-                            <a href="{{ route('aset.storage.detail', $storage->id_storage) }}" class="storage-detail-button">
-                                <i class="fas fa-eye" aria-hidden="true"></i>
-                                Detail
-                            </a>
                             <form action="{{ route('aset.storage.destroy', $storage->id_storage) }}" method="POST" class="storage-delete-form" data-delete-confirm data-delete-name="storage {{ $storage->nama_aset ?: '#' . $storage->id_storage }}">
                                 @csrf
                                 @method('DELETE')
@@ -125,5 +124,19 @@
         </table>
     </div>
 </div>
+<script>
+    document.querySelectorAll('.storage-data-row').forEach(function (row) {
+        row.addEventListener('dblclick', function (event) {
+            if (event.target.closest('a, button, form, input, select, textarea')) return;
+            window.location.assign(row.dataset.detailUrl);
+        });
+
+        row.addEventListener('keydown', function (event) {
+            if (event.key !== 'Enter') return;
+            event.preventDefault();
+            window.location.assign(row.dataset.detailUrl);
+        });
+    });
+</script>
 @include('components.delete-confirm-modal')
 @endsection
