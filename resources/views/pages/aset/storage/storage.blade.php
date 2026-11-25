@@ -31,21 +31,6 @@
         </div>
     </div>
 
-    <nav class="storage-tabs" aria-label="Subhalaman Aset">
-        <a href="{{ route('aset.lokasi') }}">
-            <i class="fas fa-location-dot" aria-hidden="true"></i>
-            Lokasi Aset
-        </a>
-        <a href="{{ route('aset.data-centers') }}">
-            <i class="fas fa-server" aria-hidden="true"></i>
-            Data Center
-        </a>
-        <a href="{{ route('aset.storage') }}" class="active" aria-current="page">
-            <i class="fas fa-hard-drive" aria-hidden="true"></i>
-            Storage
-        </a>
-    </nav>
-
     <section class="storage-summary" aria-label="Ringkasan kapasitas storage">
         <article class="storage-summary-card">
             <span>Total Kapasitas Raw</span>
