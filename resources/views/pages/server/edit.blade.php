@@ -147,12 +147,12 @@
         <!-- /* STATUS MONITORING */ -->
         <h3 class="srv-form-section">Status Monitoring</h3>
         <div class="srv-form-grid">
-            <div class="srv-form-group">
-                <label for="status_monitoring">Status <span style="color: red;">*</span></label>
+            <div class="srv-from-group">
+                <label for="status_monitoring">status<span style="color: red;">*</span></label>
                 <select name="status_monitoring" id="status_monitoring" required>
-                    <option value="Online" {{ old('status_monitoring', $server->status_monitoring) == 'Online' ? 'selected' : '' }}>Online</option>
-                    <option value="Offline" {{ old('status_monitoring', $server->status_monitoring) == 'Offline' ? 'selected' : '' }}>Offline</option>
-                </select>
+                    <option value="online" {{ old("status_monitoring", $server->status_monitoring) == "online" ? "selected" : ""}}>Online</option>
+                    <option value="offline" {{ old("status_monitoring", $server->status_monitoring) == "offline" ? "selected" : ""}}>offline</option>
+                 </select>
             </div>
 
             <div class="srv-form-group">

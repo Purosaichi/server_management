@@ -91,7 +91,7 @@ class MaintenanceController extends Controller
                 'maintenance.jadwal_tanggal',
                 'maintenance.jam_mulai',
                 'maintenance.jam_selesai',
-                'maintenance.status',
+                'maintenance.status', 
                 'maintenance.catatan',
                 'maintenance.deleted_at',
                 'server.nama_server',
